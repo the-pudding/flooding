@@ -1,0 +1,82 @@
+.property-table
+  display block
+  padding 1rem
+  font-family $atlas
+  position relative
+  max-width 400px
+  .search
+    input
+      width 100%
+      border 1px solid #ccc
+      box-shadow inset 2px 2px 5px rgba(0, 0, 0, 0.05)
+      border-radius 5px
+      height 36px
+      padding-left .8rem
+      &::placeholder
+        font-family $atlas
+  .title-wrapper
+    font-size 16px
+    text-align left
+    margin 0
+    padding 0
+    font-weight 400
+    margin-top 1.5rem
+    span
+      font-weight 600
+  .table
+    margin-top 5rem
+    .row
+      display flex
+      border-bottom 1px solid #DCDCDC
+      padding-bottom 5px
+      padding-top 5px
+
+      p
+        font-size 12px
+        margin 0
+        padding 0
+        min-width 60px
+        text-align right
+        color #777
+        margin-right 10px
+        font-weight 300
+        &:before
+          position absolute
+          color #333
+          top 0
+          left 0px
+          transform translate(0,calc(-100% - 10px))
+          font-weight 400
+          font-size 11px
+          line-height 1.4
+          text-align right
+      .city-name
+        flex-grow 1
+        text-align left
+
+      &:first-of-type
+        .city-name
+          position relative
+          &:before
+            content 'COUNTY'
+            font-size 10px
+            letter-spacing .2px
+            text-align left
+        .property-count
+          position relative
+          &:before
+            content 'Total properties in County'
+        .flooded-property-count
+          position relative
+          &:before
+            content 'Properties in Flood Zone'
+            font-weight 600
+        .percent
+          position relative
+          &:before
+            content 'Percent in Flood Zone'
+    .selected
+      background #FEFECB
+      p
+        font-weight 400
+        color rgba(0,0,0,.9)
