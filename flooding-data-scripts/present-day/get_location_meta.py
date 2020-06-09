@@ -16,7 +16,17 @@ import csv
 reload(sys)
 sys.setdefaultencoding("utf-8")
 
-output_filename = 'meta.csv'
+from argparse import ArgumentParser
+
+parser = ArgumentParser()
+parser.add_argument("--geo", nargs='?', default="check_string_for_empty")
+args = parser.parse_args()
+
+
+geo = args.geo
+
+
+output_filename = 'tract.csv'
 
 def main():
     with open(output_filename, 'a') as csvfile:
@@ -24,19 +34,30 @@ def main():
                             quotechar='|', quoting=csv.QUOTE_MINIMAL)
 
         reader = csv.reader(open('data.csv'))
+        first = ["fsid","name","fips","lsad","longitude","latitude","properties","atRisk"]
+        writer.writerow(first)
 
         for row in reader:
-            url = "https://api.firststreet.org/v1/location/detail/city/"+row[0]+"?key=w6e9nl3apphi9ln2mux4aazyd9gics5a"
+            print(row)
+            url = "https://api.firststreet.org/v1/location/detail/"+geo+"/"+row[0]+"?key=w6e9nl3apphi9ln2mux4aazyd9gics5a"
             results = requests.get(url)
             results = results.json()
             fsid = results['fsid']
+            fips = results['fips']
             name = results['name']
-            state_name = results['state']['name']
-            state_fsid = results['state']['fsid']
             centroid = results['geometry']['center']['coordinates']
-            lsad = results['lsad']
-            properties = results['properties']
-            row = [fsid,name,state_name,state_fsid,properties,lsad,centroid[0],centroid[1]]
+            if(geo == "city"):
+                lsad = results['lsad']
+            else:
+                lsad = None
+
+            url = "https://api.firststreet.org/v1/location/summary/"+geo+"/"+row[0]+"?key=w6e9nl3apphi9ln2mux4aazyd9gics5a"
+            results = requests.get(url)
+            results = results.json()
+
+            properties = results['properties']['total']
+            atRisk = results['properties']['atRisk']
+            row = [fsid,name,fips,lsad,centroid[0],centroid[1],properties,atRisk]
             writer.writerow([unicode(s).encode("utf-8") for s in row])
 if __name__ == '__main__':
     main()
