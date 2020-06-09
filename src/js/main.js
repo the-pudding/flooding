@@ -48,9 +48,8 @@ function init() {
 
   loadData(['cities.csv']).then(result => {
     let geojson = cluster.init(result[0]);
-    graphic.init(geojson);
-    propertyTable.init(result[0])
-
+    // graphic.init(geojson);
+    propertyTable.init(result[0],d3.select(".property-table"))
   }).catch(console.error);
 
 

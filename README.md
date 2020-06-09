@@ -1,5 +1,10 @@
 # Script Directory
 
+## questions for FS
+
+- looks like the query api is not working for offset values, meaning we can't access data for location fsids
+- will fema counts be available at location levels?
+
 ## /flooding-data-scripts
 
 ### /present-day
@@ -26,8 +31,17 @@ To do:
 To do:
 - daisy chain these scripts (probably convert to a node script)
 
-#### grab-cities.py
-This script hits the query API and downloads FSIDs for cities and outputs to data.csv
+#### grab-location-fsids.py
+This script hits the query API and downloads FSIDs for a geo and outputs to data.csv
+
+run `python grab-location-fsids.py --geo [geo]` where geo is a value of:
+- property
+- neighborhood
+- zcta
+- tract
+- city
+- county
+- cd
 
 #### get_location_meta.py
 This script grabs meta data (city names, lat long, property count) for fsids in data.csv and outputs to meta.csv
@@ -47,9 +61,12 @@ Merge probabilities and meta data into merged.csv
 
 - Run `npm i` (we're using node 10.15.3)
 - Run `npm start`
-- Localhost will launch
+- Localhost will launch.
 
+## chart types
 
+- table searches
+- cluster maps (based on cities)
 
 # Docs
 
