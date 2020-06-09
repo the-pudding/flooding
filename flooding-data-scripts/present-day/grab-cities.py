@@ -25,7 +25,7 @@ def main():
 
         fsids = []
 
-        url = "https://preview.firststreet.org/query?$select=city&$filter=probability:count.mid%20gt%201&$offset=0"
+        url = "api.firststreet.org/v1/query?$select=city&$filter=location:state.fsid%20eq%2039&$offset=0&key=w6e9nl3apphi9ln2mux4aazyd9gics5a"
         results = requests.get(url)
         results = results.json()
 
@@ -36,7 +36,7 @@ def main():
         max_pages = int(math.ceil(max_results/100))
         for x in range(0,max_pages+1):
             offset = x*100
-            url = "https://preview.firststreet.org/query?$select=city&$filter=probability:count.mid%20gt%201&$offset="+str(offset)
+            url = "api.firststreet.org/v1/query?$select=city&$filter=location:state.fsid%20eq%2039&$offset="+str(offset)+"&key=w6e9nl3apphi9ln2mux4aazyd9gics5a"
             results = requests.get(url)
             results = results.json()
             for result in results['results']:

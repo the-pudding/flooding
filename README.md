@@ -38,13 +38,18 @@ This script grabs flooding data from meta.csv and outputs to probabilities.csv
 #### combine.py
 Merge probabilities and meta data into merged.csv
 
-
-
-
-
-
 ### Questions for FS:
 - What is the best way to get a full list of city, county, or state FSIDs? (we're using the query api)
+
+# Chart Builds
+
+## setup
+
+- Run `npm i` (we're using node 10.15.3)
+- Run `npm start`
+- Localhost will launch
+
+
 
 # Docs
 

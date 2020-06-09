@@ -26,7 +26,7 @@ def main():
         reader = csv.reader(open('data.csv'))
 
         for row in reader:
-            url = "https://preview.firststreet.org/location/detail/city/"+row[0]
+            url = "https://api.firststreet.org/v1/location/detail/city/"+row[0]+"?key=w6e9nl3apphi9ln2mux4aazyd9gics5a"
             results = requests.get(url)
             results = results.json()
             fsid = results['fsid']

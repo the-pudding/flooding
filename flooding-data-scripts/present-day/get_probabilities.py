@@ -27,7 +27,7 @@ def main():
             reader = csv.DictReader(f, delimiter=',')
             for row in reader:
                 fsid = row['fsid']
-                url = "https://preview.firststreet.org/probability/count/city/"+str(row['fsid'])
+                url = "https://api.firststreet.org/v1/probability/count/city/"+str(row['fsid'])+"?key=w6e9nl3apphi9ln2mux4aazyd9gics5a"
                 results = requests.get(url)
                 results = results.json()
                 # fsid = results['fsid']
