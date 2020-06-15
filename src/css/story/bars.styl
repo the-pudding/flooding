@@ -1,0 +1,35 @@
+.bar-wrapper 
+    .g-bar 
+        display flex 
+        flex-direction row 
+        align-items center 
+        border-left 1px solid $off-black
+        margin 1rem 0
+        padding 0.25rem 0
+        .bar-desc 
+            font-family $atlas 
+            set-type-size('small')
+            width 40%
+            margin 0
+            padding 0 0.5rem
+    .bar-container 
+        display flex 
+        flex-direction row-reverse
+        align-items center
+        width 60%
+    .bar 
+        height 40px 
+        background-color $fs
+        display flex 
+        justify-content flex-start
+        align-items center 
+        &-percent 
+            background-color lighten($gray-light, 10)
+        &-FEMA 
+            background-color $fema
+        p
+            set-type-size('root')
+            margin 0
+            padding 0 0 0 0.25rem
+            text-align right 
+            font-family $atlas
