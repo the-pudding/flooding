@@ -1,7 +1,7 @@
 /* global d3 */
 /* usage
 	import loadData from './load-data'
-	
+
 	loadData('file.csv').then(result => {
 		console.log(result);
 	}).catch(console.error);

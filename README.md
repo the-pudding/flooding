@@ -7,6 +7,17 @@
 
 ## /flooding-data-scripts
 
+### census block
+
+#### simplification
+
+ogr2ogr -f "ESRI Shapefile" -simplify 0.00005 tl_2019_19_tabblock10_simp.shp tl_2019_19_tabblock10.shp
+
+ogr2ogr -f GeoJSON tl_2019_19_tabblock10_simp.geojson tl_2019_19_tabblock10_simp.shp
+
+tippecanoe -o census_blocks.mbtiles -Z9 -z11 -ab -l --include="PROVIDERS" output_2.geojson
+
+
 ### /present-day
 
 This folder contains python scripts to pull present-day flooding data. Note that these might be converted to node scripts later on.
@@ -14,6 +25,12 @@ This folder contains python scripts to pull present-day flooding data. Note that
 ### /historic
 
 This folder contains python scripts to pull historic event data. Note that these might be converted to node scripts later on.
+
+### combine-fs-data.py
+
+This script goes through the main state zip file via Google Drive and combines files.
+
+use flag --file [geo], where geo is either "County", "Zipcode", or "City"
 
 ### tiles_to_tiff.py
 This script will convert tiles from the first street tile service to a merged tif file.
@@ -65,8 +82,19 @@ Merge probabilities and meta data into merged.csv
 
 ## chart types
 
-- table searches
-- cluster maps (based on cities)
+### table searches
+to do:
+- generate programmatically county version and (maybe) neighborhood
+- auto locate based on IP address
+- sort columns for results
+- decide on nearby vs. similar sized cities (perhaps nationally?)
+
+- combine into zip
+
+# property search
+-
+
+### cluster maps (based on cities)
 
 # Docs
 
