@@ -1,0 +1,48 @@
+<section class="bar-wrapper" data-js="bars">
+    <div class='bar__meta-container'>
+        <h3 class='meta-title'>How does flood risk compare to FEMA's estimations?</h3>
+        <p class='meta-sub'>How is flooding affecting your community?</p>
+    </div>
+
+    <div class='bar__controls-container controls-container' data-js="bar__controls">
+        <p class='controls-directions' id='button-directions'>View data for:</p>
+        <div class='controls-buttons' aria-labelledby='button-directions'>
+            <input id='state' type='radio' name='bar-controls' value='state' checked>
+            <label for='state'>States</label>
+            <input id='county' type='radio' name='bar-controls' value='county'>
+            <label for='county'>Counties</label>
+            <input id='city' type='radio' name='bar-controls' value='city'>
+            <label for='city'>Cities</label>
+        </div>
+    </div>
+
+    <figure class='bar__figure-single' data-js="bar__figure-single" aria-labelledby="figure__desc">
+        <div class='figure__controls'>
+            <p class='embed'>Embed this chart</p>
+            <div class='figure__search'></div>
+            <p class='figure__desc' id='figure__desc'>
+                Number of properties at risk in <span class='reader'>Flint, Michigan</span> are understated by <span
+                    class='FEMA'>FEMA</span> compared to new research by the <span class='FS'>First Street
+                    Foundation</span>
+            </p>
+        </div>
+
+        <div class='figure__container' data-js='bar__container-single'></div>
+    </figure>
+
+    <figure class='bar__figure-multi' data-js="bar__figure-multi" aria-labelledby="figure__desc">
+        <div class='figure__controls'>
+            <p class='embed'>Embed this chart</p>
+            <div class='figure__search'></div>
+            <p class='figure__desc' id='figure__desc'>
+                In <span class='reader'>Michigan</span>, First Street identified <span class='count'>421,000</span>
+                additional properties at risk of flooding compared to FEMA's data.
+            </p>
+        </div>
+
+        <div class='figure__container' data-js='bar__container-multi'></div>
+    </figure>
+
+
+
+</section>
