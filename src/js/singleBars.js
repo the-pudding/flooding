@@ -3,12 +3,13 @@ let NEAREST = [];
 let DATA = [];
 
 // by default we'll start with state data
-const TYPE = 'county';
+let TYPE = 'county';
 
 // selections
 const $section = d3.select("[data-js='bars']");
 const $container = $section.select("[data-js='bar__figure-single']");
 const $figure = $container.select("[data-js='bar__container-single']");
+const $buttons = $section.selectAll('input');
 
 // scales
 const scaleX = d3.scaleLinear();
@@ -19,22 +20,22 @@ const MARGIN_LEFT = 0;
 
 const properties = [
   {
-    propertyName: 'FEMA Properties at Risk 2020 (pct)',
+    propertyName: 'FEMA Properties at Risk 2020 (total)',
     text: '...according to FEMA',
     key: 'FEMA',
   },
   {
-    propertyName: 'FS Properties at Risk 2020 (pct)',
+    propertyName: 'FS Properties at Risk 2020 (total)',
     text: '...according to new estimates in 2020',
     key: 'thisYear',
   },
   {
-    propertyName: 'FS Properties at Risk 2035 (pct)',
+    propertyName: 'FS Properties at Risk 2035 (total)',
     text: 'in 2035',
     key: 'fifteenYears',
   },
   {
-    propertyName: 'FS Properties at Risk 2050 (pct)',
+    propertyName: 'FS Properties at Risk 2050 (total)',
     text: 'in 2050',
     key: 'thirtyYears',
   },
@@ -101,7 +102,9 @@ function setupData() {
 
   // limit the nearest data to just the properties we want
   const propValues = properties.map((d) => {
-    const value = nearestData[d.propertyName];
+    const value = Math.round(
+      (nearestData[d.propertyName] / nearestData['Total Properties']) * 100
+    );
     const allData = {
       ...d,
       value: +value,
@@ -113,13 +116,25 @@ function setupData() {
   setupFigure(propValues);
 }
 
+function handleButtonClick() {
+  const sel = d3.select(this);
+
+  TYPE = sel.attr('id');
+
+  setupData();
+  console.log({ TYPE });
+}
+
 function setup() {
   resize();
   setupData();
+  $buttons.on('change', handleButtonClick);
 }
 
 function init(data, nearestLocations) {
   NEAREST = nearestLocations;
+
+  console.log({ NEAREST });
   DATA = data;
   setup();
   console.log({ NEAREST });
