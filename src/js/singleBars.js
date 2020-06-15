@@ -71,7 +71,7 @@ function setupFigure(data) {
 
   // add the inner bars
   const $innerGroup = $groups.selectAll('.bar-container');
-  console.log($innerGroup);
+
   // add gray bars
   $innerGroup
     .selectAll('.bar-percent')
@@ -80,8 +80,6 @@ function setupFigure(data) {
       () => TYPE
     )
     .join((enter) => enter.append('div').attr('class', `bar bar-percent`))
-    .transition()
-    .duration(500)
     .style('width', (d) => `${scaleX(100 - d.value)}px`);
 
   // add data bars
