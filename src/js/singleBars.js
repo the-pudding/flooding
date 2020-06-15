@@ -53,7 +53,7 @@ function resize() {
 function setupFigure(data) {
   const $groups = $figure
     .selectAll('.g-bar')
-    .data(data)
+    .data(data, () => TYPE)
     .join((enter) => {
       const $outsideGroup = enter.append('div').attr('class', 'g-bar');
 
@@ -75,24 +75,36 @@ function setupFigure(data) {
   // add gray bars
   $innerGroup
     .selectAll('.bar-percent')
-    .data((d) => [d])
+    .data(
+      (d) => [d],
+      () => TYPE
+    )
     .join((enter) => enter.append('div').attr('class', `bar bar-percent`))
+    .transition()
+    .duration(500)
     .style('width', (d) => `${scaleX(100 - d.value)}px`);
 
   // add data bars
-  $innerGroup
+  const $dataBar = $innerGroup
     .selectAll('.bar-data')
-    .data((d) => [d])
+    .data(
+      (d) => [d],
+      () => TYPE
+    )
     .join((enter) => {
       const $bar = enter
         .append('div')
         .attr('class', (d) => `bar bar-data bar-${d.key}`);
 
-      $bar.append('p').text((d) => `${d.value}%`);
+      $bar.append('p');
 
       return $bar;
     })
+    .transition()
+    .duration(500)
     .style('width', (d) => `${scaleX(d.value)}px`);
+
+  $dataBar.select('p').text((d) => `${d.value}%`);
 }
 
 function setupData() {
@@ -112,6 +124,8 @@ function setupData() {
 
     return allData;
   });
+
+  console.log({ TYPE, propValues });
 
   setupFigure(propValues);
 }
