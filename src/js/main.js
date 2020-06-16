@@ -39,19 +39,6 @@ function resize() {
   }
 }
 
-// function setupStickyHeader() {
-//   const $header = $body.select("header");
-//   if ($header.classed("is-sticky")) {
-//     const $menu = $body.select(".header__menu");
-//     const $toggle = $body.select(".header__toggle");
-//     $toggle.on("click", () => {
-//       const visible = $menu.classed("is-visible");
-//       $menu.classed("is-visible", !visible);
-//       $toggle.classed("is-visible", !visible);
-//     });
-//   }
-// }
-
 function findReaderLoc() {
   return new Promise((resolve, reject) => {
     const key = 'fd4d87f605681c0959c16d9164ab6a4a';
@@ -121,6 +108,12 @@ function init() {
           location,
           'state'
         );
+        
+        zipMap.init(location,result[2],d3.select('.climate-map-county'),"county","climate","FS Properties at Risk 2020 (total)","FS Properties at Risk 2050 (total)");
+        zipMap.init(location,result[1],d3.select('.climate-map-zip'),"zipcode","climate","FS Properties at Risk 2020 (total)","FS Properties at Risk 2050 (total)");
+        zipMap.init(location,result[2],d3.select('.fema-map-county'),"county","fema","FEMA Properties at Risk 2020 (total)","FS Properties at Risk 2020 (total)");
+        zipMap.init(location,result[1],d3.select('.fema-map-zip'),"zipcode","fema","FEMA Properties at Risk 2020 (total)","FS Properties at Risk 2020 (total)");
+
       });
 
       // let geojson = cluster.init(result[0]);
