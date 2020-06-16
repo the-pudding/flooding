@@ -117,7 +117,7 @@ function init() {
         "FS 2020 100 Year Risk (total)",
         "FS 2050 100 Year Risk (total)"
       );
-
+      //
       zipMap.init(
         nearest,DATA["zipData"],
         d3.select('.climate-map-zip'),
@@ -126,7 +126,7 @@ function init() {
         "FS 2020 100 Year Risk (total)",
         "FS 2050 100 Year Risk (total)"
       );
-
+      //
       zipMap.init(
         nearest,
         DATA["countyData"],
@@ -136,7 +136,7 @@ function init() {
         "FEMA Properties at Risk 2020 (total)",
         "FS 2020 100 Year Risk (total)"
       );
-
+      //
       zipMap.init(
         nearest,
         DATA["zipData"],

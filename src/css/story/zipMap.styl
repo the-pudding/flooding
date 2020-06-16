@@ -2,12 +2,41 @@
   max-width 500px
   margin-top 3rem
   margin-left 2rem
+  .mapboxgl-map
+    overflow visible
+    canvas
+      outline none
+      user-select none
   &:first-of-type
     margin-left 0
 .map, .county-map
   height 300px
   width 500px
   display block
+  position relative
+  overflow visible
+  .map-tooltip
+    position absolute
+    width 130px
+    height auto
+    background #f7f7f7
+    padding .5rem
+    border-radius 5px
+    box-shadow 1px 1px 5px rgba(0,0,0,.2)
+    border 1px solid #aaa
+    pointer-events none
+    transform translate(-50%, 30px)
+    display none
+    z-index 100000
+    p
+      font-size 11px
+      margin 0
+      padding 0
+      text-align center
+      $atlas
+      &:first-of-type
+        font-weight 600
+        font-size 14px
 .map-title
   font-size 18px
   font-family $atlas
