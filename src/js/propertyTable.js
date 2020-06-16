@@ -1,3 +1,5 @@
+import searchCreate from './searchCreate.js'
+
 const formatComma = d3.format(',');
 
 const test = [];
@@ -92,34 +94,37 @@ function calculatingDistance(readerLat, readerLong, locLat, locLong) {
   return R * c;
 }
 
-function setupSearchBox(container, data) {
-  const searchContainer = container.select('.search');
-  let results = null;
-  searchContainer.select('input').on('keyup', function () {
-    if (this.value.trim().length > 2) {
-      results = searchDataset(data, this.value.trim());
-      if (results.length > 0) {
-        buildSearchResults(searchContainer, results, container, data);
-      } else {
-        container.select('.results-wrapper').style('display', null);
-      }
-    } else {
-      container.select('.results-wrapper').style('display', null);
-    }
-  });
-
-  searchContainer.node().addEventListener('focusout', (e) => {
-    const t = d3.timer(function (elapsed) {
-      if (elapsed > 200) {
-        t.stop();
-        container.select('.results-wrapper').style('display', null);
-      }
-    }, 500);
-  });
-}
+// function setupSearchBox(container, data) {
+//   const searchContainer = container.select('.search');
+//   let results = null;
+//   searchContainer.select('input').on('keyup', function () {
+//     if (this.value.trim().length > 2) {
+//       results = searchDataset(data, this.value.trim());
+//       if (results.length > 0) {
+//         buildSearchResults(searchContainer, results, container, data);
+//       } else {
+//         container.select('.results-wrapper').style('display', null);
+//       }
+//     } else {
+//       container.select('.results-wrapper').style('display', null);
+//     }
+//   });
+//
+//   searchContainer.node().addEventListener('focusout', (e) => {
+//     const t = d3.timer(function (elapsed) {
+//       if (elapsed > 200) {
+//         t.stop();
+//         container.select('.results-wrapper').style('display', null);
+//       }
+//     }, 500);
+//   });
+// }
 
 function buildTable(container, data) {
+
   geoSelected = container.attr('geo-selected');
+  citySelected = container.attr('data-city');
+  stateSelected = container.attr('data-state');
 
   container.select('.city-selected').text(citySelected);
 
@@ -140,6 +145,8 @@ function buildTable(container, data) {
         ? 1
         : 0;
     });
+
+  console.log(sortedData.slice(0,10));
   //
   const rowData = tableContainer
     .selectAll('div')
@@ -211,16 +218,17 @@ function init(data, container, locationInput, geo) {
   geoSelected = geo;
 
   container.attr('geo-selected', geoSelected);
+  container.attr('type-selected', "table");
 
   loc = locationInput[geoSelected]
 
-  console.log(locationInput);
-
-  citySelected = loc.locationName;
-  stateSelected = loc.state_iso2;
+  container.attr("data-city",loc.locationName);
+  container.attr("data-state",loc.state_iso2);
 
   buildTable(container, data);
-  setupSearchBox(container, data);
+
+  searchCreate.setupSearchBox(container,data,geoSelected)
+  //setupSearchBox(container, data);
 }
 
-export default { init };
+export default { init, buildTable };
