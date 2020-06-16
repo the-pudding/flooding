@@ -1,4 +1,4 @@
-import propertyTable from './propertyTable.js'
+import propertyTable from './propertyTable.js';
 
 const geoName = { city: '', county: ' county', state: '' };
 
@@ -22,7 +22,6 @@ function calculatingDistance(readerLat, readerLong, locLat, locLong) {
   return R * c;
 }
 
-
 function findNearest(locationInput, data) {
 
 
@@ -43,11 +42,10 @@ function findNearest(locationInput, data) {
   return locationDistance;
 }
 
-
 function buildSearchResults(searchContainer, results, container, data) {
   searchContainer.select('.results-wrapper').style('display', 'block');
 
-  let geoSelected = container.attr('geo-selected');
+  const geoSelected = container.attr('geo-selected');
 
   const resultsData = searchContainer
     .select('.results-wrapper')
@@ -68,28 +66,25 @@ function buildSearchResults(searchContainer, results, container, data) {
       }, ${d.state_iso2.toUpperCase()}`;
     })
     .on('click', function (d) {
-
-      let vizType = container.attr("type-selected");
+      const vizType = container.attr('type-selected');
       searchContainer.select('input').node().value = '';
 
-      container.attr("data-city",d.locationName);
-      container.attr("data-state",d.state_iso2);
+      container.attr('data-city', d.locationName);
+      container.attr('data-state', d.state_iso2);
 
-      let loc = findNearest(
+      const loc = findNearest(
         { latitude: +d.Latitude, longitude: +d.Longitude },
         data
       );
       container.select('.results-wrapper').style('display', null);
 
-      if(vizType == "table"){
+      if (vizType == 'table') {
         propertyTable.buildTable(container, loc);
       }
-
     });
 
   resultsData.exit().remove();
 }
-
 
 function requote(value) {
   const d3_requote_re = /[\\\^\$\*\+\?\|\[\]\(\)\.\{\}]/g;
@@ -108,10 +103,7 @@ function searchDataset(data, value) {
   // circle.classed("match", function(d) { return re.test(d.artist + " " + d.track); });
 }
 
-function setupSearchBox(container, data,geoSelected) {
-
-
-
+function setupSearchBox(container, data, geoSelected) {
   const searchContainer = container.select('.search');
   let results = null;
   searchContainer.select('input').on('keyup', function () {
@@ -137,6 +129,5 @@ function setupSearchBox(container, data,geoSelected) {
     }, 500);
   });
 }
-
 
 export default { setupSearchBox, findNearest };

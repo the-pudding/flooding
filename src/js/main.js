@@ -11,6 +11,7 @@ import zipMap from './zipMap';
 import locate from './utils/locate';
 import findNearest from './utils/find-nearest';
 import singleBars from './singleBars';
+import multiBars from './multiBars';
 
 const defaultLocation = {
   country_code: 'US',
@@ -36,6 +37,7 @@ function resize() {
   if (previousWidth !== width) {
     previousWidth = width;
     graphic.resize();
+    singleBars.resize();
   }
 }
 
@@ -43,7 +45,7 @@ function findReaderLoc() {
   return new Promise((resolve, reject) => {
     const key = 'fd4d87f605681c0959c16d9164ab6a4a';
     locate(key, (err, result) => {
-      if(err){
+      if (err) {
         reject(err);
       }
       const readerLatLong =
@@ -80,34 +82,42 @@ function init() {
     })
     .then(findReaderLoc)
     .then((readerLocation) => findNearest(readerLocation, DATA))
-    .then((nearest) => {            // pass the nearest locations for each into the appropriate graphs
+    .then((nearest) => {
+      // pass the nearest locations for each into the appropriate graphs
 
-      singleBars.init(
-        DATA,
-        nearest
-      );
-      //
+      singleBars.init(DATA, nearest);
+      multiBars.init(DATA, nearest);
+
       propertyTable.init(
-        DATA["countyData"],
+        DATA.countyData,
         d3.select('.county-table'),
         nearest,
         'county'
       );
 
       propertyTable.init(
-        DATA["cityData"],
+        DATA.cityData,
         d3.select('.city-table'),
         nearest,
         'city'
       );
       //
       propertyTable.init(
-        DATA["stateData"],
+        DATA.stateData,
         d3.select('.state-table'),
         nearest,
         'state'
       );
-      //
+
+      // add button functionality
+      d3.select('.bar-wrapper')
+        .selectAll('input')
+        .on('change', function (d) {
+          const btn = d3.select(this);
+          singleBars.singleButtonClick(btn);
+          multiBars.multiButtonClick(btn);
+        });
+
       zipMap.init(
         nearest,
         DATA["countyData"],
@@ -147,12 +157,9 @@ function init() {
         "FS 2020 100 Year Risk (total)"
       );
     })
-    .catch(error => {
+    .catch((error) => {
       console.log(error);
-    })
-    ;
-
-
+    });
 
   // find reader location
   //

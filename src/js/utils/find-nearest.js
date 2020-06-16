@@ -19,7 +19,6 @@ function calculatingDistance(readerLat, readerLong, locLat, locLong) {
 }
 
 function findNearest(readerLocation, data) {
-
   const locationDistance = data
     .map((d) => ({
       ...d,
@@ -32,8 +31,8 @@ function findNearest(readerLocation, data) {
     }))
     .filter((d) => !isNaN(d.distance));
 
-  locationDistance.sort((a, b) => d3.ascending(b.distance, a.distance));
-  return locationDistance.pop();
+  locationDistance.sort((a, b) => d3.descending(b.distance, a.distance));
+  return locationDistance.slice(0, 10);
 }
 
 export default function findLocation(readerLocation, data) {
