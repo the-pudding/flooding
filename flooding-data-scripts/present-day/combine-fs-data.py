@@ -137,7 +137,10 @@ else:
 #combined_csv = pd.concat([pd.read_csv(f) for f in configfiles ])
 df_list = []
 for f in configfiles:
-    code = f.replace("/"+fileSelected+"_Summary.csv","")[-2:]
+    if fileSelected == "City":
+        code = f.replace("/All_Cities_by_Properties_at_Risk.csv","")[-2:]
+    else:
+        code = f.replace("/"+fileSelected+"_Summary.csv","")[-2:]
     print(code)
     df = pd.read_csv(f)
     df["state_iso2"] = code
@@ -170,9 +173,72 @@ if(fileSelected == "Zipcode" or fileSelected == "County"):
         merged = pd.merge(combined_csv, train, on=columnMerge, how='left')
         del merged['unit_code']
         del merged['name']
+
+        merged.rename(columns={'FS Properties at Risk 2020 (total)':'FS 2020 100 Year Risk (total)','FS Properties at Risk 2035 (total)':'FS 2035 100 Year Risk (total)','FS Properties at Risk 2050 (total)':'FS 2050 100 Year Risk (total)'}, inplace=True)
+
+
+
         merged = merged.sort_values('Total Properties')
         merged = merged.drop_duplicates(subset=columnMerge, keep="last")
+        if 'County' in merged:
+            merged["locationName"] = merged['County']
+            del merged['County']
+        if 'FEMA Properties at Risk 2020 (pct)' in merged:
+            del merged['FEMA Properties at Risk 2020 (pct)']
+        if 'FS Properties at Risk 2020 (pct)' in merged:
+            del merged['FS Properties at Risk 2020 (pct)']
+        if 'FS Properties at Risk 2035 (pct)' in merged:
+            del merged['FS Properties at Risk 2035 (pct)']
+        if 'FS Properties at Risk 2050 (pct)' in merged:
+            del merged['FS Properties at Risk 2050 (pct)']
+        if 'FS 2020 100 Year Risk (pct)' in merged:
+            del merged['FS 2020 100 Year Risk (pct)']
+        if 'FS 2035 100 Year Risk (pct)' in merged:
+            del merged['FS 2035 100 Year Risk (pct)']
+        if 'FS 2050 100 Year Risk (pct)' in merged:
+            del merged['FS 2050 100 Year Risk (pct)']
+        if 'FS 100 year Risk Change, 2020-2050 (pct)' in merged:
+            del merged['FS 100 year Risk Change, 2020-2050 (pct)']
+        if 'FS 2020 500 Year Risk (pct)' in merged:
+            del merged['FS 2020 500 Year Risk (pct)']
+        if 'FS 2035 500 Year Risk (pct)' in merged:
+            del merged['FS 2035 500 Year Risk (pct)']
+        if 'FS 2050 500 Year Risk (pct)' in merged:
+            del merged['FS 2050 500 Year Risk (pct)']
+        if 'FS 500Risk Change, 2020-2050 (pct)' in merged:
+            del merged['FS 500Risk Change, 2020-2050 (pct)']
+        if 'FS-FEMA Difference, 2020 (pct)' in merged:
+            del merged['FS-FEMA Difference, 2020 (pct)']
+
 
         merged.to_csv(str(d)+"/state_pages/"+fileSelected+"_combined.csv", index=False, encoding='utf-8-sig')
 else:
+    combined_csv.rename(columns={'lat':'Latitude','long':'Longitude',"total_prop":"Total Properties","risk20":"FS 2020 100 Year Risk (total)","risk35":"FS 2035 100 Year Risk (total)","risk50":"FS 2050 100 Year Risk (total)"}, inplace=True)
+    if 'risk20_pct' in combined_csv:
+        del combined_csv['risk20_pct']
+    if 'risk35_pct' in combined_csv:
+        del combined_csv['risk35_pct']
+    if 'risk50_pct' in combined_csv:
+        del combined_csv['risk50_pct']
+    if 'city' in combined_csv:
+        combined_csv["locationName"] = combined_csv['city']
+        del combined_csv['city']
+    if 'FS 2020 100 Year Risk (pct)' in combined_csv:
+        del combined_csv['FS 2020 100 Year Risk (pct)']
+    if 'FS 2035 100 Year Risk (pct)' in combined_csv:
+        del combined_csv['FS 2035 100 Year Risk (pct)']
+    if 'FS 2050 100 Year Risk (pct)' in combined_csv:
+        del combined_csv['FS 2050 100 Year Risk (pct)']
+    if 'FS 100 year Risk Change, 2020-2050 (pct)' in combined_csv:
+        del combined_csv['FS 100 year Risk Change, 2020-2050 (pct)']
+    if 'FS 2020 500 Year Risk (pct)' in combined_csv:
+        del combined_csv['FS 2020 500 Year Risk (pct)']
+    if 'FS 2035 500 Year Risk (pct)' in combined_csv:
+        del combined_csv['FS 2035 500 Year Risk (pct)']
+    if 'FS 2050 500 Year Risk (pct)' in combined_csv:
+        del combined_csv['FS 2050 500 Year Risk (pct)']
+    if 'FS 500Risk Change, 2020-2050 (pct)' in combined_csv:
+        del combined_csv['FS 500Risk Change, 2020-2050 (pct)']
+    if 'FS-FEMA Difference, 2020 (pct)' in combined_csv:
+        del combined_csv['FS-FEMA Difference, 2020 (pct)']
     combined_csv.to_csv(str(d)+"/state_pages/"+fileSelected+"_combined.csv", index=False, encoding='utf-8-sig')
