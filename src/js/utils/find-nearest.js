@@ -19,6 +19,7 @@ function calculatingDistance(readerLat, readerLong, locLat, locLong) {
 }
 
 function findNearest(readerLocation, data) {
+
   const locationDistance = data
     .map((d) => ({
       ...d,

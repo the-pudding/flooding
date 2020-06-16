@@ -17,22 +17,22 @@
   flex-wrap wrap
   justify-content center
 .bar-wrapper
-  max-width $column-width 
+  max-width $column-width
   padding 0 1rem
   margin 0 auto
 
-.meta-title 
-  font-family $atlas 
+.meta-title
+  font-family $atlas
   set-type-size('xxx-large')
   font-weight 500
-  text-align center 
+  text-align center
 
-.meta-sub 
-  font-family $atlas 
+.meta-sub
+  font-family $atlas
   set-type-size('large')
   text-align center
 
-.embed 
+.embed
   font-size 16px
   text-align left
   margin 0
@@ -41,7 +41,7 @@
   margin-top 1.5rem
   font-family $atlas
 
-.figure__desc 
+.figure__desc
   font-size 16px
   text-align left
   margin 0
@@ -51,35 +51,36 @@
   font-family $atlas
   span
     font-weight 600
-  .FEMA 
-    color $fema 
-  .FS 
+  .FEMA
+    color $fema
+  .FS
     color $fs
 
-.controls-container 
-  display flex 
-  flex-direction row 
+.controls-container
+  display flex
+  flex-direction row
   align-items baseline
-  .controls-directions 
+  .controls-directions
     set-type-size('root')
     text-transform uppercase
     font-family $atlas
+    margin 0
 
-  .controls-buttons 
+  .controls-buttons
     input[type=radio]
       opacity 0
-      position absolute 
+      position absolute
       margin 0
-    label 
-      font-family $atlas 
+    label
+      font-family $atlas
       set-type-size('large')
-      font-weight bold 
-      padding 0.5rem 1rem 
-      border 1px solid $gray-light 
-      background-color $white 
+      font-weight bold
+      padding 0.5rem 1rem
+      border 1px solid $gray-light
+      background-color $white
       border-radius 5px
       margin 0
-    input:checked + label 
+    input:checked + label
         background-color $gray-light
 .climate-section, .fema-section
   margin-top 5rem

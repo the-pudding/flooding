@@ -51,6 +51,7 @@ function resize() {
 }
 
 function setupFigure(data) {
+
   const $groups = $figure
     .selectAll('.g-bar')
     .data(data, () => TYPE)
@@ -109,7 +110,6 @@ function setupData() {
   // since we're starting with the nearest to the reader
   // start by accessing the location type for the nearest data
   const nearestData = NEAREST[TYPE];
-
   // limit the nearest data to just the properties we want
   const propValues = properties.map((d) => {
     const value = Math.round(
@@ -123,8 +123,6 @@ function setupData() {
     return allData;
   });
 
-  console.log({ TYPE, propValues });
-
   setupFigure(propValues);
 }
 
@@ -134,7 +132,6 @@ function handleButtonClick() {
   TYPE = sel.attr('id');
 
   setupData();
-  console.log({ TYPE });
 }
 
 function setup() {
@@ -145,11 +142,8 @@ function setup() {
 
 function init(data, nearestLocations) {
   NEAREST = nearestLocations;
-
-  console.log({ NEAREST });
   DATA = data;
   setup();
-  console.log({ NEAREST });
 }
 
 export default { init, resize };

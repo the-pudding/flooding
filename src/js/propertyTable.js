@@ -109,8 +109,6 @@ function setupSearchBox(container, data) {
   });
 
   searchContainer.node().addEventListener('focusout', (e) => {
-    console.log(e);
-    console.log('focus out');
     const t = d3.timer(function (elapsed) {
       if (elapsed > 200) {
         t.stop();
@@ -142,7 +140,7 @@ function buildTable(container, data) {
         ? 1
         : 0;
     });
-
+  //
   const rowData = tableContainer
     .selectAll('div')
     .data(sortedData.slice(0, 10), function (d, i) {
@@ -214,9 +212,12 @@ function init(data, container, locationInput, geo) {
 
   container.attr('geo-selected', geoSelected);
 
-  loc = findNearest(locationInput, data);
-  citySelected = loc[0].locationName;
-  stateSelected = loc[0].state_iso2;
+  loc = locationInput[geoSelected]
+
+  console.log(locationInput);
+
+  citySelected = loc.locationName;
+  stateSelected = loc.state_iso2;
 
   buildTable(container, data);
   setupSearchBox(container, data);

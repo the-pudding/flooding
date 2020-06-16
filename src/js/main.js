@@ -43,6 +43,9 @@ function findReaderLoc() {
   return new Promise((resolve, reject) => {
     const key = 'fd4d87f605681c0959c16d9164ab6a4a';
     locate(key, (err, result) => {
+      if(err){
+        reject(err);
+      }
       const readerLatLong =
         err || result.country_code !== 'US'
           ? {
@@ -70,61 +73,109 @@ function init() {
   let [cityData, zipData, countyData, stateData] = [];
   let DATA = [];
 
-  loadData(['city2.csv', 'zip3.csv', 'county2.csv', 'state2.csv']).then(
-    (result) => {
-      // assign names for each dataset
-      [cityData, zipData, countyData, stateData] = result;
-      DATA = { cityData, zipData, countyData, stateData };
-    }
-  );
-
-  // find reader location
-  findReaderLoc()
-    // then find nearest zip, city, county, and state for that location
-    .then((readerLocation) => findNearest(readerLocation, DATA))
-    .then((nearest) => {
-      // pass the nearest locations for each into the appropriate graphs
-      singleBars.init(DATA, nearest);
-    });
-
   loadData(['city2.csv', 'zip3.csv', 'county2.csv', 'state2.csv'])
     .then((result) => {
-      findReaderLoc().then((location) => {
-        propertyTable.init(
-          result[2],
-          d3.select('.county-table'),
-          location,
-          'county'
-        );
-        propertyTable.init(
-          result[0],
-          d3.select('.city-table'),
-          location,
-          'city'
-        );
-        propertyTable.init(
-          result[3],
-          d3.select('.state-table'),
-          location,
-          'state'
-        );
-        
-        zipMap.init(location,result[2],d3.select('.climate-map-county'),"county","climate","FS Properties at Risk 2020 (total)","FS Properties at Risk 2050 (total)");
-        zipMap.init(location,result[1],d3.select('.climate-map-zip'),"zipcode","climate","FS Properties at Risk 2020 (total)","FS Properties at Risk 2050 (total)");
-        zipMap.init(location,result[2],d3.select('.fema-map-county'),"county","fema","FEMA Properties at Risk 2020 (total)","FS Properties at Risk 2020 (total)");
-        zipMap.init(location,result[1],d3.select('.fema-map-zip'),"zipcode","fema","FEMA Properties at Risk 2020 (total)","FS Properties at Risk 2020 (total)");
-
-      });
-
-      // let geojson = cluster.init(result[0]);
-      // graphic.init(geojson);
-      // zipMap.init(result[1],d3.select('.zip-map'),"zipcode")
-      // zipMap.init(result[2],d3.select('.county-map'),"county")
+      [cityData, zipData, countyData, stateData] = result;
+      DATA = { cityData, zipData, countyData, stateData };
     })
-    .catch(console.error);
+    .then(findReaderLoc)
+    .then((readerLocation) => findNearest(readerLocation, DATA))
+    .then((nearest) => {            // pass the nearest locations for each into the appropriate graphs
+
+      singleBars.init(
+        DATA,
+        nearest
+      );
+
+      propertyTable.init(
+        DATA["countyData"],
+        d3.select('.county-table'),
+        nearest,
+        'county'
+      );
+
+      propertyTable.init(
+        DATA["cityData"],
+        d3.select('.city-table'),
+        nearest,
+        'city'
+      );
+
+      propertyTable.init(
+        DATA["stateData"],
+        d3.select('.state-table'),
+        nearest,
+        'state'
+      );
+      //
+      zipMap.init(
+        nearest,
+        DATA["countyData"],
+        d3.select('.climate-map-county'),
+        "county",
+        "climate",
+        "FS Properties at Risk 2020 (total)",
+        "FS Properties at Risk 2050 (total)"
+      );
+
+      zipMap.init(
+        nearest,DATA["zipData"],
+        d3.select('.climate-map-zip'),
+        "zipcode",
+        "climate",
+        "FS Properties at Risk 2020 (total)",
+        "FS Properties at Risk 2050 (total)"
+      );
+
+      zipMap.init(
+        nearest,
+        DATA["countyData"],
+        d3.select('.fema-map-county'),
+        "county",
+        "fema",
+        "FEMA Properties at Risk 2020 (total)",
+        "FS Properties at Risk 2020 (total)"
+      );
+
+      zipMap.init(
+        nearest,
+        DATA["zipData"],
+        d3.select('.fema-map-zip'),
+        "zipcode",
+        "fema",
+        "FEMA Properties at Risk 2020 (total)",
+        "FS Properties at Risk 2020 (total)"
+      );
+
+
+
+
+    })
+    .catch(error => {
+      console.log(error);
+    })
+    ;
+
+
+
+  // find reader location
+  //
+  //
+  // loadData(['city2.csv', 'zip3.csv', 'county2.csv', 'state2.csv'])
+  //   .then((result) => {
+  //     findReaderLoc().then((location) => {
+  //
+  //     });
+  //
+  //     // let geojson = cluster.init(result[0]);
+  //     // graphic.init(geojson);
+  //     // zipMap.init(result[1],d3.select('.zip-map'),"zipcode")
+  //     // zipMap.init(result[2],d3.select('.county-map'),"county")
+  //   })
+  //   .catch(console.error);
 
   // load footer stories
-  footer.init();
+  // footer.init();
 }
 
 init();
