@@ -99,8 +99,6 @@ function setupFigure(data) {
 
       return $bar;
     })
-    .transition()
-    .duration(500)
     .style('width', (d) => `${scaleX(d.value)}px`);
 
   $dataBar.select('p').text((d) => `${d.value}%`);
