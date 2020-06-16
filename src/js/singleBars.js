@@ -26,17 +26,17 @@ const properties = [
     key: 'FEMA',
   },
   {
-    propertyName: 'FS Properties at Risk 2020 (total)',
+    propertyName: 'FS 2020 100 Year Risk (total)',
     text: '...according to new estimates in 2020',
     key: 'thisYear',
   },
   {
-    propertyName: 'FS Properties at Risk 2035 (total)',
+    propertyName: 'FS 2035 100 Year Risk (total)',
     text: 'in 2035',
     key: 'fifteenYears',
   },
   {
-    propertyName: 'FS Properties at Risk 2050 (total)',
+    propertyName: 'FS 2050 100 Year Risk (total)',
     text: 'in 2050',
     key: 'thirtyYears',
   },

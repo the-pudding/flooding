@@ -37,8 +37,6 @@
         line-height 2.5
         &:hover
           background #dfdfdf
-
-
   .title-wrapper
     font-size 16px
     text-align left
@@ -105,3 +103,26 @@
       p
         font-weight 400
         color rgba(0,0,0,.9)
+
+
+.city-table
+  .table
+    .row
+      &:first-of-type
+        .city-name
+          &:before
+            content 'CITY'
+        .property-count
+          &:before
+            content 'Total properties in City'
+
+.state-table
+  .table
+    .row
+      &:first-of-type
+        .city-name
+          &:before
+            content 'STATE'
+        .property-count
+          &:before
+            content 'Total properties in State'

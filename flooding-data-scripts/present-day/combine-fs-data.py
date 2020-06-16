@@ -10,6 +10,7 @@ import pandas as pd
 import json
 from pandas.io.json import json_normalize
 from pathlib import Path
+import numpy as np
 
 state_coor = {"AK":[-154.493062,63.588753],
 "AL":[-86.902298,32.318231],
@@ -166,7 +167,13 @@ if(fileSelected == "Zipcode" or fileSelected == "County"):
         if fileSelected == "County":
             train["unit_code"] = train["unit_code"].str.lstrip("0")
         train[columnMerge] = train["unit_code"].astype(str)
+
+
+
         combined_csv[columnMerge] = combined_csv[columnMerge].astype(str)
+        if fileSelected == "Zipcode":
+            combined_csv['Zipcode'] = combined_csv['Zipcode'].apply(lambda s: '0' + s if len(s) == 4 else s) 
+
         print(train[columnMerge].dtype)
         print(combined_csv[columnMerge].dtype)
 

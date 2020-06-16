@@ -2,6 +2,8 @@
 
 let loc;
 
+const geoName = { city: '', county: ' county', state: '',zipcode:'zipcode'};
+
 function getRange(scope){
   if(scope == "climate"){
     return [1,1.15];
@@ -81,21 +83,46 @@ function buildLegend(container,scope){
 
 }
 
+function toggleToolTipVisibility(container,visibility){
+   let tooltipContainer = container.select(".map").select(".map-tooltip");
+   tooltipContainer.style("display",visibility)
+}
+
+function populateToolTip(container,dataPoint,coords,OPTIONS){
+  let tooltipContainer = container.select(".map").select(".map-tooltip");
+  tooltipContainer.style("left",coords["x"]+"px").style("top",coords["y"]+"px")
+  tooltipContainer.html(
+    "<p>"+dataPoint.locationName+" "+geoName[OPTIONS.geo]+"</p>"+"<p>"+Math.round((getDataPoint(+dataPoint[OPTIONS.variableOne],+dataPoint[OPTIONS.variableTwo],OPTIONS)-1)*100)+"%"+" increase in properties affected by flooding</p>"
+  );
+}
+
+function buildToolTip(container,map){
+  let tooltipContainer = container.select(".map").append("div").attr("class","map-tooltip");
+}
+
+function getDataPoint(dataOne,dataTwo,OPTIONS){
+  if(OPTIONS.scope == "climate"){
+    return dataTwo/dataOne;
+  }
+  else if (OPTIONS.scope == "fema"){
+    return dataTwo/dataOne;
+  }
+}
+
 function init(locationInput,data,container,geo,scope,variableOne,variableTwo){
+  // let params = [locationInput,data,container,geo,scope,variableOne,variableTwo]
+  const OPTIONS = {locationInput,data,container,geo,scope,variableOne,variableTwo}
+  //for mousemove looksups
+  let dataMap = d3.map(data,function(d){
+    return +d.index;
+  });
 
   mapboxgl.accessToken = 'pk.eyJ1IjoiZG9jazQyNDIiLCJhIjoiY2pjazE5eTM2NDl2aDJ3cDUyeDlsb292NiJ9.Jr__XbmAolbLyzPDj7-8kQ';
   //mapboxgl.accessToken = "pk.eyJ1IjoibGFicy1zYW5kYm94IiwiYSI6ImNrMTZuanRtdTE3cW4zZG56bHR6MnBkZG4ifQ.YGRP0sZNYdLw5_jSa9IvXg";
 
   buildLegend(container,scope);
 
-  function getDataPoint(dataOne,dataTwo){
-    if(scope == "climate"){
-      return dataTwo/dataOne;
-    }
-    else if (scope == "fema"){
-      return dataTwo/dataOne;
-    }
-  }
+
 
   loc = findNearest(locationInput,data);
 
@@ -108,10 +135,12 @@ function init(locationInput,data,container,geo,scope,variableOne,variableTwo){
     zoom: getZoom(scope,geo)
   });
 
+  buildToolTip(container,map);
+
   let range = getRange(scope);
 
   let dataKey = d3.map(data,function(d){return +d["index"]});
-  let variableExtent = d3.extent(data,function(d){return getDataPoint(+d[variableOne],+d[variableTwo]); });
+  let variableExtent = d3.extent(data,function(d){return getDataPoint(+d[variableOne],+d[variableTwo],OPTIONS); });
   let colorScale = d3.scaleLinear().domain(range).range([.1,1]).clamp(true);
 
   function getColor(d){
@@ -126,7 +155,7 @@ function init(locationInput,data,container,geo,scope,variableOne,variableTwo){
 
   for (var row in data){
     let mapboxId = +data[row]["index"];
-    let pctChange = getDataPoint(+data[row][variableOne],+data[row][variableTwo]);
+    let pctChange = getDataPoint(+data[row][variableOne],+data[row][variableTwo],OPTIONS);
 
     if(pctChange == "inf"){
       pctChange = range[1];
@@ -171,6 +200,7 @@ function init(locationInput,data,container,geo,scope,variableOne,variableTwo){
       //url: "mapbox://mapbox.enterprise-boundaries-p2-v1"
       url:url//.json?secure&access_token=pk.eyJ1IjoibGFicy1zYW5kYm94IiwiYSI6ImNrMTZuanRtdTE3cW4zZG56bHR6MnBkZG4ifQ.YGRP0sZNYdLw5_jSa9IvXg
     });
+
     map.addLayer({
       "id": "postal-2-fill",
       "type": "fill",
@@ -183,10 +213,68 @@ function init(locationInput,data,container,geo,scope,variableOne,variableTwo){
       }
     },"admin-1-boundary");
 
+    map.addLayer({
+      "id": "postal-2-line",
+      "type": "line",
+      "source": "postal-2",
+      "source-layer": source,
+      "paint": {
+          "line-width":2,
+          "line-opacity":1,
+          "line-color":"black"
+      },
+      'filter': ['==', 'id', 123]
+    });
+
+    let timeout = null;
+
     map.on('mousemove', function(e){
+
       const features = map.queryRenderedFeatures(e.point, { layers: ["postal-2-fill"] });
-      let point = features[0]//["id"];
-      console.log(features);
+      if(features.length > 0){
+        if(Object.keys(features[0]).indexOf("id") > -1){
+          let point = features[0]["id"];
+
+          if(dataMap.has(+point)){
+            let dataPoint = dataMap.get(+point);
+            populateToolTip(container,dataPoint,e.point,OPTIONS);
+            toggleToolTipVisibility(container,"block")
+
+            clearTimeout(timeout);
+            timeout = setTimeout(function(){
+              map.setFilter('postal-2-line', [
+                'match',
+                ['id'],
+                point,
+                true,
+                false
+              ]);
+            },15)
+
+          }
+          else{
+            toggleToolTipVisibility(container,"none")
+          };
+        }
+        else {
+          toggleToolTipVisibility(container,"none")
+        }
+      } else {
+        toggleToolTipVisibility(container,"none")
+      }
+
+
+    })
+    .on("mouseout",function(d){
+      clearTimeout(timeout);
+      map.setFilter('postal-2-line', [
+        'match',
+        ['id'],
+        123,
+        true,
+        false
+      ])
+      toggleToolTipVisibility(container,"none")
     })
 
   })
