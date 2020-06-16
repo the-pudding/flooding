@@ -76,7 +76,6 @@ function buildSearchResults(searchContainer, results, container, data) {
         { latitude: +d.Latitude, longitude: +d.Longitude },
         data
       );
-
       container.select('.results-wrapper').style('display', null);
 
       if(vizType == "table"){
