@@ -21,7 +21,6 @@ function buildTable(container, data) {
 
   const tableContainer = container.select('.table');
   // let indexOfSelected = findWithAttr(data,"name",citySelected);
-
   const sortedData = data
     .filter(function (d) {
       if (geoSelected == 'state') {
@@ -37,8 +36,6 @@ function buildTable(container, data) {
         : 0;
     });
 
-  console.log(sortedData.slice(0,10));
-  //
   const rowData = tableContainer
     .selectAll('div')
     .data(sortedData.slice(0, 10), function (d, i) {
@@ -68,7 +65,7 @@ function buildTable(container, data) {
   const floodedProperties = row
     .append('p')
     .text(function (d) {
-      return formatComma(Math.round(d['FEMA Properties at Risk 2020 (total)']));
+      return formatComma(Math.round(d['FS 2020 100 Year Risk (total)']));
     })
     .attr('class', 'flooded-property-count');
   const properties = row
@@ -81,7 +78,7 @@ function buildTable(container, data) {
     .append('p')
     .text(function (d) {
       return `${Math.round(
-        (d['FEMA Properties at Risk 2020 (total)'] / d['Total Properties']) *
+        (d['FS 2020 100 Year Risk (total)'] / d['Total Properties']) *
           100
       )}%`;
     })
@@ -116,7 +113,13 @@ function init(data, container, locationInput, geo) {
   container.attr("data-city",loc.locationName);
   container.attr("data-state",loc.state_iso2);
 
-  buildTable(container, data);
+  //re-sort data to be closest to location
+  let locData = searchCreate.findNearest(
+    { latitude: +loc.Latitude, longitude: +loc.Longitude },
+    data
+  );
+
+  buildTable(container, locData);
 
   searchCreate.setupSearchBox(container,data,geoSelected)
   //setupSearchBox(container, data);

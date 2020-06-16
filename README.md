@@ -30,7 +30,7 @@ This folder contains python scripts to pull historic event data. Note that these
 
 This script goes through the main state zip file via Google Drive and combines files.
 
-use flag --file [geo], where geo is either "County", "Zipcode", or "City"
+use flag --file [geo], where geo is either "County", "Zipcode", "State", or "City"
 
 ### tiles_to_tiff.py
 This script will convert tiles from the first street tile service to a merged tif file.

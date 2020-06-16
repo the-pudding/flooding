@@ -24,6 +24,8 @@ function calculatingDistance(readerLat, readerLong, locLat, locLong) {
 
 
 function findNearest(locationInput, data) {
+
+
   const locationDistance = data
     .map((d) => ({
       ...d,
@@ -35,6 +37,7 @@ function findNearest(locationInput, data) {
       ),
     }))
     .filter((d) => !isNaN(d.distance));
+
 
   locationDistance.sort((a, b) => d3.descending(b.distance, a.distance));
   return locationDistance;
@@ -115,8 +118,6 @@ function setupSearchBox(container, data,geoSelected) {
     if (this.value.trim().length > 2) {
       results = searchDataset(data, this.value.trim());
 
-      console.log(results);
-
       if (results.length > 0) {
         buildSearchResults(searchContainer, results, container, data);
       } else {
@@ -138,4 +139,4 @@ function setupSearchBox(container, data,geoSelected) {
 }
 
 
-export default { setupSearchBox };
+export default { setupSearchBox, findNearest };
