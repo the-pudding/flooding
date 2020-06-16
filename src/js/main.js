@@ -101,7 +101,7 @@ function init() {
         nearest,
         'city'
       );
-      //
+      // //
       propertyTable.init(
         DATA.stateData,
         d3.select('.state-table'),
@@ -109,7 +109,7 @@ function init() {
         'state'
       );
 
-      // add button functionality
+      //add button functionality
       d3.select('.bar-wrapper')
         .selectAll('input')
         .on('change', function (d) {

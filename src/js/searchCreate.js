@@ -3,6 +3,7 @@ import propertyTable from './propertyTable.js';
 const geoName = { city: '', county: ' county', state: '' };
 
 function calculatingDistance(readerLat, readerLong, locLat, locLong) {
+  console.log(readerLat, readerLong, locLat, locLong);
   // Haversine Formula
   function toRadians(value) {
     return (value * Math.PI) / 180;
@@ -24,6 +25,7 @@ function calculatingDistance(readerLat, readerLong, locLat, locLong) {
 
 function findNearest(locationInput, data) {
 
+  console.log(locationInput);
 
   const locationDistance = data
     .map((d) => ({
@@ -37,8 +39,8 @@ function findNearest(locationInput, data) {
     }))
     .filter((d) => !isNaN(d.distance));
 
-
   locationDistance.sort((a, b) => d3.descending(b.distance, a.distance));
+
   return locationDistance;
 }
 

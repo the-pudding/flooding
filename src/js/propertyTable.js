@@ -22,12 +22,12 @@ function buildTable(container, data) {
   const tableContainer = container.select('.table');
   // let indexOfSelected = findWithAttr(data,"name",citySelected);
   const sortedData = data
-    .filter(function (d) {
-      if (geoSelected == 'state') {
-        return d;
-      }
-      return d.state_iso2 == stateSelected;
-    })
+    // .filter(function (d) {
+    //   if (geoSelected == 'state') {
+    //     return d;
+    //   }
+    //   return d.state_iso2 == stateSelected;
+    // })
     .sort(function (x, y) {
       return x.locationName == citySelected
         ? -1
@@ -108,18 +108,20 @@ function init(data, container, locationInput, geo) {
   container.attr('geo-selected', geoSelected);
   container.attr('type-selected', "table");
 
-  loc = locationInput[geoSelected]
+  loc = locationInput[geoSelected][0]
 
   container.attr("data-city",loc.locationName);
   container.attr("data-state",loc.state_iso2);
 
   //re-sort data to be closest to location
-  let locData = searchCreate.findNearest(
-    { latitude: +loc.Latitude, longitude: +loc.Longitude },
-    data
-  );
+  // let locData = searchCreate.findNearest(
+  //   { latitude: +loc.Latitude, longitude: +loc.Longitude },
+  //   data
+  // );
 
-  buildTable(container, locData);
+  console.log(locationInput[geo]);
+
+  buildTable(container, locationInput[geo]);
 
   searchCreate.setupSearchBox(container,data,geoSelected)
   //setupSearchBox(container, data);
