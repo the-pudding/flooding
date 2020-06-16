@@ -174,10 +174,8 @@ function setupData() {
   $desc.select('.count').text(FORMAT_NUMBER(diff));
 }
 
-function handleButtonClick() {
-  const sel = d3.select(this);
-
-  TYPE = sel.attr('id');
+function multiButtonClick(btn) {
+  TYPE = btn.attr('id');
 
   setupData();
 }
@@ -185,7 +183,6 @@ function handleButtonClick() {
 function setup() {
   resize();
   setupData();
-  $buttons.on('change', handleButtonClick);
 }
 
 function init(data, nearestLocations) {
@@ -194,4 +191,4 @@ function init(data, nearestLocations) {
   setup();
 }
 
-export default { init, resize };
+export default { init, resize, multiButtonClick };

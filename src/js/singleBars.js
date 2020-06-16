@@ -49,6 +49,8 @@ function resize() {
     .domain([0, 100])
     .range([0, width - MARGIN_LEFT])
     .nice();
+
+  setupData();
 }
 
 function setupFigure(data) {
@@ -133,18 +135,14 @@ function setupData() {
     );
 }
 
-function handleButtonClick() {
-  const sel = d3.select(this);
-
-  TYPE = sel.attr('id');
+function singleButtonClick(btn) {
+  TYPE = btn.attr('id');
 
   setupData();
 }
 
 function setup() {
   resize();
-  setupData();
-  $buttons.on('change', handleButtonClick);
 }
 
 function init(data, nearestLocations) {
@@ -153,4 +151,4 @@ function init(data, nearestLocations) {
   setup();
 }
 
-export default { init, resize };
+export default { init, resize, singleButtonClick };

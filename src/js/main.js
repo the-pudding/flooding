@@ -108,45 +108,15 @@ function init() {
         nearest,
         'state'
       );
-      //
-      // zipMap.init(
-      //   nearest,
-      //   DATA["countyData"],
-      //   d3.select('.climate-map-county'),
-      //   "county",
-      //   "climate",
-      //   "FS Properties at Risk 2020 (total)",
-      //   "FS Properties at Risk 2050 (total)"
-      // );
-      //
-      // zipMap.init(
-      //   nearest,DATA["zipData"],
-      //   d3.select('.climate-map-zip'),
-      //   "zipcode",
-      //   "climate",
-      //   "FS Properties at Risk 2020 (total)",
-      //   "FS Properties at Risk 2050 (total)"
-      // );
-      //
-      // zipMap.init(
-      //   nearest,
-      //   DATA["countyData"],
-      //   d3.select('.fema-map-county'),
-      //   "county",
-      //   "fema",
-      //   "FEMA Properties at Risk 2020 (total)",
-      //   "FS Properties at Risk 2020 (total)"
-      // );
-      //
-      // zipMap.init(
-      //   nearest,
-      //   DATA["zipData"],
-      //   d3.select('.fema-map-zip'),
-      //   "zipcode",
-      //   "fema",
-      //   "FEMA Properties at Risk 2020 (total)",
-      //   "FS Properties at Risk 2020 (total)"
-      // );
+
+      // add button functionality
+      d3.select('.bar-wrapper')
+        .selectAll('input')
+        .on('change', function (d) {
+          const btn = d3.select(this);
+          singleBars.singleButtonClick(btn);
+          multiBars.multiButtonClick(btn);
+        });
     })
     .catch((error) => {
       console.log(error);
