@@ -9,6 +9,7 @@ let TYPE = 'county';
 const $section = d3.select("[data-js='bars']");
 const $container = $section.select("[data-js='bar__figure-single']");
 const $figure = $container.select("[data-js='bar__container-single']");
+const $desc = $container.select('.figure__desc');
 const $buttons = $section.selectAll('input');
 
 // scales
@@ -51,7 +52,6 @@ function resize() {
 }
 
 function setupFigure(data) {
-
   const $groups = $figure
     .selectAll('.g-bar')
     .data(data, () => TYPE)
@@ -109,7 +109,7 @@ function setupFigure(data) {
 function setupData() {
   // since we're starting with the nearest to the reader
   // start by accessing the location type for the nearest data
-  const nearestData = NEAREST[TYPE];
+  const nearestData = NEAREST[TYPE][0];
   // limit the nearest data to just the properties we want
   const propValues = properties.map((d) => {
     const value = Math.round(
@@ -124,6 +124,15 @@ function setupData() {
   });
 
   setupFigure(propValues);
+
+  // update figure description
+  $desc
+    .select('.reader')
+    .text(
+      TYPE === 'county'
+        ? `${nearestData.locationName} County`
+        : nearestData.locationName
+    );
 }
 
 function handleButtonClick() {
