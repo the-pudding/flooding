@@ -5,10 +5,10 @@ function init(data){
   data = data.map(function(row){
     return {
       "type":"Feature",
-      "properties":{"fsid":row.fsid,count:+row.count},
+      "properties":{count:+row["FS 2020 100 Year Risk (total)"]},
       "geometry":{
         "type":"Point",
-        "coordinates":[row.longitude,row.latitude]
+        "coordinates":[row.Longitude,row.Latitude]
       }
     }
   })

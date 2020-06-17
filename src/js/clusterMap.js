@@ -7,26 +7,64 @@ import locate from './utils/locate';
 function resize() {}
 
 function init(data) {
+
+  console.log(data);
+
     mapboxgl.accessToken = 'pk.eyJ1IjoiZG9jazQyNDIiLCJhIjoiY2pjazE5eTM2NDl2aDJ3cDUyeDlsb292NiJ9.Jr__XbmAolbLyzPDj7-8kQ';
 
         var map = new mapboxgl.Map({
-          container: 'mapbox-map',
+          container: 'city-cluster',
           style: 'mapbox://styles/mapbox/light-v10',
           // style: 'mapbox://styles/nytgraphics/cjmsjh9u308ze2rpk2vh41efx?optimize=true',
           center: [-84.191605, 39.758949],
-          minZoom: 1,
-          clusterMaxZoom: 14, // Max zoom to cluster points on
-          zoom: 6
+          minZoom: 4,
+          clusterMaxZoom: 10, // Max zoom to cluster points on
+          zoom: 4
       });
 
 
       map.on('load', function() {
 
 
+        map.addSource("postal-2", {
+          type: "vector",
+          url:'mapbox://mapbox.boundaries-pos4-v3'//.json?secure&access_token=pk.eyJ1IjoibGFicy1zYW5kYm94IiwiYSI6ImNrMTZuanRtdTE3cW4zZG56bHR6MnBkZG4ifQ.YGRP0sZNYdLw5_jSa9IvXg
+        });
+
+        map.addLayer({
+          "id": "postal-2-fill",
+          "type": "fill",
+          "source": "postal-2",
+          "source-layer": 'boundaries_postal_4',
+          "paint": {
+              "fill-outline-color":"rgba(0,0,0,0)",
+              "fill-opacity":.1,
+              "fill-color": "#000"
+          },
+          'minzoom':7
+
+        },"admin-1-boundary");
+
+        map.addLayer({
+          "id": "postal-2-line",
+          "type": "line",
+          "source": "postal-2",
+          "source-layer": 'boundaries_postal_4',
+          'minzoom':7,
+          "paint": {
+              "line-width":1,
+              "line-opacity": .8,
+              "line-color":"#aaa"
+          }
+        });
+
+
+
         map.addSource('points', {
           'type': 'geojson',
           'data': data,
           'cluster':true,
+          'clusterRadius': 30,
           'clusterProperties':{
             'pointTotal':["+", ["get", "count"]]
           }
@@ -38,10 +76,40 @@ function init(data) {
           source: 'points',
           filter: ['!', ['has', 'point_count']],
           paint: {
-          'circle-color': '#11b4da',
-          'circle-radius': 4,
-          'circle-stroke-width': 1,
-          'circle-stroke-color': '#fff'
+            'circle-opacity':.5,
+            'circle-color': "#000",
+            'circle-radius':
+            [
+              "interpolate",
+              ["linear"],
+              ["zoom"],
+              4,
+              [
+                "interpolate",
+                ["linear"],
+                [
+                  "get",
+                  "count"
+                ],
+                10000,
+                5,
+                200000,
+                30
+              ],
+              9,
+              [
+                "interpolate",
+                ["linear"],
+                [
+                  "get",
+                  "count"
+                ],
+                500,
+                5,
+                10000,
+                30
+              ]
+            ]
           }
         });
 
@@ -51,11 +119,7 @@ function init(data) {
           source: 'points',
           filter: ['has', 'point_count'],
           paint: {
-          // Use step expressions (https://docs.mapbox.com/mapbox-gl-js/style-spec/#expressions-step)
-          // with three steps to implement three types of circles:
-          //   * Blue, 20px circles when point count is less than 100
-          //   * Yellow, 30px circles when point count is between 100 and 750
-          //   * Pink, 40px circles when point count is greater than or equal to 750
+            'circle-opacity':.8,
             'circle-color': [
               'step',
               ['get', 'pointTotal'],
@@ -65,19 +129,38 @@ function init(data) {
               10000,
               '#f28cb1'
             ],
-            'circle-radius': [
-              'step',
-              ['get', 'pointTotal'],
-              5,
-              500,
-              10,
-              1000,
-              20,
-              5000,
-              30,
-              10000,
-              50
+            'circle-radius':
 
+            [
+              "interpolate",
+              ["linear"],
+              ["zoom"],
+              4,
+              [
+                "interpolate",
+                ["linear"],
+                [
+                  "get",
+                  "pointTotal"
+                ],
+                10000,
+                5,
+                200000,
+                30
+              ],
+              9,
+              [
+                "interpolate",
+                ["linear"],
+                [
+                  "get",
+                  "pointTotal"
+                ],
+                500,
+                5,
+                10000,
+                30
+              ]
             ]
           }
         });
@@ -90,13 +173,27 @@ function init(data) {
 
           //'filter': ['!=', 'cluster', true],
           'layout': {
-            'text-field': ["get", "pointTotal"],
+            'text-field': [
+              'number-format',
+              ['get', 'pointTotal'],
+              { 'min-fraction-digits': 0, 'max-fraction-digits': 0 }
+            ],
             'text-font': ['Open Sans Semibold', 'Arial Unicode MS Bold'],
             'text-size': 10
           }
         });
 
-          map.on('click', 'clusters', function(e) {
+        map.on('mousemove', function(e){
+
+          const features = map.queryRenderedFeatures(e.point, { layers: ["unclustered-point"] });
+          if(features.length > 0){
+            console.log(features[0]);
+          }
+
+
+        });
+
+          // map.on('click', 'clusters', function(e) {
             // var features = map.queryRenderedFeatures(e.point, {
             //   layers: ['clusters']
             // });
@@ -112,7 +209,7 @@ function init(data) {
             //   console.log('Cluster leaves:', error, features);
             // })
 
-          });
+          // });
 
 
 

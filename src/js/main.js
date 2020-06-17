@@ -2,9 +2,9 @@
 import debounce from 'lodash.debounce';
 import isMobile from './utils/is-mobile';
 import linkFix from './utils/link-fix';
-import graphic from './graphic';
 import footer from './footer';
-import cluster from './cluster';
+import createGeojson from './createGeojson';
+import clusterMap from './clusterMap';
 import loadData from './load-data';
 import propertyTable from './propertyTable';
 import zipMap from './zipMap';
@@ -36,7 +36,6 @@ function resize() {
   const width = $body.node().offsetWidth;
   if (previousWidth !== width) {
     previousWidth = width;
-    graphic.resize();
     singleBars.resize();
   }
 }
@@ -76,7 +75,7 @@ function init() {
   let [cityData, zipData, countyData, stateData] = [];
   let DATA = [];
 
-  loadData(['city4.csv', 'zip4.csv', 'county4.csv', 'state4.csv'])
+  loadData(['city4.csv', 'zip4-1.csv', 'county4.csv', 'state4.csv'])
     .then((result) => {
       [cityData, zipData, countyData, stateData] = result;
       DATA = { cityData, zipData, countyData, stateData };
@@ -130,44 +129,46 @@ function init() {
       );
 
 
-      // zipMap.init(
-      //   nearest,
-      //   DATA["countyData"],
-      //   d3.select('.climate-map-county'),
-      //   "county",
-      //   "climate",
-      //   "FS 2020 100 Year Risk (total)",
-      //   "FS 2050 100 Year Risk (total)"
-      // );
-      // //
-      // zipMap.init(
-      //   nearest,DATA["zipData"],
-      //   d3.select('.climate-map-zip'),
-      //   "zipcode",
-      //   "climate",
-      //   "FS 2020 100 Year Risk (total)",
-      //   "FS 2050 100 Year Risk (total)"
-      // );
+      zipMap.init(
+        nearest,
+        DATA["countyData"],
+        d3.select('.climate-map-county'),
+        "county",
+        "climate",
+        "FS 2020 100 Year Risk (total)",
+        "FS 2050 100 Year Risk (total)"
+      );
       //
-      // zipMap.init(
-      //   nearest,
-      //   DATA["countyData"],
-      //   d3.select('.fema-map-county'),
-      //   "county",
-      //   "fema",
-      //   "FEMA Properties at Risk 2020 (total)",
-      //   "FS 2020 100 Year Risk (total)"
-      // );
-      // //
-      // zipMap.init(
-      //   nearest,
-      //   DATA["zipData"],
-      //   d3.select('.fema-map-zip'),
-      //   "zipcode",
-      //   "fema",
-      //   "FEMA Properties at Risk 2020 (total)",
-      //   "FS 2020 100 Year Risk (total)"
-      // );
+      zipMap.init(
+        nearest,DATA["zipData"],
+        d3.select('.climate-map-zip'),
+        "zipcode",
+        "climate",
+        "FS 2020 100 Year Risk (total)",
+        "FS 2050 100 Year Risk (total)"
+      );
+
+      zipMap.init(
+        nearest,
+        DATA["countyData"],
+        d3.select('.fema-map-county'),
+        "county",
+        "fema",
+        "FEMA Properties at Risk 2020 (total)",
+        "FS 2020 100 Year Risk (total)"
+      );
+      //
+      zipMap.init(
+        nearest,
+        DATA["zipData"],
+        d3.select('.fema-map-zip'),
+        "zipcode",
+        "fema",
+        "FEMA Properties at Risk 2020 (total)",
+        "FS 2020 100 Year Risk (total)"
+      );
+
+      clusterMap.init(createGeojson.init(DATA["zipData"]));
     })
     .catch((error) => {
       console.log(error);
