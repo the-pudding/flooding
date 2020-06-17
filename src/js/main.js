@@ -86,32 +86,12 @@ function init() {
     .then((nearest) => {
       // pass the nearest locations for each into the appropriate graphs
 
+
+      //setup bars
       singleBars.init(DATA, nearest);
       multiBars.init(DATA, nearest);
-      //
-      propertyTable.init(
-        DATA.countyData,
-        d3.select('.county-table'),
-        nearest,
-        'county'
-      );
 
-      propertyTable.init(
-        DATA.cityData,
-        d3.select('.city-table'),
-        nearest,
-        'city'
-      );
-      // //
-      propertyTable.init(
-        DATA.stateData,
-        d3.select('.state-table'),
-        nearest,
-        'state'
-      );
-
-      //add button functionality
-      d3.select('.bar-wrapper')
+      d3.select(".bar-wrapper")
         .selectAll('input')
         .on('change', function (d) {
           const btn = d3.select(this);
@@ -119,44 +99,75 @@ function init() {
           multiBars.multiButtonClick(btn);
         });
 
-      zipMap.init(
+
+      //setup tables
+      let tableSelected = d3.select(".table-wrapper").select('input[name="table-controls"]:checked').attr("value");
+      propertyTable.tableButtonClick(tableSelected);
+
+      d3.select(".table-wrapper")
+        .selectAll('input')
+        .on('change', function (d) {
+          propertyTable.tableButtonClick(d3.select(this).attr("value"));
+        });
+
+      propertyTable.init(
+        DATA.countyData,
+        d3.select('.county-table'),
         nearest,
-        DATA["countyData"],
-        d3.select('.climate-map-county'),
-        "county",
-        "climate",
-        "FS 2020 100 Year Risk (total)",
-        "FS 2050 100 Year Risk (total)"
+        'county'
       );
-      //
-      zipMap.init(
-        nearest,DATA["zipData"],
-        d3.select('.climate-map-zip'),
-        "zipcode",
-        "climate",
-        "FS 2020 100 Year Risk (total)",
-        "FS 2050 100 Year Risk (total)"
+      propertyTable.init(
+        DATA.cityData,
+        d3.select('.city-table'),
+        nearest,
+        'city'
+      );
+      propertyTable.init(
+        DATA.stateData,
+        d3.select('.state-table'),
+        nearest,
+        'state'
       );
 
-      zipMap.init(
-        nearest,
-        DATA["countyData"],
-        d3.select('.fema-map-county'),
-        "county",
-        "fema",
-        "FEMA Properties at Risk 2020 (total)",
-        "FS 2020 100 Year Risk (total)"
-      );
+
+      // zipMap.init(
+      //   nearest,
+      //   DATA["countyData"],
+      //   d3.select('.climate-map-county'),
+      //   "county",
+      //   "climate",
+      //   "FS 2020 100 Year Risk (total)",
+      //   "FS 2050 100 Year Risk (total)"
+      // );
+      // //
+      // zipMap.init(
+      //   nearest,DATA["zipData"],
+      //   d3.select('.climate-map-zip'),
+      //   "zipcode",
+      //   "climate",
+      //   "FS 2020 100 Year Risk (total)",
+      //   "FS 2050 100 Year Risk (total)"
+      // );
       //
-      zipMap.init(
-        nearest,
-        DATA["zipData"],
-        d3.select('.fema-map-zip'),
-        "zipcode",
-        "fema",
-        "FEMA Properties at Risk 2020 (total)",
-        "FS 2020 100 Year Risk (total)"
-      );
+      // zipMap.init(
+      //   nearest,
+      //   DATA["countyData"],
+      //   d3.select('.fema-map-county'),
+      //   "county",
+      //   "fema",
+      //   "FEMA Properties at Risk 2020 (total)",
+      //   "FS 2020 100 Year Risk (total)"
+      // );
+      // //
+      // zipMap.init(
+      //   nearest,
+      //   DATA["zipData"],
+      //   d3.select('.fema-map-zip'),
+      //   "zipcode",
+      //   "fema",
+      //   "FEMA Properties at Risk 2020 (total)",
+      //   "FS 2020 100 Year Risk (total)"
+      // );
     })
     .catch((error) => {
       console.log(error);

@@ -11,6 +11,11 @@ let loc = null;
 
 const geoName = { city: '', county: ' county', state: '' };
 
+function tableButtonClick(btn) {
+  d3.select(".table-wrapper").selectAll(".property-table").style("display",null);
+  d3.select(".table-wrapper").select("."+btn+"-table").style("display","block");
+}
+
 function buildTable(container, data) {
 
   geoSelected = container.attr('geo-selected');
@@ -127,4 +132,4 @@ function init(data, container, locationInput, geo) {
   //setupSearchBox(container, data);
 }
 
-export default { init, buildTable };
+export default { init, buildTable, tableButtonClick };
