@@ -149,7 +149,16 @@ for f in configfiles:
         df["locationName"] = state_names[code.upper()]
         df["Longitude"] = state_coor[code.upper()][0]
         df["Latitude"] = state_coor[code.upper()][1]
+
+    if(fileSelected == "Zipcode"):
+        zipCoords = pd.read_csv("post-coords.csv", dtype=object)
+        df['Zipcode'] = df['Zipcode'].astype(str)
+        df['Zipcode'] = df['Zipcode'].apply(lambda s: '0' + s if s < 1000 else s)
+        df['Zipcode'] = df['Zipcode'].apply(lambda s: '00' + s if len(s) == 3 else s)
+        df = pd.merge(df, zipCoords, on="Zipcode", how='left')
     df_list.append(df)
+#
+#
 combined_csv = pd.concat(df_list)
 
 file = 'post4.json'
@@ -169,13 +178,7 @@ if(fileSelected == "Zipcode" or fileSelected == "County"):
         train[columnMerge] = train["unit_code"].astype(str)
 
 
-
         combined_csv[columnMerge] = combined_csv[columnMerge].astype(str)
-        if fileSelected == "Zipcode":
-            combined_csv['Zipcode'] = combined_csv['Zipcode'].apply(lambda s: '0' + s if len(s) == 4 else s)
-
-        print(train[columnMerge].dtype)
-        print(combined_csv[columnMerge].dtype)
 
         merged = pd.merge(combined_csv, train, on=columnMerge, how='left')
         del merged['unit_code']
@@ -216,8 +219,6 @@ if(fileSelected == "Zipcode" or fileSelected == "County"):
             del merged['FS 500Risk Change, 2020-2050 (pct)']
         if 'FS-FEMA Difference, 2020 (pct)' in merged:
             del merged['FS-FEMA Difference, 2020 (pct)']
-
-
         merged.to_csv(str(d)+"/state_pages/"+fileSelected+"_combined.csv", index=False, encoding='utf-8-sig')
 else:
     combined_csv.rename(columns={"FEMA Properties at Risk 2020":"FEMA Properties at Risk 2020 (total)",'lat':'Latitude','long':'Longitude',"total_prop":"Total Properties","risk20":"FS 2020 100 Year Risk (total)","risk35":"FS 2035 100 Year Risk (total)","risk50":"FS 2050 100 Year Risk (total)"}, inplace=True)
