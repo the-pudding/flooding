@@ -172,7 +172,7 @@ if(fileSelected == "Zipcode" or fileSelected == "County"):
 
         combined_csv[columnMerge] = combined_csv[columnMerge].astype(str)
         if fileSelected == "Zipcode":
-            combined_csv['Zipcode'] = combined_csv['Zipcode'].apply(lambda s: '0' + s if len(s) == 4 else s) 
+            combined_csv['Zipcode'] = combined_csv['Zipcode'].apply(lambda s: '0' + s if len(s) == 4 else s)
 
         print(train[columnMerge].dtype)
         print(combined_csv[columnMerge].dtype)
@@ -220,7 +220,7 @@ if(fileSelected == "Zipcode" or fileSelected == "County"):
 
         merged.to_csv(str(d)+"/state_pages/"+fileSelected+"_combined.csv", index=False, encoding='utf-8-sig')
 else:
-    combined_csv.rename(columns={'lat':'Latitude','long':'Longitude',"total_prop":"Total Properties","risk20":"FS 2020 100 Year Risk (total)","risk35":"FS 2035 100 Year Risk (total)","risk50":"FS 2050 100 Year Risk (total)"}, inplace=True)
+    combined_csv.rename(columns={"FEMA Properties at Risk 2020":"FEMA Properties at Risk 2020 (total)",'lat':'Latitude','long':'Longitude',"total_prop":"Total Properties","risk20":"FS 2020 100 Year Risk (total)","risk35":"FS 2035 100 Year Risk (total)","risk50":"FS 2050 100 Year Risk (total)"}, inplace=True)
     if 'risk20_pct' in combined_csv:
         del combined_csv['risk20_pct']
     if 'risk35_pct' in combined_csv:

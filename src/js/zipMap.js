@@ -220,13 +220,57 @@ function init(locationInput,data,container,geo,scope,variableOne,variableTwo){
       "source-layer": source,
       "paint": {
           "line-width":2,
-          "line-opacity":1,
+          "line-opacity":[
+            'case',
+            ['boolean', ['feature-state', 'hover'], false],
+            1,
+            0
+          ],
           "line-color":"black"
-      },
-      'filter': ['==', 'id', 123]
+      }
+      //,
+      //'filter': ['==', 'id', 123]
     });
 
+
+    // Join the JSON unemployment data with the corresponding vector features where
+     // feautre.unit_code === `STATE_ID`.
+     function setStates(e) {
+
+       //console.log("setting states");
+
+       data.forEach(function(row) {
+         map.setFeatureState({
+           source: 'postal-2',
+           sourceLayer: source,
+           id: +row["index"]
+         }, {
+           hover: false
+         });
+       });
+     }
+
+     // Check if `statesData` source is loaded.
+     function setAfterLoad(e) {
+       if (e.sourceId === 'postal-2' && e.isSourceLoaded) {
+         setStates();
+         map.off('sourcedata', setAfterLoad);
+       }
+     }
+
+     // If `statesData` source is loaded, call `setStates()`.
+     if (map.isSourceLoaded('postal-2')) {
+       setStates();
+     } else {
+       map.on('sourcedata', setAfterLoad);
+     }
+
+
+
+
+
     let timeout = null;
+    let selectedGeo = null;
 
     map.on('mousemove', function(e){
 
@@ -236,20 +280,38 @@ function init(locationInput,data,container,geo,scope,variableOne,variableTwo){
           let point = features[0]["id"];
 
           if(dataMap.has(+point)){
-            let dataPoint = dataMap.get(+point);
-            populateToolTip(container,dataPoint,e.point,OPTIONS);
-            toggleToolTipVisibility(container,"block")
 
-            clearTimeout(timeout);
-            timeout = setTimeout(function(){
-              map.setFilter('postal-2-line', [
-                'match',
-                ['id'],
-                point,
-                true,
-                false
-              ]);
-            },15)
+            //dont fire event every mousemove
+            if(selectedGeo != point){
+
+              let dataPoint = dataMap.get(+point);
+              populateToolTip(container,dataPoint,e.point,OPTIONS);
+              toggleToolTipVisibility(container,"block")
+
+                if (selectedGeo) {
+
+                  map.setFeatureState({
+                    source: 'postal-2',
+                    sourceLayer: source,
+                    id: selectedGeo
+                  }, {
+                    hover: false
+                  });
+
+                }
+
+
+                selectedGeo = point;
+
+                map.setFeatureState({
+                  source: 'postal-2',
+                  sourceLayer: source,
+                  id: point
+                }, {
+                  hover: true
+                });
+            }
+
 
           }
           else{
@@ -266,14 +328,13 @@ function init(locationInput,data,container,geo,scope,variableOne,variableTwo){
 
     })
     .on("mouseout",function(d){
-      clearTimeout(timeout);
-      map.setFilter('postal-2-line', [
-        'match',
-        ['id'],
-        123,
-        true,
-        false
-      ])
+      map.setFeatureState({
+        source: 'postal-2',
+        sourceLayer: source,
+        id: selectedGeo
+      }, {
+        hover: false
+      });
       toggleToolTipVisibility(container,"none")
     })
 

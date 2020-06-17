@@ -1,62 +1,105 @@
-.bar-wrapper 
+.bar-wrapper
     padding 0 1rem
     margin 0 auto
+    margin-top 5rem
     .figure__wrapper
-        display flex 
-        flex-direction row 
+        display flex
+        flex-direction row
         flex-wrap wrap
-        figure 
+        figure
             max-width 400px
             margin 0 2rem
-    .g-bar 
-        display flex 
-        flex-direction row 
-        align-items center 
+    .g-bar
+        display flex
+        flex-direction row
+        align-items center
         border-left 1px solid $off-black
         margin 1rem 0
         padding 0.25rem 0
-        .bar-desc 
-            font-family $atlas 
+        .bar-desc
+            font-family $atlas
             set-type-size('small')
             width 40%
             margin 0
             padding 0 0.5rem
             font-weight normal
-        .bar-name 
+            span
+              font-weight 600
+        .bar-name
             order 0
-    .bar-container 
-        display flex 
+    .bar-container
+        display flex
         flex-direction row-reverse
         align-items center
         width 60%
-    .bar 
-        height 40px 
+    .bar
+        height 40px
         background-color $fs
-        display flex 
+        display flex
         justify-content flex-start
-        align-items center 
-        &-percent 
+        align-items center
+        &-percent
             background-color lighten($gray-light, 10)
-        &-FEMA 
+        &-FEMA
             background-color $fema
         p
-            set-type-size('root')
+            font-size 14px
             margin 0
             padding 0 0 0 0.25rem
-            text-align right 
+            text-align right
             font-family $atlas
     .bar__figure-multi
-        .g-bar 
-            border-left none
-            margin 0.5rem auto
-        .text-group 
-            min-width 30%
-            p
-                text-align right
-                margin 0
-                width 100%
-        .bar-container 
-            margin-right 1rem
-            .bar 
-                height 20px
-        
+        .figure__container
+            margin-top 6rem
+
+            .g-bar
+                border-left none
+                margin 0 auto
+                &:first-of-type
+                  .bar-container
+                    position relative
+                    &:before
+                      content 'FEMA'
+                      position absolute
+                      top -5px
+                      left 0px
+                      font-family $atlas
+                      font-size 12px
+                      font-weight 400
+                      transform translate(0,-100%)
+                  .bar-container__fema
+                    &:after
+                      content 'Share of properties at risk of flooding according to...'
+                      position absolute
+                      top -40px
+                      left 0px
+                      font-family $atlas
+                      font-size 13px
+                      font-weight 400
+                      transform translate(0,-100%)
+                      width 200px
+                      font-weight 500
+                  .bar-container__fs
+                    &:before
+                      content 'First Street'
+                      position absolute
+                      top -5px
+                      left 0px
+                      font-family $atlas
+                      font-size 12px
+                      font-weight 400
+                      transform translate(0,-100%)
+
+
+
+            .text-group
+                min-width 30%
+                p
+                    text-align right
+                    margin 0
+                    width 100%
+            .bar-container
+                margin-right 1rem
+                justify-content flex-end
+                .bar
+                    height 20px

@@ -44,20 +44,21 @@ function resize() {
 function findReaderLoc() {
   return new Promise((resolve, reject) => {
     const key = 'fd4d87f605681c0959c16d9164ab6a4a';
-    locate(key, (err, result) => {
-      if (err) {
-        reject(err);
-      }
-      const readerLatLong =
-        err || result.country_code !== 'US'
-          ? {
-              latitude: defaultLocation.latitude,
-              longitude: defaultLocation.longitude,
-            }
-          : { latitude: result.latitude, longitude: result.longitude };
-
-      resolve(readerLatLong);
-    });
+    resolve(defaultLocation);
+    // locate(key, (err, result) => {
+    //   if (err) {
+    //     reject(err);
+    //   }
+    //   const readerLatLong =
+    //     err || result.country_code !== 'US'
+    //       ? {
+    //           latitude: defaultLocation.latitude,
+    //           longitude: defaultLocation.longitude,
+    //         }
+    //       : { latitude: result.latitude, longitude: result.longitude };
+    //
+    //   resolve(readerLatLong);
+    // });
   });
 }
 
@@ -87,7 +88,7 @@ function init() {
 
       singleBars.init(DATA, nearest);
       multiBars.init(DATA, nearest);
-
+      //
       propertyTable.init(
         DATA.countyData,
         d3.select('.county-table'),
@@ -136,7 +137,7 @@ function init() {
         "FS 2020 100 Year Risk (total)",
         "FS 2050 100 Year Risk (total)"
       );
-      //
+
       zipMap.init(
         nearest,
         DATA["countyData"],

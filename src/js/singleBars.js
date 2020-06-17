@@ -22,12 +22,12 @@ const MARGIN_LEFT = 0;
 const properties = [
   {
     propertyName: 'FEMA Properties at Risk 2020 (total)',
-    text: '...according to FEMA',
+    text: '...according to <span>FEMA</span>',
     key: 'FEMA',
   },
   {
     propertyName: 'FS 2020 100 Year Risk (total)',
-    text: '...according to new estimates in 2020',
+    text: '...according to <span>new</span> estimates in 2020',
     key: 'thisYear',
   },
   {
@@ -67,7 +67,7 @@ function setupFigure(data) {
       $outsideGroup
         .append('p')
         .attr('class', 'bar-desc')
-        .text((d) => d.text);
+        .html((d) => d.text);
 
       return $outsideGroup;
     });

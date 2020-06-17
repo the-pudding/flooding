@@ -28,7 +28,7 @@ const properties = [
     key: 'FEMA',
   },
   {
-    propertyName: 'FS Properties at Risk 2020 (total)',
+    propertyName: 'FS 2020 100 Year Risk (total)',
     key: 'thisYear',
   },
 ];
@@ -43,6 +43,7 @@ function resize() {
 }
 
 function setupFigure(data) {
+
   const $groups = $figure
     .selectAll('.g-bar')
     .data(data, (d) => d.name)
@@ -137,9 +138,12 @@ function setupFigure(data) {
     .style('width', (d) => `${scaleX(d.fs)}px`);
 
   $dataBarFs.select('p').text((d) => `${d.fs}%`);
+
+
 }
 
 function cleanData(dat) {
+  console.log(dat);
   const cleaned = dat.map((d) => ({
     name: d.locationName,
     fema: Math.round(
@@ -147,7 +151,7 @@ function cleanData(dat) {
         100
     ),
     fs: Math.round(
-      (+d['FS Properties at Risk 2020 (total)'] / +d['Total Properties']) * 100
+      (+d['FS 2020 100 Year Risk (total)'] / +d['Total Properties']) * 100
     ),
   }));
 
@@ -159,6 +163,8 @@ function setupData() {
   // start by accessing the location type for the nearest data
   // and clean the data to find % of properties at risk
   const nearestData = cleanData(NEAREST[TYPE]);
+
+
 
   setupFigure(nearestData);
 
