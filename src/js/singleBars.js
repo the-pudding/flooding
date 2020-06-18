@@ -1,3 +1,5 @@
+import searchSetup from './utils/search';
+
 // global constants
 let NEAREST = [];
 let DATA = [];
@@ -11,6 +13,7 @@ const $container = $section.select("[data-js='bar__figure-single']");
 const $figure = $container.select("[data-js='bar__container-single']");
 const $desc = $container.select('.figure__desc');
 const $buttons = $section.selectAll('input');
+const $search = $section.select("[data-js='search__bar-single'");
 
 // scales
 const scaleX = d3.scaleLinear();
@@ -135,14 +138,25 @@ function setupData() {
     );
 }
 
+function setupSearch() {
+  const theseData = DATA[`${TYPE}Data`];
+
+  const names = theseData
+    .map((d) => ({ location: d.locationName, state: d.state_iso2 }))
+    .sort((a, b) => d3.ascending(a.location, b.location));
+  searchSetup(names, $search, TYPE);
+}
+
 function singleButtonClick(btn) {
   TYPE = btn.attr('id');
 
   setupData();
+  setupSearch();
 }
 
 function setup() {
   resize();
+  setupSearch();
 }
 
 function init(data, nearestLocations) {
