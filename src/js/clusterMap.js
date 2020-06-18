@@ -6,6 +6,22 @@ import locate from './utils/locate';
 
 function resize() {}
 
+function swapText(id) {
+  map.setLayoutProperty(id, 'text-field',
+  [
+    'format',
+    ['get', 'name_clean'],
+    { 'font-scale': 1 },
+    '\n',
+    {},
+    ['get', 'place'],
+    {
+      'font-scale': 0.75,
+      'text-font': ['literal', ['Roboto Mono Regular', 'Rubik Black']],
+    },
+  ]);
+}
+
 function init(data) {
 
   console.log(data);
@@ -19,12 +35,11 @@ function init(data) {
           center: [-84.191605, 39.758949],
           minZoom: 4,
           clusterMaxZoom: 10, // Max zoom to cluster points on
-          zoom: 4
+          zoom: 9
       });
 
 
       map.on('load', function() {
-
 
         map.addSource("postal-2", {
           type: "vector",
@@ -57,8 +72,6 @@ function init(data) {
               "line-color":"#aaa"
           }
         });
-
-
 
         map.addSource('points', {
           'type': 'geojson',
@@ -110,6 +123,40 @@ function init(data) {
                 30
               ]
             ]
+          }
+        });
+
+        console.log(data);
+
+        map.addLayer({
+          id: 'unclustered-label',
+          type: 'symbol',
+          source: 'points',
+          filter: ['!', ['has', 'point_count']],
+          paint: {
+            "text-halo-width":1,
+            "text-halo-color":"#FFFFFF"
+          },
+          layout: {
+            'text-field':
+            [
+              'format',
+              ['get', 'countFormatted'],
+              { 'font-scale': 1.1,
+                'text-font': ['literal', ['Open Sans Bold', 'Arial Unicode MS Bold']],
+              },
+              '\n',
+              {},
+              ['get', 'id'],
+              {
+                'font-scale': 0.85,
+                'text-font': ['literal', ['Open Sans Semibold', 'Arial Unicode MS Bold']],
+              }
+            ],
+
+
+            'text-font': ['Open Sans Semibold', 'Arial Unicode MS Bold'],
+            'text-size': 10
           }
         });
 
@@ -183,14 +230,16 @@ function init(data) {
           }
         });
 
+
+
+
+
         map.on('mousemove', function(e){
 
           const features = map.queryRenderedFeatures(e.point, { layers: ["unclustered-point"] });
           if(features.length > 0){
             console.log(features[0]);
           }
-
-
         });
 
           // map.on('click', 'clusters', function(e) {
