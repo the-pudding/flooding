@@ -35,7 +35,7 @@ function init(data) {
           center: [-84.191605, 39.758949],
           minZoom: 4,
           clusterMaxZoom: 10, // Max zoom to cluster points on
-          zoom: 9
+          zoom: 4
       });
 
 
