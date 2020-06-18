@@ -68,6 +68,7 @@ function buildSearchResults(searchContainer, results, container, data) {
       }, ${d.state_iso2.toUpperCase()}`;
     })
     .on('click', function (d) {
+      console.log("clicked");
       const vizType = container.attr('type-selected');
       searchContainer.select('input').node().value = '';
 
@@ -83,6 +84,7 @@ function buildSearchResults(searchContainer, results, container, data) {
       if (vizType == 'table') {
         propertyTable.buildTable(container, loc);
       }
+
     });
 
   resultsData.exit().remove();
@@ -123,6 +125,7 @@ function setupSearchBox(container, data, geoSelected) {
   });
 
   searchContainer.node().addEventListener('focusout', (e) => {
+    console.log("focusing out");
     const t = d3.timer(function (elapsed) {
       if (elapsed > 200) {
         t.stop();

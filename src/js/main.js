@@ -104,8 +104,10 @@ function init() {
       propertyTable.tableButtonClick(tableSelected);
 
       d3.select(".table-wrapper")
+        .select(".controls-container")
         .selectAll('input')
         .on('change', function (d) {
+          console.log("changing");
           propertyTable.tableButtonClick(d3.select(this).attr("value"));
         });
 

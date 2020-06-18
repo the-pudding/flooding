@@ -12,6 +12,7 @@ let loc = null;
 const geoName = { city: '', county: ' county', state: '' };
 
 function tableButtonClick(btn) {
+  console.log("toggling");
   d3.select(".table-wrapper").selectAll(".property-table").style("display",null);
   d3.select(".table-wrapper").select("."+btn+"-table").style("display","block");
 }
@@ -123,8 +124,6 @@ function init(data, container, locationInput, geo) {
   //   { latitude: +loc.Latitude, longitude: +loc.Longitude },
   //   data
   // );
-
-  console.log(locationInput[geo]);
 
   buildTable(container, locationInput[geo]);
 

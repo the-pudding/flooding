@@ -24,8 +24,6 @@ function swapText(id) {
 
 function init(data) {
 
-  console.log(data);
-
     mapboxgl.accessToken = 'pk.eyJ1IjoiZG9jazQyNDIiLCJhIjoiY2pjazE5eTM2NDl2aDJ3cDUyeDlsb292NiJ9.Jr__XbmAolbLyzPDj7-8kQ';
 
         var map = new mapboxgl.Map({
