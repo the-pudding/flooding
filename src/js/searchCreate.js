@@ -108,6 +108,7 @@ function searchDataset(data, value) {
 }
 
 function setupSearchBox(container, data, geoSelected) {
+
   const searchContainer = container.select('.search');
   let results = null;
   searchContainer.select('input').on('keyup', function () {
@@ -123,6 +124,8 @@ function setupSearchBox(container, data, geoSelected) {
       container.select('.results-wrapper').style('display', null);
     }
   });
+
+  console.log(searchContainer.node());
 
   searchContainer.node().addEventListener('focusout', (e) => {
     console.log("focusing out");

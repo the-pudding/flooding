@@ -86,7 +86,6 @@ function init() {
       // pass the nearest locations for each into the appropriate graphs
 
 
-      //setup bars
       singleBars.init(DATA, nearest);
       multiBars.init(DATA, nearest);
 
@@ -99,7 +98,6 @@ function init() {
         });
 
 
-      //setup tables
       let tableSelected = d3.select(".table-wrapper").select('input[name="table-controls"]:checked').attr("value");
       propertyTable.tableButtonClick(tableSelected);
 
@@ -170,7 +168,7 @@ function init() {
         "FS 2020 100 Year Risk (total)"
       );
 
-      clusterMap.init(createGeojson.init(DATA["zipData"]));
+      clusterMap.init(createGeojson.init(DATA["zipData"],"cluster"),DATA);
     })
     .catch((error) => {
       console.log(error);

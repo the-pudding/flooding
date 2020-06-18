@@ -1,5 +1,6 @@
 
-
+import searchCreate from './searchCreate.js'
+import createGeojson from './createGeojson';
 // import mapboxgl from 'mapbox-gl';
 /* global d3 */
 import locate from './utils/locate';
@@ -22,7 +23,30 @@ function swapText(id) {
   ]);
 }
 
-function init(data) {
+function init(geojson,data) {
+    let munged = data.cityData.concat(data.countyData).concat(data.stateData);
+
+    function forwardGeocoder(query) {
+      var matchingFeatures = [];
+      for (var i = 0; i < customData.features.length; i++) {
+      var feature = customData.features[i];
+      // handle queries with different capitalization than the source data by calling toLowerCase()
+      if (
+        feature.properties.title
+        .toLowerCase()
+        .search(query.toLowerCase()) !== -1
+      ) {
+        // add a tree emoji as a prefix for custom data results
+        // using carmen geojson format: https://github.com/mapbox/carmen/blob/master/carmen-geojson.md
+        feature['place_name'] = feature.properties.title + " county, "+feature.properties.state.toUpperCase();
+        feature['center'] = feature.geometry.coordinates;
+        matchingFeatures.push(feature);
+      }
+      }
+      return matchingFeatures;
+    }
+
+    let customData = createGeojson.init(data.countyData,"search");
 
     mapboxgl.accessToken = 'pk.eyJ1IjoiZG9jazQyNDIiLCJhIjoiY2pjazE5eTM2NDl2aDJ3cDUyeDlsb292NiJ9.Jr__XbmAolbLyzPDj7-8kQ';
 
@@ -35,6 +59,22 @@ function init(data) {
           clusterMaxZoom: 10, // Max zoom to cluster points on
           zoom: 4
       });
+
+      var geocoder = new MapboxGeocoder({
+        accessToken: mapboxgl.accessToken,
+        countries: 'us',
+        localGeocoder: forwardGeocoder,
+        placeholder:'Find a location',
+        filter: function(item) {
+          return item.place_type[0] != "poi";
+        },
+        zoom:7,
+        marker:false,
+        mapboxgl: mapboxgl
+      });
+
+      document.getElementById('geocode').appendChild(geocoder.onAdd(map));
+
 
 
       map.on('load', function() {
@@ -54,7 +94,8 @@ function init(data) {
               "fill-opacity":.1,
               "fill-color": "#000"
           },
-          'minzoom':7
+          'minzoom':7,
+          'maxzoom':10
 
         },"admin-1-boundary");
 
@@ -73,7 +114,7 @@ function init(data) {
 
         map.addSource('points', {
           'type': 'geojson',
-          'data': data,
+          'data': geojson,
           'cluster':true,
           'clusterRadius': 30,
           'clusterProperties':{
@@ -123,8 +164,6 @@ function init(data) {
             ]
           }
         });
-
-        console.log(data);
 
         map.addLayer({
           id: 'unclustered-label',
@@ -228,8 +267,20 @@ function init(data) {
           }
         });
 
+        map.addSource('fsf', {
+             'type': 'raster',
+             'tiles': ['https://api.firststreet.org/v1/tile/probability/depth/2020/100/{z}/{x}/{y}.png?key=w6e9nl3apphi9ln2mux4aazyd9gics5a'],
+             'tileSize': 256
+         });
 
-
+         map.addLayer({
+             'id': 'fsf',
+             'source': 'fsf',
+             'type': 'raster',
+             'minzoom': 10,
+             'maxzoom': 18,
+             'paint': { 'raster-opacity': .8 }
+         },"postal-2-fill");
 
 
         map.on('mousemove', function(e){

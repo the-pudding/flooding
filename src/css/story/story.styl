@@ -1,16 +1,51 @@
+#geocode
+  .mapboxgl-ctrl-geocoder
+    box-shadow none
+    width 100%
+  input
+    font-family $atlas
+    width 100%
+    border 1px solid #ccc
+    box-shadow inset 2px 2px 5px rgba(0, 0, 0, 0.05)
+    border-radius 5px
+    height 36px
+
+    &::placeholder
+      font-family $atlas
+
+  .suggestions-wrapper
+    ul
+      li
+        font-family $atlas
+        .mapboxgl-ctrl-geocoder--suggestion
+          font-size 13px
+
+
+
+
+
+main
+  background rgb(255, 254, 252)
+p
+  margin 0 auto
 /* CUSTOM STORY STYLE */
+section
+  max-width $column-width
+  width 95%
+  margin 0 auto
+
 .section-hed
   font-family $atlas
-  font-size 24px
+  font-size 36px
   margin 0 auto
-  text-align center
   padding 0
+  margin-bottom 1rem
 .section-dek
   font-size 18px
   margin 0 auto
   font-family $lyon
-  text-align center
   padding 0
+
 
 .table-wrapper
   margin-top 2rem
