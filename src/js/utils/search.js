@@ -5,9 +5,25 @@ let DATA = [];
 let SEARCH = null;
 let TYPE = null;
 let $ac = null;
+let $menu = null;
 
 function handleDownPress(key) {
   console.log('down arrow pressed');
+}
+
+function updateStatus(len) {
+  SEARCH.select('.result-count').text(
+    len > 1 ? `${len} results` : 'Type for more results'
+  );
+}
+
+function showMenu() {
+  console.log({ $menu });
+  $menu.classed('hidden', false);
+}
+
+function hideMenu() {
+  $menu.classed('hidden', true);
 }
 
 function handleType(key, textbox, search, type) {
@@ -19,9 +35,19 @@ function handleType(key, textbox, search, type) {
     const re = new RegExp(`\\b${text}`);
 
     const results = DATA.filter((d) => d.location.toLowerCase().match(re));
+    const len = results.length;
 
     // update list of results
     buildMenu(results, search, type);
+
+    // show the menu
+    showMenu();
+
+    // update status for screen readers
+    updateStatus(len);
+  } else {
+    hideMenu();
+    updateStatus(1);
   }
 }
 
@@ -36,22 +62,46 @@ function handleTextInput(search, type, textbox) {
     'ArrowRight',
     'Space',
     'Enter',
-    'Tab',
     'ShiftLeft',
     'ShiftRight',
   ];
 
   // figure out what to do based on which key was pressed
-  if (!ignore.includes(key) && key !== 'ArrowDown')
+  if (!ignore.includes(key) && key !== 'ArrowDown' && key !== 'Tab')
     handleType(key, textbox, search, type);
   else if (key === 'ArrowDown') handleDownPress();
+  else if (key === 'Tab') hideMenu();
+}
+
+function selectOption(value) {}
+
+function handleOptionClick() {
+  const sel = d3.select(this);
+  const val = sel.attr('data-option-value');
+
+  // set the textbox value to selected option
+  const tb = SEARCH.select('input');
+  tb.property('value', val);
+
+  // set the select option to correct one
+  SEARCH.select('select')
+    .selectAll('option')
+    .property('selected', (d) => {
+      const loc =
+        TYPE === 'county'
+          ? `${d.location}, ${d.state.toUpperCase()}`
+          : `${d.location}`;
+      return loc === val;
+    });
+
+  hideMenu();
 }
 
 function buildMenu(data, search, type) {
   const uniqueID = search.attr('data-js');
 
   // add li elements on data update
-  $ac
+  const options = $ac
     .select('ul')
     .selectAll('li')
     .data((d) => {
@@ -74,7 +124,17 @@ function buildMenu(data, search, type) {
         : `${d.location}`;
     })
     // stores the select box option value
-    .attr('data-option-value', (d, i) => i + 1);
+    .attr('data-option-value', (d) =>
+      type === 'county'
+        ? `${d.location}, ${d.state.toUpperCase()}`
+        : `${d.location}`
+    );
+
+  options.on('click', handleOptionClick);
+
+  console.log({ $menu });
+
+  if ($menu === null) $menu = $ac.select('ul');
 }
 
 function setupDOM(data, search, type) {
@@ -85,6 +145,11 @@ function setupDOM(data, search, type) {
     .data(data)
     .join((enter) => enter.append('option'))
     .text((d) =>
+      type === 'county'
+        ? `${d.location}, ${d.state.toUpperCase()}`
+        : `${d.location}`
+    )
+    .attr('value', (d) =>
       type === 'county'
         ? `${d.location}, ${d.state.toUpperCase()}`
         : `${d.location}`
