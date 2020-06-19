@@ -25,7 +25,7 @@ function init(data,cut){
     data = data.map(function(row){
       return {
         "type":"Feature",
-        "properties":{title:row["locationName"],state:row["state_iso2"]},
+        "properties":{type:"manual",title:row["locationName"],state:row["state_iso2"]},
         "place_type":["search"],
         "geometry":{
           "type":"Point",

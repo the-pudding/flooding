@@ -1,6 +1,10 @@
 <section class="property-section">
   <p class="section-hed">Who is affected by flooding?</p>
-  <p class="section-dek">Nearly 5,000,000 properties in America have a 99% chance of flooding in the next 30 years.  Here’s how those numbers breakdown by varius geographics.</p>
+  <p class="section-dek">Nearly <span class="at-risk-properties"></span> properties in America have have a 1% risk of flooding in 2020. Here’s how those numbers breakdown by varius geographics.</p>
+
+
+  <p class="subsection-hed">How many properties are affected in my community?</p>
+  <p class="subsection-dek">Explore the map and zoom in to see how the number of properties at risk of flooding in your area.</p>
 
   <div class="map-wrapper">
     <!-- <div class="search">
@@ -14,13 +18,36 @@
     <div id="geocode">
 
     </div>
+    <div class="title-wrapper">
+      <p class="chart-title">Number of Properties with a 1% annual likelihood of flooding in 2020.</p>
+      <div class="legend-wrapper">
+        <p>Fewer Properties</p>
+        <div class="legend-circles">
+          <div class="circle">
+
+          </div>
+          <div class="circle">
+
+          </div>
+          <div class="circle">
+
+          </div>
+        </div>
+        <p>More Properties</p>
+      </div>
+    </div>
+    <p class="click-to-explore">Click map to explore »</p>
     <div id="city-cluster">
     </div>
 
   </div>
 
+  <p class="subsection-hed">How does flooding risk compare to neighboring communities?</p>
+  <p class="subsection-dek">Filter the table to see the number of properties in a flood zone, defined as a 1% annual likelihood of flooding in 2020.</p>
 
   <div class="table-wrapper">
+
+
 
     <div class='controls-container' data-js="table__controls">
         <p class='controls-directions' id='button-directions'>View data for:</p>
@@ -33,8 +60,12 @@
             <label for='city-table'>Cities</label>
         </div>
     </div>
+    <div id="geocoder-container-test">
+
+    </div>
 
     <div class="property-table state-table">
+
       <div class="search">
 
         <input autocomplete="off" spellcheck="off" type="text" name="" value="" placeholder="Find a state...">

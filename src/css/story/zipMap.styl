@@ -2,14 +2,74 @@
   width 500px
   height 300px
   margin 0 auto
-  margin-top 2rem
+  margin-top .5rem
   margin-bottom 4rem
+
+.mapboxgl-ctrl-logo
+  border none
+  text-decoration none
 
 
 .map-wrapper
   max-width 500px
-  margin-top 3rem
+  margin-top 1.5rem
   margin-left 2rem
+  .title-wrapper
+    display flex
+    margin-top 2rem
+    .chart-title
+      font-size 16px
+      font-family $atlas
+      font-size 14px
+      font-weight 500
+      align-self center
+      margin 0
+      padding 0
+      line-height 1.5
+    .legend-wrapper
+      display flex
+      p
+        font-size 12px
+        font-weight 400
+        font-family $atlas
+        margin 0
+        padding 0
+        align-self center
+        width 70px
+        text-align right
+        line-height 1.2
+        &:last-of-type
+          text-align left
+      .legend-circles
+        display flex
+        margin 0 5px
+        .circle
+          width 30px
+          border-radius 50%
+          height 30px
+          background #F2EE97
+          margin-left 5px
+          margin-right 5px
+          align-self center
+          &:first-of-type
+            width 15px
+            height 15px
+            margin 0
+            background #42D9FF
+          &:last-of-type
+            width 40px
+            height 40px
+            margin 0
+            background #F0A2BE
+  .click-to-explore
+    font-size 14px
+    color rgba(0,0,0,.7)
+    font-family $atlas
+    margin 0
+    padding 0
+    text-align center
+    font-weight 400
+    margin-top 1rem
   .mapboxgl-map
     overflow visible
     canvas

@@ -23,7 +23,8 @@ function swapText(id) {
   ]);
 }
 
-function init(geojson,data) {
+function init(nearest,geojson,data) {
+
     let munged = data.cityData.concat(data.countyData).concat(data.stateData);
 
     function forwardGeocoder(query) {
@@ -47,14 +48,16 @@ function init(geojson,data) {
     }
 
     let customData = createGeojson.init(data.countyData,"search");
-
+    let defaultCoords = [-84.191605, 39.758949];
+    //this needs an if statement in case nearest isn't found
+    defaultCoords = [nearest["state"][0]["Longitude"],nearest["state"][0]["Latitude"]];
     mapboxgl.accessToken = 'pk.eyJ1IjoiZG9jazQyNDIiLCJhIjoiY2pjazE5eTM2NDl2aDJ3cDUyeDlsb292NiJ9.Jr__XbmAolbLyzPDj7-8kQ';
 
         var map = new mapboxgl.Map({
           container: 'city-cluster',
           style: 'mapbox://styles/mapbox/light-v10',
           // style: 'mapbox://styles/nytgraphics/cjmsjh9u308ze2rpk2vh41efx?optimize=true',
-          center: [-84.191605, 39.758949],
+          center: defaultCoords,
           minZoom: 4,
           clusterMaxZoom: 10, // Max zoom to cluster points on
           zoom: 4

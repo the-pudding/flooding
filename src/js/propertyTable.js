@@ -109,26 +109,29 @@ function findNearest(locationInput, data) {
 }
 
 function init(data, container, locationInput, geo) {
-  geoSelected = geo;
 
-  container.attr('geo-selected', geoSelected);
-  container.attr('type-selected', "table");
 
-  loc = locationInput[geoSelected][0]
+    // document.getElementById('geocode').appendChild(geocoder.onAdd(map));
 
-  container.attr("data-city",loc.locationName);
-  container.attr("data-state",loc.state_iso2);
-
-  //re-sort data to be closest to location
-  // let locData = searchCreate.findNearest(
-  //   { latitude: +loc.Latitude, longitude: +loc.Longitude },
-  //   data
-  // );
-
-  buildTable(container, locationInput[geo]);
-
-  searchCreate.setupSearchBox(container,data,geoSelected)
-  //setupSearchBox(container, data);
+  // geoSelected = geo;
+  //
+  // container.attr('geo-selected', geoSelected);
+  // container.attr('type-selected', "table");
+  //
+  // loc = locationInput[geoSelected][0]
+  //
+  // container.attr("data-city",loc.locationName);
+  // container.attr("data-state",loc.state_iso2);
+  //
+  // //re-sort data to be closest to location
+  // // let locData = searchCreate.findNearest(
+  // //   { latitude: +loc.Latitude, longitude: +loc.Longitude },
+  // //   data
+  // // );
+  //
+  // buildTable(container, locationInput[geo]);
+  //
+  // searchCreate.setupSearchBox(container,data,geoSelected)
 }
 
 export default { init, buildTable, tableButtonClick };
