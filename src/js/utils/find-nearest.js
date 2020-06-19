@@ -31,8 +31,6 @@ function findNearest(readerLocation, data) {
     }))
     .filter((d) => !isNaN(d.distance));
 
-  console.log({ readerLocation, locationDistance });
-
   locationDistance.sort((a, b) => d3.descending(b.distance, a.distance));
   return locationDistance.slice(0, 10);
 }

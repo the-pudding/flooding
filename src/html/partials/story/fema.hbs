@@ -58,6 +58,15 @@
                 <figure class='bar__figure-multi' data-js="bar__figure-multi" aria-labelledby="figure__desc">
                     <div class='figure__controls'>
                         <p class='embed'>Embed this chart</p>
+
+                        <div class='search-container' data-selected='county' data-js='search__bar-multi'>
+                            <label for='location__bar-multi'>
+                                <span class='search-label'>Location</span>
+                            </label>
+                            <select name='location__bar-multi' id='location__bar-multi' aria-hidden='true' tabindex='-1'
+                                class='visually-hidden' data-file='multiBars'></select>
+                        </div>
+
                         <div class='figure__search'></div>
                         <p class='figure__desc' id='figure__desc'>
                             In <span class='reader'>Michigan</span>, <span class='FS'>First

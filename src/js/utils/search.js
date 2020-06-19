@@ -14,10 +14,10 @@ function handleDownPress(key) {
   console.log('down arrow pressed');
 }
 
-function updateStatus(len) {
-  SEARCH.select('.result-count').text(
-    len > 1 ? `${len} results` : 'Type for more results'
-  );
+function updateStatus(len, search) {
+  search
+    .select('.result-count')
+    .text(len > 1 ? `${len} results` : 'Type for more results');
 }
 
 function showMenu() {
@@ -46,7 +46,7 @@ function handleType(key, textbox, search, type) {
     showMenu();
 
     // update status for screen readers
-    updateStatus(len);
+    updateStatus(len, search);
   } else {
     hideMenu();
     updateStatus(1);
@@ -75,13 +75,14 @@ function handleTextInput(search, type, textbox) {
   else if (key === 'Tab') hideMenu();
 }
 
-function selectOption(value) {
+function selectOption(value, search) {
   // set the textbox value to selected option
-  const tb = SEARCH.select('input');
+  const tb = search.select('input');
   tb.property('value', value);
+  console.log({ SEARCH });
 
   // set the select option to correct one
-  const selElement = SEARCH.select('select');
+  const selElement = search.select('select');
 
   selElement.selectAll('option').property('selected', (d) => {
     const loc =
@@ -103,19 +104,21 @@ function selectOption(value) {
   hideMenu();
 }
 
-function handleOptionClick() {
-  const sel = d3.select(this);
+function handleOptionClick(sel, search) {
   const val = sel.attr('data-option-value');
 
-  selectOption(val);
+  selectOption(val, search);
 }
 
 function buildMenu(data, search, type) {
-  const uniqueID = search.attr('data-js');
+  const uniqueID = search.select('input').attr('id');
+  const findID = `#options-${uniqueID}`;
+
+  $menu = search.selectAll(`#options-${uniqueID}`);
 
   // add li elements on data update
-  const options = $ac
-    .select('ul')
+  const options = search
+    .select(`#options-${uniqueID}`)
     .selectAll('li')
     .data((d) => {
       return data;
@@ -143,14 +146,15 @@ function buildMenu(data, search, type) {
         : `${d.locationName}`
     );
 
-  options.on('click', handleOptionClick);
-
-  if ($menu === null) $menu = $ac.select('ul');
+  options.on('click', (d, i, nodes) => {
+    const sel = d3.select(nodes[i]);
+    handleOptionClick(sel, search);
+  });
 }
 
 function setupDOM(data, search, type) {
   // add options to the select box for full a11y
-  console.log({ data, search, type });
+
   search
     .select('select')
     .selectAll('option')
@@ -214,6 +218,7 @@ function setupDOM(data, search, type) {
   // add type event listener
   $ac.on('keyup', function (d) {
     const textbox = d3.select(this).select('input');
+    console.log({ textbox });
     handleTextInput(search, type, textbox);
   });
 }

@@ -104,11 +104,14 @@ function findUpdateFile(name) {
 function handleSearchUpdate(searchBox, DATA, type) {
   // find which chart file to update
   const file = searchBox.attr('data-file');
+
   // find selected value
   const sel = searchBox.property('value');
   const locs = sel.split(',');
   const [name, state] = locs;
   const stateLower = state.trim().toLowerCase();
+
+  console.log({ sel });
 
   const theseData = DATA[`${type}Data`];
 
