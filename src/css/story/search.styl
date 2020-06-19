@@ -1,5 +1,6 @@
 .search-container
-    background-color rgba($gray-light, 0.2)
+    font-weight normal
+    font-family $atlas
     .autocomplete [role=listbox] 
         max-height 12em
         overflow-y scroll
@@ -8,4 +9,18 @@
         &.hidden 
             display none
     .autocomplete [role=option][aria-selected='true']
-        background-color red
+        background-color rgba($gray-light, 0.5)
+        font-weight bold
+    .visually-hidden 
+        border 0
+        clip rect(0 0 0 0)
+        height 1px
+        margin -1px
+        overflow hidden
+        padding 0
+        position absolute
+        width 1px
+    input 
+        font-family $atlas 
+        set-type-size('root')
+

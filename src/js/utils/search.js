@@ -289,6 +289,8 @@ d3.selection.prototype.setupSearch = function init(options) {
         return $parent;
       });
 
+    $ac.select('input').attr('placeholder', `Search for a ${TYPE}`);
+
     buildMenu(DATA);
 
     // add type event listener
