@@ -12,8 +12,7 @@ import locate from './utils/locate';
 import findNearest from './utils/find-nearest';
 import singleBars from './singleBars';
 import multiBars from './multiBars';
-import search from './utils/search';
-import setupSearch from './utils/search';
+import './utils/search';
 import findLocation from './utils/find-nearest';
 
 const defaultLocation = {
@@ -93,7 +92,7 @@ function prepareSearch(section, locationType, DATA) {
     const theseData = DATA[`${type}Data`].sort((a, b) =>
       d3.ascending(a.locationName, b.locationName)
     );
-    setupSearch(theseData, thisBox, type);
+    thisBox.setupSearch({ theseData, type, thisBox });
   });
 }
 
