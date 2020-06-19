@@ -14,6 +14,7 @@ import singleBars from './singleBars';
 import multiBars from './multiBars';
 import search from './utils/search';
 import setupSearch from './utils/search';
+import findLocation from './utils/find-nearest';
 
 const defaultLocation = {
   country_code: 'US',
@@ -25,6 +26,12 @@ const defaultLocation = {
   time_zone: 'America/New_York',
   latitude: 40.7789,
   longitude: -73.9692,
+};
+
+// list any files imported that will need a searchbar update
+const searchUpdateFiles = {
+  singleBars,
+  multiBars,
 };
 
 // let readerLatLong = null;
@@ -90,19 +97,34 @@ function prepareSearch(section, locationType, DATA) {
   });
 }
 
-function handleSearchUpdate(searchBox, DATA) {
+function findUpdateFile(name) {
+  return searchUpdateFiles[name];
+}
+
+function handleSearchUpdate(searchBox, DATA, type) {
+  // find which chart file to update
+  const file = searchBox.attr('data-file');
   // find selected value
   const sel = searchBox.property('value');
   const locs = sel.split(',');
   const [name, state] = locs;
   const stateLower = state.trim().toLowerCase();
 
-  // filter data to find coordinates of selected location
-  const filtered = DATA[`${type}Data`].filter(
-    (d) => d.locationName === name && d.state_iso2 === stateLower
-  );
+  const theseData = DATA[`${type}Data`];
 
-  console.log({ filtered });
+  // filter data to find coordinates of selected location
+  const filtered = theseData
+    .filter((d) => d.locationName === name && d.state_iso2 === stateLower)
+    .map((d) => ({
+      ...d,
+      latitude: +d.Latitude,
+      longitude: +d.Longitude,
+    }));
+
+  // run the init function which will update charts
+  findLocation(filtered[0], DATA).then((result) =>
+    findUpdateFile(file).init(DATA, result)
+  );
 }
 
 function init() {
