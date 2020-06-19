@@ -218,6 +218,18 @@ d3.selection.prototype.setupSearch = function init(options) {
     selectOption(val);
   }
 
+  function equalToEventTarget() {
+    return this === d3.event.target;
+  }
+
+  function setupOutsideClick() {
+    const $acAll = CONTAINER.selectAll('.autocomplete *');
+    d3.select('body').on('click', (d, i, nodes) => {
+      const outside = $acAll.filter(equalToEventTarget).empty();
+      if (outside) hideMenu();
+    });
+  }
+
   function setupDOM() {
     // add options to the select box for full a11y
 
@@ -284,6 +296,7 @@ d3.selection.prototype.setupSearch = function init(options) {
       const textbox = d3.select(nodes[i]).select('input');
 
       handleTextInput(textbox);
+      setupOutsideClick();
     });
   }
 
