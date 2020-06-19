@@ -8,7 +8,7 @@ d3.selection.prototype.setupSearch = function init(options) {
   let $ac = null;
   let $menu = null;
 
-  let arrowIndex = 0;
+  const arrowIndex = 0;
 
   function buildMenu(filteredData) {
     const uniqueID = CONTAINER.select('input').attr('id');
@@ -62,24 +62,45 @@ d3.selection.prototype.setupSearch = function init(options) {
   }
 
   function handleDownPress() {
+    // prevent page scroll
+    d3.event.preventDefault();
+
     const allVisible = CONTAINER.selectAll('[role="option"]').nodes();
 
     // find any active ones
-    const active = CONTAINER.selectAll('[aria-selected="true"]');
+    const active = allVisible.filter((d, i, nodes) => {
+      const sel = d3.select(nodes[i]).attr('aria-selected');
+      return sel === 'true';
+    });
 
-    // if none active, set to first
+    const sib = d3.select(active[0].nextSibling);
 
-    const next =
-      active.size() > 0
-        ? d3.select(allVisible[arrowIndex])
-        : d3.select(allVisible[0]);
+    const next = active.length > 0 ? sib : d3.select(allVisible[0]);
 
-    arrowIndex += 1;
-    active.attr('aria-selected', false);
+    d3.select(active[0]).attr('aria-selected', false);
     next.attr('aria-selected', 'true');
+    next.node().focus();
+  }
 
-    // start with first in focus
-    // handleHighlightOption(search, allVisible[0]);
+  function handleUpPress() {
+    // prevent page scroll
+    d3.event.preventDefault();
+
+    const allVisible = CONTAINER.selectAll('[role="option"]').nodes();
+
+    // find any active ones
+    const active = allVisible.filter((d, i, nodes) => {
+      const sel = d3.select(nodes[i]).attr('aria-selected');
+      return sel === 'true';
+    });
+
+    const sib = d3.select(active[0].previousSibling);
+
+    const prev = active.length > 0 ? sib : d3.select(allVisible[0]);
+
+    d3.select(active[0]).attr('aria-selected', false);
+    prev.attr('aria-selected', 'true');
+    prev.node().focus();
   }
 
   function updateStatus(len) {
@@ -129,7 +150,6 @@ d3.selection.prototype.setupSearch = function init(options) {
     // make array of keys to ignore
     const ignore = [
       'Escape',
-      'ArrowUp',
       'ArrowLeft',
       'ArrowRight',
       'Space',
@@ -139,10 +159,16 @@ d3.selection.prototype.setupSearch = function init(options) {
     ];
 
     // figure out what to do based on which key was pressed
-    if (!ignore.includes(key) && key !== 'ArrowDown' && key !== 'Tab')
+    if (
+      !ignore.includes(key) &&
+      key !== 'ArrowDown' &&
+      key !== 'Tab' &&
+      key !== 'ArrowUp'
+    )
       handleType(key, textbox);
     else if (key === 'ArrowDown') handleDownPress();
     else if (key === 'Tab') hideMenu();
+    else if (key === 'ArrowUp') handleUpPress();
   }
 
   function selectOption(value) {
