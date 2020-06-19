@@ -4,14 +4,46 @@
 import findNearest from './find-nearest';
 
 let DATA = [];
-let SEARCH = null;
-let TYPE = null;
-
 let $ac = null;
 let $menu = null;
 
-function handleDownPress(key) {
-  console.log('down arrow pressed');
+let arrowIndex = 0;
+
+function handleHighlightOption(search, option) {
+  // are any already active?
+  const active = search.selectAll('[aria-selected="true"]');
+  if (active.size() > 0) {
+    active.attr('aria-selected', 'false');
+  }
+
+  // make the selected option the highlighted one
+  option.attr('aria-selected', 'true');
+
+  // highlight first option
+
+  console.log({ search, active });
+}
+
+function handleDownPress(search) {
+  const allVisible = search.selectAll('[role="option"]').nodes();
+
+  // find any active ones
+  const active = search.selectAll('[aria-selected="true"]');
+
+  // if none active, set to first
+
+  const next =
+    active.size() > 0
+      ? d3.select(allVisible[arrowIndex])
+      : d3.select(allVisible[0]);
+
+  arrowIndex += 1;
+  active.attr('aria-selected', false);
+  next.attr('aria-selected', 'true');
+  next.focus();
+
+  // start with first in focus
+  // handleHighlightOption(search, allVisible[0]);
 }
 
 function updateStatus(len, search) {
@@ -71,22 +103,21 @@ function handleTextInput(search, type, textbox) {
   // figure out what to do based on which key was pressed
   if (!ignore.includes(key) && key !== 'ArrowDown' && key !== 'Tab')
     handleType(key, textbox, search, type);
-  else if (key === 'ArrowDown') handleDownPress();
+  else if (key === 'ArrowDown') handleDownPress(search);
   else if (key === 'Tab') hideMenu();
 }
 
-function selectOption(value, search) {
+function selectOption(value, search, type) {
   // set the textbox value to selected option
   const tb = search.select('input');
   tb.property('value', value);
-  console.log({ SEARCH });
 
   // set the select option to correct one
   const selElement = search.select('select');
 
   selElement.selectAll('option').property('selected', (d) => {
     const loc =
-      TYPE === 'county'
+      type === 'county'
         ? `${d.locationName}, ${d.state_iso2.toUpperCase()}`
         : `${d.locationName}`;
     return loc === value;
@@ -104,10 +135,13 @@ function selectOption(value, search) {
   hideMenu();
 }
 
-function handleOptionClick(sel, search) {
+function handleOptionClick(sel, search, type) {
   const val = sel.attr('data-option-value');
 
-  selectOption(val, search);
+  search.selectAll('li').attr('aria-selected', 'false');
+  sel.attr('aria-selected', 'true');
+
+  selectOption(val, search, type);
 }
 
 function buildMenu(data, search, type) {
@@ -148,7 +182,7 @@ function buildMenu(data, search, type) {
 
   options.on('click', (d, i, nodes) => {
     const sel = d3.select(nodes[i]);
-    handleOptionClick(sel, search);
+    handleOptionClick(sel, search, type);
   });
 }
 
@@ -231,7 +265,5 @@ export default function setupSearch(data, searchBoxSel, locationType) {
   return new Promise((resolve, reject) => {
     setupDOM(data, searchBoxSel, locationType);
     DATA = data;
-    SEARCH = searchBoxSel;
-    TYPE = locationType;
   });
 }
