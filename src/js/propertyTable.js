@@ -1,4 +1,5 @@
 import searchCreate from './searchCreate.js'
+import createGeojson from './createGeojson';
 
 const formatComma = d3.format(',');
 
@@ -109,29 +110,89 @@ function findNearest(locationInput, data) {
 }
 
 function init(data, container, locationInput, geo) {
+  let customData = createGeojson.init(data,"search");
+  function forwardGeocoder(query) {
+    var matchingFeatures = [];
+    for (var i = 0; i < customData.features.length; i++) {
+    var feature = customData.features[i];
+    // handle queries with different capitalization than the source data by calling toLowerCase()
+    if (
+      feature.properties.title
+      .toLowerCase()
+      .search(query.toLowerCase()) !== -1
+    ) {
+      // add a tree emoji as a prefix for custom data results
+      // using carmen geojson format: https://github.com/mapbox/carmen/blob/master/carmen-geojson.md
+      feature['place_name'] = feature.properties.title + " county, "+feature.properties.state.toUpperCase();
+      feature['center'] = feature.geometry.coordinates;
+      matchingFeatures.push(feature);
+    }
+    }
+    return matchingFeatures;
+  }
+
+  mapboxgl.accessToken = 'pk.eyJ1IjoiZG9jazQyNDIiLCJhIjoiY2pjazE5eTM2NDl2aDJ3cDUyeDlsb292NiJ9.Jr__XbmAolbLyzPDj7-8kQ';
+
+    var geocoder = new MapboxGeocoder({
+      accessToken: mapboxgl.accessToken,
+      countries: 'us',
+      localGeocoder: forwardGeocoder,
+      placeholder:'Find a location',
+      // filter: function(item) {
+      //   return item.place_type[0] == "manual";
+      // },
+      zoom:7,
+      localGeocoderOnly:true,
+      marker:false
+      //mapboxgl: mapboxgl
+    });
 
 
-    // document.getElementById('geocode').appendChild(geocoder.onAdd(map));
+    const parent = container.select(".search").node();//document.querySelectorAll("#search");
 
-  // geoSelected = geo;
-  //
-  // container.attr('geo-selected', geoSelected);
-  // container.attr('type-selected', "table");
-  //
-  // loc = locationInput[geoSelected][0]
-  //
-  // container.attr("data-city",loc.locationName);
-  // container.attr("data-state",loc.state_iso2);
-  //
-  // //re-sort data to be closest to location
-  // // let locData = searchCreate.findNearest(
-  // //   { latitude: +loc.Latitude, longitude: +loc.Longitude },
-  // //   data
-  // // );
-  //
-  // buildTable(container, locationInput[geo]);
-  //
-  // searchCreate.setupSearchBox(container,data,geoSelected)
+    let el = geocoder.onAdd();
+    parent.appendChild(el);
+
+
+
+
+    geocoder.on("result",function(d){
+
+      container.attr('data-city', d.locationName);
+      container.attr('data-state', d.state_iso2);
+      console.log(d);
+      let long = d.result.geometry.coordinates[0];
+      let lat = +d.result.geometry.coordinates[1];
+
+      const loc = searchCreate.findNearest(
+        { latitude: lat, longitude: long },
+        data
+      );
+
+      buildTable(container, loc);
+
+
+    })
+
+    geoSelected = geo;
+
+    container.attr('geo-selected', geoSelected);
+    container.attr('type-selected', "table");
+
+    loc = locationInput[geoSelected][0]
+
+    container.attr("data-city",loc.locationName);
+    container.attr("data-state",loc.state_iso2);
+
+    //re-sort data to be closest to location
+    // let locData = searchCreate.findNearest(
+    //   { latitude: +loc.Latitude, longitude: +loc.Longitude },
+    //   data
+    // );
+
+    buildTable(container, locationInput[geo]);
+
+    // searchCreate.setupSearchBox(container,data,geoSelected)
 }
 
 export default { init, buildTable, tableButtonClick };

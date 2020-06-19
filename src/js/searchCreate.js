@@ -65,6 +65,7 @@ function buildSearchResults(searchContainer, results, container, data) {
       }, ${d.state_iso2.toUpperCase()}`;
     })
     .on('click', function (d) {
+
       console.log("clicked");
       const vizType = container.attr('type-selected');
       searchContainer.select('input').node().value = '';

@@ -11,30 +11,30 @@
   padding 0
 
 
-
-.mapboxgl-ctrl-geocoder
-  box-shadow none
-  width 100%
-  margin 0
-  max-width none
-input
-  font-family $atlas
-  width 100%
-  border 1px solid #ccc
-  box-shadow inset 2px 2px 5px rgba(0, 0, 0, 0.05)
-  border-radius 5px
-  height 36px
-  font-weight 400
-
-  &::placeholder
-    font-family $atlas
-
-.suggestions-wrapper
-  ul
-    li
+main
+  .mapboxgl-ctrl-geocoder
+    box-shadow none
+    width 100%
+    margin 0
+    max-width none
+    input
       font-family $atlas
-      .mapboxgl-ctrl-geocoder--suggestion
-        font-size 13px
+      width 100%
+      border 1px solid #ccc
+      box-shadow inset 2px 2px 5px rgba(0, 0, 0, 0.05)
+      border-radius 5px
+      height 36px
+      font-weight 400
+      padding-left 2rem
+
+      &::placeholder
+        font-family $atlas
+    .suggestions-wrapper
+      ul
+        li
+          font-family $atlas
+          .mapboxgl-ctrl-geocoder--suggestion
+            font-size 13px
 
 
 
