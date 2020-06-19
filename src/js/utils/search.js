@@ -8,8 +8,6 @@ d3.selection.prototype.setupSearch = function init(options) {
   let $ac = null;
   let $menu = null;
 
-  const arrowIndex = 0;
-
   function buildMenu(filteredData) {
     const uniqueID = CONTAINER.select('input').attr('id');
 
@@ -46,19 +44,6 @@ d3.selection.prototype.setupSearch = function init(options) {
       const sel = d3.select(nodes[i]);
       handleOptionClick(sel);
     });
-  }
-
-  function handleHighlightOption(option) {
-    // are any already active?
-    const active = CONTAINER.selectAll('[aria-selected="true"]');
-    if (active.size() > 0) {
-      active.attr('aria-selected', 'false');
-    }
-
-    // make the selected option the highlighted one
-    option.attr('aria-selected', 'true');
-
-    // highlight first option
   }
 
   function handleDownPress() {
@@ -146,6 +131,7 @@ d3.selection.prototype.setupSearch = function init(options) {
 
     hideMenu();
   }
+
   function handleType(key, textbox) {
     // only show options if user typed something
     const typed = textbox.node().value;

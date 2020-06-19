@@ -110,8 +110,6 @@ function handleSearchUpdate(searchBox, DATA, type) {
   const [name, state] = locs;
   const stateLower = state.trim().toLowerCase();
 
-  console.log({ sel });
-
   const theseData = DATA[`${type}Data`];
 
   // filter data to find coordinates of selected location

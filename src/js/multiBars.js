@@ -10,7 +10,6 @@ const $section = d3.select("[data-js='bars']");
 const $container = $section.select("[data-js='bar__figure-multi']");
 const $figure = $container.select("[data-js='bar__container-multi']");
 const $desc = $container.select('.figure__desc');
-const $buttons = $section.selectAll('input');
 
 // scales
 const scaleX = d3.scaleLinear();
@@ -21,17 +20,6 @@ const MARGIN_LEFT = 32;
 
 // number formats
 const FORMAT_NUMBER = d3.format(',.0f');
-
-const properties = [
-  {
-    propertyName: 'FEMA Properties at Risk 2020 (total)',
-    key: 'FEMA',
-  },
-  {
-    propertyName: 'FS 2020 100 Year Risk (total)',
-    key: 'thisYear',
-  },
-];
 
 function resize() {
   const width = $figure.node().offsetWidth - MARGIN_LEFT - MARGIN_RIGHT;
@@ -93,9 +81,7 @@ function setupFigure(data) {
       (d) => d.name
     )
     .join((enter) => {
-      const $bar = enter
-        .append('div')
-        .attr('class', (d) => `bar bar-data bar-FEMA`);
+      const $bar = enter.append('div').attr('class', `bar bar-data bar-FEMA`);
 
       $bar.append('p');
 
@@ -126,9 +112,7 @@ function setupFigure(data) {
       (d) => d.name
     )
     .join((enter) => {
-      const $bar = enter
-        .append('div')
-        .attr('class', (d) => `bar bar-data bar-fs`);
+      const $bar = enter.append('div').attr('class', `bar bar-data bar-fs`);
 
       $bar.append('p');
 
