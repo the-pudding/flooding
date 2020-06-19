@@ -73,9 +73,10 @@ d3.selection.prototype.setupSearch = function init(options) {
       return sel === 'true';
     });
 
-    const sib = d3.select(active[0].nextSibling);
-
-    const next = active.length > 0 ? sib : d3.select(allVisible[0]);
+    const next =
+      active.length > 0
+        ? d3.select(active[0].nextSibling)
+        : d3.select(allVisible[0]);
 
     d3.select(active[0]).attr('aria-selected', false);
     next.attr('aria-selected', 'true');
@@ -94,9 +95,10 @@ d3.selection.prototype.setupSearch = function init(options) {
       return sel === 'true';
     });
 
-    const sib = d3.select(active[0].previousSibling);
-
-    const prev = active.length > 0 ? sib : d3.select(allVisible[0]);
+    const prev =
+      active.length > 0
+        ? d3.select(active[0].previousSibling)
+        : d3.select(allVisible[0]);
 
     d3.select(active[0]).attr('aria-selected', false);
     prev.attr('aria-selected', 'true');
@@ -117,6 +119,33 @@ d3.selection.prototype.setupSearch = function init(options) {
     $menu.classed('hidden', true);
   }
 
+  function selectOption(value) {
+    // set the textbox value to selected option
+    const tb = CONTAINER.select('input');
+    tb.property('value', value);
+
+    // set the select option to correct one
+    const selElement = CONTAINER.select('select');
+
+    selElement.selectAll('option').property('selected', (d) => {
+      const loc =
+        TYPE === 'county'
+          ? `${d.locationName}, ${d.state_iso2.toUpperCase()}`
+          : `${d.locationName}`;
+      return loc === value;
+    });
+
+    // make sure the on change event is fired
+    selElement.dispatch('change');
+
+    // find new nearest data
+
+    // const newNear = findNearest();
+
+    // update(sel.datum());
+
+    hideMenu();
+  }
   function handleType(key, textbox) {
     // only show options if user typed something
     const typed = textbox.node().value;
@@ -150,6 +179,9 @@ d3.selection.prototype.setupSearch = function init(options) {
     // make array of keys to ignore
     const ignore = [
       'Escape',
+      'ArrowUp',
+      'ArrowDown',
+      'Tab',
       'ArrowLeft',
       'ArrowRight',
       'Space',
@@ -159,44 +191,22 @@ d3.selection.prototype.setupSearch = function init(options) {
     ];
 
     // figure out what to do based on which key was pressed
-    if (
-      !ignore.includes(key) &&
-      key !== 'ArrowDown' &&
-      key !== 'Tab' &&
-      key !== 'ArrowUp'
-    )
-      handleType(key, textbox);
+    if (!ignore.includes(key)) handleType(key, textbox);
     else if (key === 'ArrowDown') handleDownPress();
     else if (key === 'Tab') hideMenu();
     else if (key === 'ArrowUp') handleUpPress();
-  }
+    else if (key === 'Enter' || key === 'Space') {
+      const allVisible = CONTAINER.selectAll('[role="option"]').nodes();
 
-  function selectOption(value) {
-    // set the textbox value to selected option
-    const tb = CONTAINER.select('input');
-    tb.property('value', value);
+      // find any active ones
+      const active = allVisible.filter((d, i, nodes) => {
+        const sel = d3.select(nodes[i]).attr('aria-selected');
+        return sel === 'true';
+      });
 
-    // set the select option to correct one
-    const selElement = CONTAINER.select('select');
-
-    selElement.selectAll('option').property('selected', (d) => {
-      const loc =
-        TYPE === 'county'
-          ? `${d.locationName}, ${d.state_iso2.toUpperCase()}`
-          : `${d.locationName}`;
-      return loc === value;
-    });
-
-    // make sure the on change event is fired
-    selElement.dispatch('change');
-
-    // find new nearest data
-
-    // const newNear = findNearest();
-
-    // update(sel.datum());
-
-    hideMenu();
+      const val = d3.select(active[0]).attr('data-option-value');
+      selectOption(val);
+    }
   }
 
   function handleOptionClick(sel) {
