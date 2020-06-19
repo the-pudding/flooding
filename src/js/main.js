@@ -13,7 +13,6 @@ import findNearest from './utils/find-nearest';
 import singleBars from './singleBars';
 import multiBars from './multiBars';
 import './utils/search';
-import findLocation from './utils/find-nearest';
 
 const defaultLocation = {
   country_code: 'US',
@@ -122,7 +121,7 @@ function handleSearchUpdate(searchBox, DATA, type) {
     }));
 
   // run the init function which will update charts
-  findLocation(filtered[0], DATA).then((result) =>
+  findNearest(filtered[0], DATA).then((result) =>
     findUpdateFile(file).init(DATA, result)
   );
 }
