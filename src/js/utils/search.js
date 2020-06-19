@@ -1,9 +1,12 @@
 // these functions are modeled heavily off of Adam Silver's "Building an Accessible Autocomplete Control"
 // https://adamsilver.io/articles/building-an-accessible-autocomplete-control/
 
+import findNearest from './find-nearest';
+
 let DATA = [];
 let SEARCH = null;
 let TYPE = null;
+
 let $ac = null;
 let $menu = null;
 
@@ -18,7 +21,6 @@ function updateStatus(len) {
 }
 
 function showMenu() {
-  console.log({ $menu });
   $menu.classed('hidden', false);
 }
 
@@ -34,7 +36,7 @@ function handleType(key, textbox, search, type) {
     const text = typed.toLowerCase();
     const re = new RegExp(`\\b${text}`);
 
-    const results = DATA.filter((d) => d.location.toLowerCase().match(re));
+    const results = DATA.filter((d) => d.locationName.toLowerCase().match(re));
     const len = results.length;
 
     // update list of results
@@ -73,28 +75,39 @@ function handleTextInput(search, type, textbox) {
   else if (key === 'Tab') hideMenu();
 }
 
-function selectOption(value) {}
+function selectOption(value) {
+  // set the textbox value to selected option
+  const tb = SEARCH.select('input');
+  tb.property('value', value);
+
+  // set the select option to correct one
+  const selElement = SEARCH.select('select');
+
+  selElement.selectAll('option').property('selected', (d) => {
+    const loc =
+      TYPE === 'county'
+        ? `${d.locationName}, ${d.state_iso2.toUpperCase()}`
+        : `${d.locationName}`;
+    return loc === value;
+  });
+
+  // make sure the on change event is fired
+  selElement.dispatch('change');
+
+  // find new nearest data
+
+  // const newNear = findNearest();
+
+  // update(sel.datum());
+
+  hideMenu();
+}
 
 function handleOptionClick() {
   const sel = d3.select(this);
   const val = sel.attr('data-option-value');
 
-  // set the textbox value to selected option
-  const tb = SEARCH.select('input');
-  tb.property('value', val);
-
-  // set the select option to correct one
-  SEARCH.select('select')
-    .selectAll('option')
-    .property('selected', (d) => {
-      const loc =
-        TYPE === 'county'
-          ? `${d.location}, ${d.state.toUpperCase()}`
-          : `${d.location}`;
-      return loc === val;
-    });
-
-  hideMenu();
+  selectOption(val);
 }
 
 function buildMenu(data, search, type) {
@@ -120,25 +133,24 @@ function buildMenu(data, search, type) {
     )
     .text((d) => {
       return type === 'county'
-        ? `${d.location}, ${d.state.toUpperCase()}`
-        : `${d.location}`;
+        ? `${d.locationName}, ${d.state_iso2.toUpperCase()}`
+        : `${d.locationName}`;
     })
     // stores the select box option value
     .attr('data-option-value', (d) =>
       type === 'county'
-        ? `${d.location}, ${d.state.toUpperCase()}`
-        : `${d.location}`
+        ? `${d.locationName}, ${d.state_iso2.toUpperCase()}`
+        : `${d.locationName}`
     );
 
   options.on('click', handleOptionClick);
-
-  console.log({ $menu });
 
   if ($menu === null) $menu = $ac.select('ul');
 }
 
 function setupDOM(data, search, type) {
   // add options to the select box for full a11y
+  console.log({ data, search, type });
   search
     .select('select')
     .selectAll('option')
@@ -146,14 +158,10 @@ function setupDOM(data, search, type) {
     .join((enter) => enter.append('option'))
     .text((d) =>
       type === 'county'
-        ? `${d.location}, ${d.state.toUpperCase()}`
-        : `${d.location}`
+        ? `${d.locationName}, ${d.state_iso2.toUpperCase()}`
+        : `${d.locationName}`
     )
-    .attr('value', (d) =>
-      type === 'county'
-        ? `${d.location}, ${d.state.toUpperCase()}`
-        : `${d.location}`
-    );
+    .attr('value', (d) => `${d.locationName}, ${d.state_iso2.toUpperCase()}`);
 
   const uniqueID = search.attr('data-js');
 
@@ -208,6 +216,10 @@ function setupDOM(data, search, type) {
     const textbox = d3.select(this).select('input');
     handleTextInput(search, type, textbox);
   });
+}
+
+function update(chartUpdateFn) {
+  // pass chart specific update function
 }
 
 export default function setupSearch(data, searchBoxSel, locationType) {

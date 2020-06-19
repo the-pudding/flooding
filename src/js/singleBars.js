@@ -1,5 +1,3 @@
-import searchSetup from './utils/search';
-
 // global constants
 let NEAREST = [];
 let DATA = [];
@@ -138,13 +136,18 @@ function setupData() {
     );
 }
 
+function update(result) {
+  console.log({ result });
+}
+
 function setupSearch() {
   const theseData = DATA[`${TYPE}Data`];
 
   const names = theseData
     .map((d) => ({ location: d.locationName, state: d.state_iso2 }))
     .sort((a, b) => d3.ascending(a.location, b.location));
-  searchSetup(names, $search, TYPE);
+  // search.setupSearch(names, $search, TYPE);
+  // search.update(update);
 }
 
 function singleButtonClick(btn) {

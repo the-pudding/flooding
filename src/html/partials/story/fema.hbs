@@ -36,11 +36,12 @@
                     <div class='figure__controls'>
                         <p class='embed'>Embed this chart</p>
 
-                        <div class='search' data-selected='county' data-js='search__bar-single'>
+                        <div class='search-container' data-selected='county' data-js='search__bar-single'>
                             <label for='location__bar-single'>
                                 <span class='search-label'>Location</span>
                             </label>
-                            <select name='location__bar-single' id='location__bar-single'></select>
+                            <select name='location__bar-single' id='location__bar-single' aria-hidden='true'
+                                tabindex='-1' class='visually-hidden'></select>
                         </div>
 
                         <p class='figure__desc' id='figure__desc'>

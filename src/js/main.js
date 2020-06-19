@@ -12,6 +12,8 @@ import locate from './utils/locate';
 import findNearest from './utils/find-nearest';
 import singleBars from './singleBars';
 import multiBars from './multiBars';
+import search from './utils/search';
+import setupSearch from './utils/search';
 
 const defaultLocation = {
   country_code: 'US',
@@ -61,6 +63,48 @@ function findReaderLoc() {
   });
 }
 
+function prepareSearch(section, locationType, DATA) {
+  let searchBars = null;
+  let type = locationType;
+  if (section === 'all') {
+    searchBars = d3.selectAll('.search-container');
+  } else searchBars = section.selectAll('.search-container');
+
+  searchBars.each((d, i, nodes) => {
+    const thisBox = d3.select(nodes[i]);
+
+    // if there is no location type, go with default
+    if (locationType === null) {
+      type = thisBox.attr('data-selected');
+    } else {
+      // otherwise, update the data attribute
+      type = locationType;
+      thisBox.attr('data-selected', type);
+    }
+
+    // setup select based on data type
+    const theseData = DATA[`${type}Data`].sort((a, b) =>
+      d3.ascending(a.locationName, b.locationName)
+    );
+    setupSearch(theseData, thisBox, type);
+  });
+}
+
+function handleSearchUpdate(searchBox, DATA) {
+  // find selected value
+  const sel = searchBox.property('value');
+  const locs = sel.split(',');
+  const [name, state] = locs;
+  const stateLower = state.trim().toLowerCase();
+
+  // filter data to find coordinates of selected location
+  const filtered = DATA[`${type}Data`].filter(
+    (d) => d.locationName === name && d.state_iso2 === stateLower
+  );
+
+  console.log({ filtered });
+}
+
 function init() {
   // adds rel="noopener" to all target="_blank" links
   linkFix();
@@ -91,10 +135,31 @@ function init() {
 
       d3.select('.bar-wrapper')
         .selectAll('input')
-        .on('change', function (d) {
-          const btn = d3.select(this);
+        .on('change', (d, i, nodes) => {
+          // same as d3.select(this)
+          const btn = d3.select(nodes[i]);
           singleBars.singleButtonClick(btn);
           multiBars.multiButtonClick(btn);
+
+          // update search bars to reflect change
+
+          const barSection = d3.select('.bar-wrapper');
+          const btnType = btn.attr('id');
+
+          prepareSearch(barSection, btnType, DATA);
+        });
+
+      // setup all search bar containers
+      prepareSearch('all', null, DATA);
+
+      // setup update functions for search menu changes
+      d3.selectAll('.search-container')
+        .select('select')
+        .on('change', (d, i, nodes) => {
+          const sel = d3.select(nodes[i]);
+          const parent = d3.select(nodes[i].parentNode);
+          const type = parent.attr('data-selected');
+          handleSearchUpdate(sel, DATA, type);
         });
 
       // setup tables
