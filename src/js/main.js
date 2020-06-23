@@ -263,10 +263,6 @@ function init() {
       customData = createGeojson.init(DATA["countyData"],"search");
       setupGeocoder(d3.select(".bar-wrapper"),DATA,"countyData");
 
-
-
-
-
       let tableSelected = d3.select(".table-wrapper").select('input[name="table-controls"]:checked').attr("value");
       propertyTable.tableButtonClick(tableSelected);
       //
