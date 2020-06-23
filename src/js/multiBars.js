@@ -10,7 +10,6 @@ const $section = d3.select("[data-js='bars']");
 const $container = $section.select("[data-js='bar__figure-multi']");
 const $figure = $container.select("[data-js='bar__container-multi']");
 const $desc = $container.select('.figure__desc');
-const $buttons = $section.selectAll('input');
 
 // scales
 const scaleX = d3.scaleLinear();
@@ -22,17 +21,6 @@ const MARGIN_LEFT = 32;
 // number formats
 const FORMAT_NUMBER = d3.format(',.0f');
 
-const properties = [
-  {
-    propertyName: 'FEMA Properties at Risk 2020 (total)',
-    key: 'FEMA',
-  },
-  {
-    propertyName: 'FS 2020 100 Year Risk (total)',
-    key: 'thisYear',
-  },
-];
-
 function resize() {
   const width = $figure.node().offsetWidth - MARGIN_LEFT - MARGIN_RIGHT;
 
@@ -43,7 +31,6 @@ function resize() {
 }
 
 function setupFigure(data) {
-
   const $groups = $figure
     .selectAll('.g-bar')
     .data(data, (d) => d.name)
@@ -94,9 +81,7 @@ function setupFigure(data) {
       (d) => d.name
     )
     .join((enter) => {
-      const $bar = enter
-        .append('div')
-        .attr('class', (d) => `bar bar-data bar-FEMA`);
+      const $bar = enter.append('div').attr('class', `bar bar-data bar-FEMA`);
 
       $bar.append('p');
 
@@ -127,9 +112,7 @@ function setupFigure(data) {
       (d) => d.name
     )
     .join((enter) => {
-      const $bar = enter
-        .append('div')
-        .attr('class', (d) => `bar bar-data bar-fs`);
+      const $bar = enter.append('div').attr('class', `bar bar-data bar-fs`);
 
       $bar.append('p');
 
@@ -138,12 +121,9 @@ function setupFigure(data) {
     .style('width', (d) => `${scaleX(d.fs)}px`);
 
   $dataBarFs.select('p').text((d) => `${d.fs}%`);
-
-
 }
 
 function cleanData(dat) {
-  console.log(dat);
   const cleaned = dat.map((d) => ({
     name: d.locationName,
     fema: Math.round(
@@ -163,8 +143,6 @@ function setupData() {
   // start by accessing the location type for the nearest data
   // and clean the data to find % of properties at risk
   const nearestData = cleanData(NEAREST[TYPE]);
-
-
 
   setupFigure(nearestData);
 

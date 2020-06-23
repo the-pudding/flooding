@@ -11,6 +11,7 @@ const $container = $section.select("[data-js='bar__figure-single']");
 const $figure = $container.select("[data-js='bar__container-single']");
 const $desc = $container.select('.figure__desc');
 const $buttons = $section.selectAll('input');
+const $search = $section.select("[data-js='search__bar-single'");
 
 // scales
 const scaleX = d3.scaleLinear();

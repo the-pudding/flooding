@@ -12,6 +12,7 @@ import locate from './utils/locate';
 import findNearest from './utils/find-nearest';
 import singleBars from './singleBars';
 import multiBars from './multiBars';
+import './utils/search';
 import story from './story'
 import animatedGif from './animatedGif'
 
@@ -25,6 +26,12 @@ const defaultLocation = {
   time_zone: 'America/New_York',
   latitude: 40.7789,
   longitude: -73.9692,
+};
+
+// list any files imported that will need a searchbar update
+const searchUpdateFiles = {
+  singleBars,
+  multiBars,
 };
 
 // let readerLatLong = null;
@@ -63,6 +70,64 @@ function findReaderLoc() {
   });
 }
 
+function prepareSearch(section, locationType, DATA) {
+  let searchBars = null;
+  let type = locationType;
+  if (section === 'all') {
+    searchBars = d3.selectAll('.search-container');
+  } else searchBars = section.selectAll('.search-container');
+
+  searchBars.each((d, i, nodes) => {
+    const thisBox = d3.select(nodes[i]);
+
+    // if there is no location type, go with default
+    if (locationType === null) {
+      type = thisBox.attr('data-selected');
+    } else {
+      // otherwise, update the data attribute
+      type = locationType;
+      thisBox.attr('data-selected', type);
+    }
+
+    // setup select based on data type
+    const theseData = DATA[`${type}Data`].sort((a, b) =>
+      d3.ascending(a.locationName, b.locationName)
+    );
+    thisBox.setupSearch({ theseData, type, thisBox });
+  });
+}
+
+function findUpdateFile(name) {
+  return searchUpdateFiles[name];
+}
+
+function handleSearchUpdate(searchBox, DATA, type) {
+  // find which chart file to update
+  const file = searchBox.attr('data-file');
+
+  // find selected value
+  const sel = searchBox.property('value');
+  const locs = sel.split(',');
+  const [name, state] = locs;
+  const stateLower = state.trim().toLowerCase();
+
+  const theseData = DATA[`${type}Data`];
+
+  // filter data to find coordinates of selected location
+  const filtered = theseData
+    .filter((d) => d.locationName === name && d.state_iso2 === stateLower)
+    .map((d) => ({
+      ...d,
+      latitude: +d.Latitude,
+      longitude: +d.Longitude,
+    }));
+
+  // run the init function which will update charts
+  findNearest(filtered[0], DATA).then((result) =>
+    findUpdateFile(file).init(DATA, result)
+  );
+}
+
 function init() {
   // adds rel="noopener" to all target="_blank" links
   linkFix();
@@ -86,21 +151,37 @@ function init() {
     .then((readerLocation) => findNearest(readerLocation, DATA))
     .then((nearest) => {
 
-      // animatedGif.init(DATA,nearest)
-
       story.init(DATA);
-
       singleBars.init(DATA, nearest);
       multiBars.init(DATA, nearest);
 
-      d3.select(".bar-wrapper")
+      d3.select('.bar-wrapper')
         .selectAll('input')
-        .on('change', function (d) {
-          const btn = d3.select(this);
+        .on('change', (d, i, nodes) => {
+          // same as d3.select(this)
+          const btn = d3.select(nodes[i]);
           singleBars.singleButtonClick(btn);
           multiBars.multiButtonClick(btn);
+
+          // update search bars to reflect change
+
+          const barSection = d3.select('.bar-wrapper');
+          const btnType = btn.attr('id');
+
+          prepareSearch(barSection, btnType, DATA);
         });
 
+      //prepareSearch('all', null, DATA);
+
+      // setup update functions for search menu changes
+      d3.selectAll('.search-container')
+        .select('select')
+        .on('change', (d, i, nodes) => {
+          const sel = d3.select(nodes[i]);
+          const parent = d3.select(nodes[i].parentNode);
+          const type = parent.attr('data-selected');
+          handleSearchUpdate(sel, DATA, type);
+        });
 
 
       // let tableSelected = d3.select(".table-wrapper").select('input[name="table-controls"]:checked').attr("value");
@@ -132,6 +213,7 @@ function init() {
       //   nearest,
       //   'state'
       // );
+
       //
       // // //
       // zipMap.init(
@@ -151,7 +233,7 @@ function init() {
       //   "FEMA Properties at Risk 2020 (total)",
       //   "FS 2020 100 Year Risk (total)"
       // );
-      //
+
       clusterMap.init(nearest,DATA);
 
     })
