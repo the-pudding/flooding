@@ -149,6 +149,9 @@ function setup() {
 function init(data, nearestLocations) {
   NEAREST = nearestLocations;
   DATA = data;
+
+  console.log(data,nearestLocations);
+
   setup();
 }
 

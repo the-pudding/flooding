@@ -101,6 +101,68 @@ function findUpdateFile(name) {
   return searchUpdateFiles[name];
 }
 
+let customData = null;
+let suffix = " county"
+
+function setupGeocoder(container,data,geo){
+
+  function forwardGeocoder(query) {
+
+    var matchingFeatures = [];
+    for (var i = 0; i < customData.features.length; i++) {
+    var feature = customData.features[i];
+    // handle queries with different capitalization than the source data by calling toLowerCase()
+    if (
+      feature.properties.title
+      .toLowerCase()
+      .search(query.toLowerCase()) !== -1
+    ) {
+      // add a tree emoji as a prefix for custom data results
+      // using carmen geojson format: https://github.com/mapbox/carmen/blob/master/carmen-geojson.md
+
+      feature['place_name'] = feature.properties.title +suffix+", "+feature.properties.state.toUpperCase();
+      feature['center'] = feature.geometry.coordinates;
+      matchingFeatures.push(feature);
+    }
+    }
+    return matchingFeatures;
+  }
+
+  mapboxgl.accessToken = 'pk.eyJ1IjoiZG9jazQyNDIiLCJhIjoiY2pjazE5eTM2NDl2aDJ3cDUyeDlsb292NiJ9.Jr__XbmAolbLyzPDj7-8kQ';
+
+  var geocoder = new MapboxGeocoder({
+    accessToken: mapboxgl.accessToken,
+    countries: 'us',
+    localGeocoder: forwardGeocoder,
+    placeholder:'Find a location',
+    // filter: function(item) {
+    //   return item.place_type[0] == "manual";
+    // },
+    zoom:7,
+    localGeocoderOnly:true,
+    marker:false
+    //mapboxgl: mapboxgl
+  });
+
+  const parent = container.select(".search").node();//document.querySelectorAll("#search");
+
+  let el = geocoder.onAdd();
+  parent.appendChild(el);
+
+  geocoder.on("result",function(d){
+
+
+    let long = +d.result.geometry.coordinates[0];
+    let lat = +d.result.geometry.coordinates[1];
+
+    findNearest({ latitude: lat, longitude: long },data)
+      .then((nearest) => {
+        singleBars.init(data, nearest)
+        multiBars.init(data, nearest)
+      })
+  })
+}
+
 function handleSearchUpdate(searchBox, DATA, type) {
   // find which chart file to update
   const file = searchBox.attr('data-file');
@@ -152,6 +214,8 @@ function init() {
     .then((nearest) => {
 
       story.init(DATA);
+      animatedGif.init(DATA,nearest)
+
       singleBars.init(DATA, nearest);
       multiBars.init(DATA, nearest);
 
@@ -163,15 +227,27 @@ function init() {
           singleBars.singleButtonClick(btn);
           multiBars.multiButtonClick(btn);
 
+
+
           // update search bars to reflect change
 
           const barSection = d3.select('.bar-wrapper');
           const btnType = btn.attr('id');
 
+          console.log(btnType);
+          if(btnType == "state"){
+            customData = createGeojson.init(data["stateData"],"search");
+            suffix = "";
+          }
+          else {
+            customData = createGeojson.init(data["countyData"],"search");
+            suffix = " county";
+          }
+
           prepareSearch(barSection, btnType, DATA);
         });
 
-      //prepareSearch('all', null, DATA);
+      prepareSearch('all', null, DATA);
 
       // setup update functions for search menu changes
       d3.selectAll('.search-container')
@@ -184,55 +260,62 @@ function init() {
         });
 
 
-      // let tableSelected = d3.select(".table-wrapper").select('input[name="table-controls"]:checked').attr("value");
-      // propertyTable.tableButtonClick(tableSelected);
-      // //
-      // d3.select(".table-wrapper")
-      //   .select(".controls-container")
-      //   .selectAll('input')
-      //   .on('change', function (d) {
-      //     console.log("changing");
-      //     propertyTable.tableButtonClick(d3.select(this).attr("value"));
-      //   });
+      customData = createGeojson.init(DATA["countyData"],"search");
+      setupGeocoder(d3.select(".bar-wrapper"),DATA,"countyData");
+
+
+
+
+
+      let tableSelected = d3.select(".table-wrapper").select('input[name="table-controls"]:checked').attr("value");
+      propertyTable.tableButtonClick(tableSelected);
       //
-      // propertyTable.init(
-      //   DATA.countyData,
-      //   d3.select('.county-table'),
-      //   nearest,
-      //   'county'
-      // );
-      // propertyTable.init(
-      //   DATA.cityData,
-      //   d3.select('.city-table'),
-      //   nearest,
-      //   'city'
-      // );
-      // propertyTable.init(
-      //   DATA.stateData,
-      //   d3.select('.state-table'),
-      //   nearest,
-      //   'state'
-      // );
+      d3.select(".table-wrapper")
+        .select(".controls-container")
+        .selectAll('input')
+        .on('change', function (d) {
+          console.log("changing");
+          propertyTable.tableButtonClick(d3.select(this).attr("value"));
+        });
+
+      propertyTable.init(
+        DATA.countyData,
+        d3.select('.county-table'),
+        nearest,
+        'county'
+      );
+      propertyTable.init(
+        DATA.cityData,
+        d3.select('.city-table'),
+        nearest,
+        'city'
+      );
+      propertyTable.init(
+        DATA.stateData,
+        d3.select('.state-table'),
+        nearest,
+        'state'
+      );
 
       //
       // // //
-      // zipMap.init(
-      //   nearest,DATA,
-      //   d3.select('.climate-map'),
-      //   "zipcode",
-      //   "climate",
-      //   "FS 2020 100 Year Risk (total)",
-      //   "FS 2050 100 Year Risk (total)"
-      // );
-      //
-      // zipMap.init(
-      //   nearest,DATA,
-      //   d3.select('.fema-map'),
-      //   "zipcode",
-      //   "fema",
-      //   "FEMA Properties at Risk 2020 (total)",
-      //   "FS 2020 100 Year Risk (total)"
-      // );
+      zipMap.init(
+        nearest,DATA,
+        d3.select('.climate-map'),
+        "zipcode",
+        "climate",
+        "FS 2020 100 Year Risk (total)",
+        "FS 2050 100 Year Risk (total)"
+      );
+
+      zipMap.init(
+        nearest,DATA,
+        d3.select('.fema-map'),
+        "zipcode",
+        "fema",
+        "FEMA Properties at Risk 2020 (total)",
+        "FS 2020 100 Year Risk (total)"
+      );
 
       clusterMap.init(nearest,DATA);
 

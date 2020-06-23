@@ -1,17 +1,18 @@
 .search-container
     font-weight normal
     font-family $atlas
-    .autocomplete [role=listbox] 
+    display none
+    .autocomplete [role=listbox]
         max-height 12em
         overflow-y scroll
     ul
         display block
-        &.hidden 
+        &.hidden
             display none
     .autocomplete [role=option][aria-selected='true']
         background-color rgba($gray-light, 0.5)
         font-weight bold
-    .visually-hidden 
+    .visually-hidden
         border 0
         clip rect(0 0 0 0)
         height 1px
@@ -20,9 +21,8 @@
         padding 0
         position absolute
         width 1px
-    input 
-        font-family $atlas 
+    input
+        font-family $atlas
         set-type-size('root')
-        &::placeholder 
+        &::placeholder
             color $gray
-
