@@ -13,6 +13,8 @@ import findNearest from './utils/find-nearest';
 import singleBars from './singleBars';
 import multiBars from './multiBars';
 import './utils/search';
+import story from './story'
+import animatedGif from './animatedGif'
 
 const defaultLocation = {
   country_code: 'US',
@@ -140,7 +142,7 @@ function init() {
   let [cityData, zipData, countyData, stateData] = [];
   let DATA = [];
 
-  loadData(['city4.csv', 'zip4-1.csv', 'county4.csv', 'state4.csv'])
+  loadData(['city5.csv', 'zip5.csv', 'county5.csv', 'state5.csv'])
     .then((result) => {
       [cityData, zipData, countyData, stateData] = result;
       DATA = { cityData, zipData, countyData, stateData };
@@ -148,9 +150,8 @@ function init() {
     .then(findReaderLoc)
     .then((readerLocation) => findNearest(readerLocation, DATA))
     .then((nearest) => {
-      // pass the nearest locations for each into the appropriate graphs
 
-      // setup bars
+      story.init(DATA);
       singleBars.init(DATA, nearest);
       multiBars.init(DATA, nearest);
 
@@ -170,8 +171,7 @@ function init() {
           prepareSearch(barSection, btnType, DATA);
         });
 
-      // setup all search bar containers
-      prepareSearch('all', null, DATA);
+      //prepareSearch('all', null, DATA);
 
       // setup update functions for search menu changes
       d3.selectAll('.search-container')
@@ -183,16 +183,18 @@ function init() {
           handleSearchUpdate(sel, DATA, type);
         });
 
-      // setup tables
+
       // let tableSelected = d3.select(".table-wrapper").select('input[name="table-controls"]:checked').attr("value");
       // propertyTable.tableButtonClick(tableSelected);
-
+      // //
       // d3.select(".table-wrapper")
+      //   .select(".controls-container")
       //   .selectAll('input')
       //   .on('change', function (d) {
+      //     console.log("changing");
       //     propertyTable.tableButtonClick(d3.select(this).attr("value"));
       //   });
-
+      //
       // propertyTable.init(
       //   DATA.countyData,
       //   d3.select('.county-table'),
@@ -212,46 +214,28 @@ function init() {
       //   'state'
       // );
 
+      //
+      // // //
       // zipMap.init(
-      //   nearest,
-      //   DATA["countyData"],
-      //   d3.select('.climate-map-county'),
-      //   "county",
-      //   "climate",
-      //   "FS 2020 100 Year Risk (total)",
-      //   "FS 2050 100 Year Risk (total)"
-      // );
-      // //
-      // zipMap.init(
-      //   nearest,DATA["zipData"],
-      //   d3.select('.climate-map-zip'),
+      //   nearest,DATA,
+      //   d3.select('.climate-map'),
       //   "zipcode",
       //   "climate",
       //   "FS 2020 100 Year Risk (total)",
       //   "FS 2050 100 Year Risk (total)"
       // );
-
+      //
       // zipMap.init(
-      //   nearest,
-      //   DATA["countyData"],
-      //   d3.select('.fema-map-county'),
-      //   "county",
-      //   "fema",
-      //   "FEMA Properties at Risk 2020 (total)",
-      //   "FS 2020 100 Year Risk (total)"
-      // );
-      // //
-      // zipMap.init(
-      //   nearest,
-      //   DATA["zipData"],
-      //   d3.select('.fema-map-zip'),
+      //   nearest,DATA,
+      //   d3.select('.fema-map'),
       //   "zipcode",
       //   "fema",
       //   "FEMA Properties at Risk 2020 (total)",
       //   "FS 2020 100 Year Risk (total)"
       // );
 
-      // clusterMap.init(createGeojson.init(DATA["zipData"]));
+      clusterMap.init(nearest,DATA);
+
     })
     .catch((error) => {
       console.log(error);

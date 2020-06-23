@@ -1,4 +1,5 @@
 import searchCreate from './searchCreate.js'
+import createGeojson from './createGeojson';
 
 const formatComma = d3.format(',');
 
@@ -27,30 +28,32 @@ function buildTable(container, data) {
   const tableContainer = container.select('.table');
   // let indexOfSelected = findWithAttr(data,"name",citySelected);
   const sortedData = data
-    // .filter(function (d) {
-    //   if (geoSelected == 'state') {
-    //     return d;
-    //   }
-    //   return d.state_iso2 == stateSelected;
-    // })
-    .sort(function (x, y) {
-      return x.locationName == citySelected
-        ? -1
-        : y.locationName == citySelected
-        ? 1
-        : 0;
-    });
+  //   // .filter(function (d) {
+  //   //   if (geoSelected == 'state') {
+  //   //     return d;
+  //   //   }
+  //   //   return d.state_iso2 == stateSelected;
+  //   // })
+  //   .sort(function (x, y) {
+  //     return x.locationName == citySelected
+  //       ? -1
+  //       : y.locationName == citySelected
+  //       ? 1
+  //       : 0;
+  //   });
 
   const rowData = tableContainer
     .selectAll('div')
     .data(sortedData.slice(0, 10), function (d, i) {
       return d.locationName + i;
     });
+
   const row = rowData.enter().append('div').attr('class', 'row');
   rowData.exit().remove();
 
   row.classed('selected', function (d, i) {
-    if (d.locationName == citySelected) {
+    if(i==0){
+    //if (d.locationName == citySelected) {
       return true;
     }
     return false;
@@ -108,28 +111,91 @@ function findNearest(locationInput, data) {
 }
 
 function init(data, container, locationInput, geo) {
-  geoSelected = geo;
+  let customData = createGeojson.init(data,"search");
+  let suffix = "";
+  if(geo=="county"){
+    suffix = " county"
+  }
 
-  container.attr('geo-selected', geoSelected);
-  container.attr('type-selected', "table");
+  function forwardGeocoder(query) {
+    var matchingFeatures = [];
+    for (var i = 0; i < customData.features.length; i++) {
+    var feature = customData.features[i];
+    // handle queries with different capitalization than the source data by calling toLowerCase()
+    if (
+      feature.properties.title
+      .toLowerCase()
+      .search(query.toLowerCase()) !== -1
+    ) {
+      // add a tree emoji as a prefix for custom data results
+      // using carmen geojson format: https://github.com/mapbox/carmen/blob/master/carmen-geojson.md
 
-  loc = locationInput[geoSelected][0]
+      feature['place_name'] = feature.properties.title +suffix+", "+feature.properties.state.toUpperCase();
+      feature['center'] = feature.geometry.coordinates;
+      matchingFeatures.push(feature);
+    }
+    }
+    return matchingFeatures;
+  }
 
-  container.attr("data-city",loc.locationName);
-  container.attr("data-state",loc.state_iso2);
+  mapboxgl.accessToken = 'pk.eyJ1IjoiZG9jazQyNDIiLCJhIjoiY2pjazE5eTM2NDl2aDJ3cDUyeDlsb292NiJ9.Jr__XbmAolbLyzPDj7-8kQ';
 
-  //re-sort data to be closest to location
-  // let locData = searchCreate.findNearest(
-  //   { latitude: +loc.Latitude, longitude: +loc.Longitude },
-  //   data
-  // );
+    var geocoder = new MapboxGeocoder({
+      accessToken: mapboxgl.accessToken,
+      countries: 'us',
+      localGeocoder: forwardGeocoder,
+      placeholder:'Find a location',
+      // filter: function(item) {
+      //   return item.place_type[0] == "manual";
+      // },
+      zoom:7,
+      localGeocoderOnly:true,
+      marker:false
+      //mapboxgl: mapboxgl
+    });
 
-  console.log(locationInput[geo]);
 
-  buildTable(container, locationInput[geo]);
+    const parent = container.select(".search").node();//document.querySelectorAll("#search");
 
-  searchCreate.setupSearchBox(container,data,geoSelected)
-  //setupSearchBox(container, data);
+    let el = geocoder.onAdd();
+    parent.appendChild(el);
+
+    geocoder.on("result",function(d){
+
+      container.attr('data-city', d.result.place_name);
+      container.attr('data-state', d.result.properties.state);
+
+      let long = d.result.geometry.coordinates[0];
+      let lat = +d.result.geometry.coordinates[1];
+
+      const loc = searchCreate.findNearest(
+        { latitude: lat, longitude: long },
+        data
+      );
+
+      buildTable(container, loc);
+
+    })
+
+    geoSelected = geo;
+
+    container.attr('geo-selected', geoSelected);
+    container.attr('type-selected', "table");
+
+    loc = locationInput[geoSelected][0]
+
+    container.attr("data-city",loc.locationName);
+    container.attr("data-state",loc.state_iso2);
+
+    //re-sort data to be closest to location
+    // let locData = searchCreate.findNearest(
+    //   { latitude: +loc.Latitude, longitude: +loc.Longitude },
+    //   data
+    // );
+
+    buildTable(container, locationInput[geo]);
+
+    // searchCreate.setupSearchBox(container,data,geoSelected)
 }
 
 export default { init, buildTable, tableButtonClick };

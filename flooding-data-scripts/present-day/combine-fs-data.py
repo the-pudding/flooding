@@ -153,8 +153,9 @@ for f in configfiles:
     if(fileSelected == "Zipcode"):
         zipCoords = pd.read_csv("post-coords.csv", dtype=object)
         df['Zipcode'] = df['Zipcode'].astype(str)
-        df['Zipcode'] = df['Zipcode'].apply(lambda s: '0' + s if s < 1000 else s)
-        df['Zipcode'] = df['Zipcode'].apply(lambda s: '00' + s if len(s) == 3 else s)
+        df['Zipcode'] = df['Zipcode'].apply(lambda s: '0' + s if len(s) == 3 else s)
+        df['Zipcode'] = df['Zipcode'].apply(lambda s: '0' + s if len(s) == 4 else s)
+
         df = pd.merge(df, zipCoords, on="Zipcode", how='left')
     df_list.append(df)
 #

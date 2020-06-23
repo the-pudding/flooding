@@ -1,30 +1,22 @@
 
 
-let loc;
 
 const geoName = { city: '', county: ' county', state: '',zipcode:'zipcode'};
+const dataCross = {"county":"countyData","zipcode":"zipData"};
 
 function getRange(scope){
   if(scope == "climate"){
     return [1,1.15];
   }
   if(scope == "fema"){
-    return [1,5];
+    return [1,8];
   }
 }
 
-function getZoom(scope,geo){
-  if(geo=="zipcode"){
-    return 4
-  }
-  return 2.5;
-}
-
-function getMinZoom(scope,geo){
-  if(geo=="zipcode"){
-    return 4
-  }
-  return 1;
+function setDataMap(selectedData){
+  return d3.map(selectedData,function(d){
+    return +d.index;
+  });
 }
 
 function findNearest(locationInput,data) {
@@ -65,10 +57,15 @@ function calculatingDistance(readerLat, readerLong, locLat, locLong) {
 }
 
 function buildLegend(container,scope){
-  console.log(container.node());
-  let legendContainer = container.select(".legend");
-  legendContainer.append("p").attr("class","legend-text").text("no change");
-  let legendContainerColors = container.select(".legend").append("div").attr("class","legend-colors");
+
+  let legendContainer = container.select(".legend-wrapper");
+  legendContainer.append("p").attr("class","legend-text").text("No Change or Decrease");
+  legendContainer.append("div").attr("class","legend-item");
+
+  legendContainer.append("p").attr("class","legend-text").text("0%");
+
+  let legendContainerColors = container.select(".legend-wrapper").append("div").attr("class","legend-colors");
+
   legendContainer.append("p").attr("class","legend-text").text("+"+Math.round((getRange(scope)[1]-1)*100)+"%");
 
   legendContainerColors.selectAll("div")
@@ -88,16 +85,35 @@ function toggleToolTipVisibility(container,visibility){
    tooltipContainer.style("display",visibility)
 }
 
-function populateToolTip(container,dataPoint,coords,OPTIONS){
-  let tooltipContainer = container.select(".map").select(".map-tooltip");
-  tooltipContainer.style("left",coords["x"]+"px").style("top",coords["y"]+"px")
-  tooltipContainer.html(
-    "<p>"+dataPoint.locationName+" "+geoName[OPTIONS.geo]+"</p>"+"<p>"+Math.round((getDataPoint(+dataPoint[OPTIONS.variableOne],+dataPoint[OPTIONS.variableTwo],OPTIONS)-1)*100)+"%"+" increase in properties affected by flooding</p>"
-  );
+function createExpression(variableOne,variableTwo,selectedData,OPTIONS,colorScale){
+  var expression = ['match', ['id']];
+  let thing = [];
+
+  for (var row in selectedData){
+    let mapboxId = +selectedData[row]["index"];
+    let pctChange = getDataPoint(+selectedData[row][variableOne],+selectedData[row][variableTwo],OPTIONS);
+    if(!pctChange){
+      pctChange = colorScale.domain()[1];
+    }
+    let color = getColor(+pctChange,colorScale);
+    if(mapboxId > 0){
+      expression.push(mapboxId, color);
+      thing.push(mapboxId);
+    }
+  }
+  expression.push('#f1f1f0');
+  return expression;
 }
 
 function buildToolTip(container,map){
   let tooltipContainer = container.select(".map").append("div").attr("class","map-tooltip");
+}
+
+function getColor(d,colorScale){
+  if(d < 1){
+    return "#aaa";
+  }
+  return d3.interpolateRdPu(colorScale(d))
 }
 
 function getDataPoint(dataOne,dataTwo,OPTIONS){
@@ -105,6 +121,9 @@ function getDataPoint(dataOne,dataTwo,OPTIONS){
     return dataTwo/dataOne;
   }
   else if (OPTIONS.scope == "fema"){
+    if(dataOne == 0){
+      return null;
+    }
     return dataTwo/dataOne;
   }
 }
@@ -112,9 +131,166 @@ function getDataPoint(dataOne,dataTwo,OPTIONS){
 function init(locationInput,data,container,geo,scope,variableOne,variableTwo){
   // let params = [locationInput,data,container,geo,scope,variableOne,variableTwo]
   const OPTIONS = {locationInput,data,container,geo,scope,variableOne,variableTwo}
+  let addedCounty = false;
+  let loc;
+  let colorScale = null;
+  let dataMap = null;
+  let geoSelected = null;
+
+
+  geoSelected = geo;
+
+  let selectedData = data[dataCross[geoSelected]];
   //for mousemove looksups
-  let dataMap = d3.map(data,function(d){
-    return +d.index;
+  dataMap = setDataMap(selectedData);
+  //
+  // console.log(datamap);
+
+  function getLayerSource(){
+    if(geoSelected == "county"){
+      return ["county","county-fill","boundaries_admin_2"]
+    }
+    return ["postal","postal-fill","boundaries_postal_4"];
+  }
+
+  function getZoom(scope,geo){
+    if(geoSelected=="zipcode"){
+      return 3
+    }
+    return 2.5;
+  }
+
+  function getMinZoom(scope,geo){
+    if(geoSelected=="zipcode"){
+      return 3
+    }
+    return 1;
+  }
+
+  function populateToolTip(container,dataPoint,coords,OPTIONS){
+
+
+
+    let tooltipContainer = container.select(".map").select(".map-tooltip");
+    tooltipContainer.style("left",coords["x"]+"px").style("top",coords["y"]+"px")
+
+    let dataToFill = Math.round((getDataPoint(+dataPoint[OPTIONS.variableOne],+dataPoint[OPTIONS.variableTwo],OPTIONS)-1)*1000)/10+"% increase in properties affected by flooding";
+
+    if(!getDataPoint(+dataPoint[OPTIONS.variableOne],+dataPoint[OPTIONS.variableTwo],OPTIONS) && OPTIONS.scope == "fema"){
+      dataToFill = "Zero properties identified by FEMA; "+dataPoint[OPTIONS.variableTwo]+" propreties identified by First Street"
+    }
+
+    if(Object.keys(dataPoint).indexOf("Zipcode") > -1){
+      tooltipContainer.html(
+        "<p>"+dataPoint.Zipcode+" "+geoName[geoSelected]+"</p><p>"+dataToFill+"</p>"
+      )
+    }
+    else {
+      tooltipContainer.html(
+        "<p>"+dataPoint.locationName+" "+geoName[geoSelected]+"</p><p>"+dataToFill+"</p>"
+      )
+    }
+    ;
+  }
+
+  container.select(".controls-container").selectAll("input").on("change",function(d){
+
+    if(!addedCounty && d3.select(this).attr("value") == "county"){
+      addedCounty = true;
+      geoSelected = "county";
+      url = "mapbox://mapbox.boundaries-adm2-v3";
+      source = "boundaries_admin_2"
+      map.setLayoutProperty('postal-fill',"visibility","none");
+      map.setLayoutProperty('postal-line',"visibility","none");
+      selectedData = data[dataCross["county"]];
+      dataMap = setDataMap(selectedData);
+      expression = createExpression(variableOne,variableTwo,selectedData,OPTIONS,colorScale);
+
+      map.addSource("county", {
+        type: "vector",
+        url:url
+      });
+
+      map.addLayer({
+        "id": "county-fill",
+        "type": "fill",
+        "source": "county",
+        "source-layer": source,
+        "paint": {
+            "fill-outline-color":"rgba(0,0,0,0)",
+            "fill-opacity":1,
+            "fill-color": expression
+        }
+      },"admin-1-boundary");
+
+      map.addLayer({
+        "id": "county-line",
+        "type": "line",
+        "source": "county",
+        "source-layer": source,
+        "paint": {
+            "line-width":2,
+            "line-opacity":[
+              'case',
+              ['boolean', ['feature-state', 'hover'], false],
+              1,
+              0
+            ],
+            "line-color":"black"
+        }
+        //,
+      });
+
+      function setStates(e) {
+
+        //console.log("setting states");
+
+        selectedData.forEach(function(row) {
+          map.setFeatureState({
+            source: 'county',
+            sourceLayer: "boundaries_admin_2",
+            id: +row["index"]
+          }, {
+            hover: false
+          });
+        });
+      }
+
+      // Check if `statesData` source is loaded.
+      function setAfterLoad(e) {
+        if (e.sourceId === 'county' && e.isSourceLoaded) {
+          setStates();
+          map.off('sourcedata', setAfterLoad);
+        }
+      }
+
+      // If `statesData` source is loaded, call `setStates()`.
+      if (map.isSourceLoaded('county')) {
+        setStates();
+      } else {
+        map.on('sourcedata', setAfterLoad);
+      }
+
+    }
+    else if(d3.select(this).attr("value") == "county"){
+      selectedData = data[dataCross["county"]];
+      dataMap = setDataMap(selectedData);
+      geoSelected = "county";
+      map.setLayoutProperty('postal-fill',"visibility","none");
+      map.setLayoutProperty('postal-line',"visibility","none");
+      map.setLayoutProperty('county-fill',"visibility","visible");
+      map.setLayoutProperty('county-line',"visibility","visible");
+    }
+    else if(d3.select(this).attr("value") == "zipcode"){
+      selectedData = data[dataCross["zipcode"]];
+      dataMap = setDataMap(selectedData);
+
+      geoSelected = "zipcode";
+      map.setLayoutProperty('postal-fill',"visibility","visible");
+      map.setLayoutProperty('postal-line',"visibility","visible");
+      map.setLayoutProperty('county-fill',"visibility","none");
+      map.setLayoutProperty('county-line',"visibility","none");
+    }
   });
 
   mapboxgl.accessToken = 'pk.eyJ1IjoiZG9jazQyNDIiLCJhIjoiY2pjazE5eTM2NDl2aDJ3cDUyeDlsb292NiJ9.Jr__XbmAolbLyzPDj7-8kQ';
@@ -122,52 +298,27 @@ function init(locationInput,data,container,geo,scope,variableOne,variableTwo){
 
   buildLegend(container,scope);
 
-
-
-  loc = findNearest(locationInput,data);
+  loc = findNearest(locationInput,selectedData);
 
   var map = new mapboxgl.Map({
     container: container.select(".map").node(),
     style: 'mapbox://styles/mapbox/light-v10',
     // style: 'mapbox://styles/nytgraphics/cjmsjh9u308ze2rpk2vh41efx?optimize=true',
     center: [-98.585522 , 39.8333333],
-    minZoom: getMinZoom(scope,geo),
-    zoom: getZoom(scope,geo)
+    minZoom: getMinZoom(scope,geoSelected),
+    zoom: getZoom(scope,geoSelected)
   });
 
   buildToolTip(container,map);
 
   let range = getRange(scope);
 
-  let dataKey = d3.map(data,function(d){return +d["index"]});
-  let variableExtent = d3.extent(data,function(d){return getDataPoint(+d[variableOne],+d[variableTwo],OPTIONS); });
-  let colorScale = d3.scaleLinear().domain(range).range([.1,1]).clamp(true);
+  let dataKey = d3.map(selectedData,function(d){return +d["index"]});
+  let variableExtent = d3.extent(selectedData,function(d){return getDataPoint(+d[variableOne],+d[variableTwo],OPTIONS); });
+  colorScale = d3.scaleLinear().domain(range).range([.1,1]).clamp(true);
 
-  function getColor(d){
-    if(d < 1){
-      return "#aaa";
-    }
-    return d3.interpolateRdPu(colorScale(d))
-  }
 
-  var expression = ['match', ['id']];
-  let thing = [];
-
-  for (var row in data){
-    let mapboxId = +data[row]["index"];
-    let pctChange = getDataPoint(+data[row][variableOne],+data[row][variableTwo],OPTIONS);
-
-    if(pctChange == "inf"){
-      pctChange = range[1];
-    }
-    let color = getColor(+pctChange);
-    if(mapboxId > 0){
-      expression.push(mapboxId, color);
-      thing.push(mapboxId);
-    }
-  }
-  expression.push('#f1f1f0');
-
+  let expression = createExpression(variableOne,variableTwo,selectedData,OPTIONS,colorScale);
 
   const findDuplicates = (arr) => {
     let sorted_arr = arr.slice().sort(); // You can define the comparing function here.
@@ -186,25 +337,23 @@ function init(locationInput,data,container,geo,scope,variableOne,variableTwo){
   let url = "mapbox://mapbox.boundaries-pos4-v3";
   let source = "boundaries_postal_4"
 
-  if(geo == "county"){
+  if(geoSelected == "county"){
     url = "mapbox://mapbox.boundaries-adm2-v3";
     source = "boundaries_admin_2"
   }
 
   map.on('load', function() {
 
-    console.log(map.getStyle());
-
-    map.addSource("postal-2", {
+    map.addSource("postal", {
       type: "vector",
       //url: "mapbox://mapbox.enterprise-boundaries-p2-v1"
       url:url//.json?secure&access_token=pk.eyJ1IjoibGFicy1zYW5kYm94IiwiYSI6ImNrMTZuanRtdTE3cW4zZG56bHR6MnBkZG4ifQ.YGRP0sZNYdLw5_jSa9IvXg
     });
 
     map.addLayer({
-      "id": "postal-2-fill",
+      "id": "postal-fill",
       "type": "fill",
-      "source": "postal-2",
+      "source": "postal",
       "source-layer": source,
       "paint": {
           "fill-outline-color":"rgba(0,0,0,0)",
@@ -214,9 +363,9 @@ function init(locationInput,data,container,geo,scope,variableOne,variableTwo){
     },"admin-1-boundary");
 
     map.addLayer({
-      "id": "postal-2-line",
+      "id": "postal-line",
       "type": "line",
-      "source": "postal-2",
+      "source": "postal",
       "source-layer": source,
       "paint": {
           "line-width":2,
@@ -232,16 +381,15 @@ function init(locationInput,data,container,geo,scope,variableOne,variableTwo){
       //'filter': ['==', 'id', 123]
     });
 
-
     // Join the JSON unemployment data with the corresponding vector features where
      // feautre.unit_code === `STATE_ID`.
      function setStates(e) {
 
        //console.log("setting states");
 
-       data.forEach(function(row) {
+       selectedData.forEach(function(row) {
          map.setFeatureState({
-           source: 'postal-2',
+           source: 'postal',
            sourceLayer: source,
            id: +row["index"]
          }, {
@@ -252,30 +400,27 @@ function init(locationInput,data,container,geo,scope,variableOne,variableTwo){
 
      // Check if `statesData` source is loaded.
      function setAfterLoad(e) {
-       if (e.sourceId === 'postal-2' && e.isSourceLoaded) {
+       if (e.sourceId === 'postal' && e.isSourceLoaded) {
          setStates();
          map.off('sourcedata', setAfterLoad);
        }
      }
 
      // If `statesData` source is loaded, call `setStates()`.
-     if (map.isSourceLoaded('postal-2')) {
+     if (map.isSourceLoaded('postal')) {
        setStates();
      } else {
        map.on('sourcedata', setAfterLoad);
      }
 
-
-
-
-
     let timeout = null;
     let selectedGeo = null;
 
     map.on('mousemove', function(e){
-
-      const features = map.queryRenderedFeatures(e.point, { layers: ["postal-2-fill"] });
+      let layerSource = getLayerSource();
+      const features = map.queryRenderedFeatures(e.point, { layers: [layerSource[1]] });
       if(features.length > 0){
+
         if(Object.keys(features[0]).indexOf("id") > -1){
           let point = features[0]["id"];
 
@@ -291,8 +436,8 @@ function init(locationInput,data,container,geo,scope,variableOne,variableTwo){
                 if (selectedGeo) {
 
                   map.setFeatureState({
-                    source: 'postal-2',
-                    sourceLayer: source,
+                    source: layerSource[0],
+                    sourceLayer: layerSource[2],
                     id: selectedGeo
                   }, {
                     hover: false
@@ -300,12 +445,11 @@ function init(locationInput,data,container,geo,scope,variableOne,variableTwo){
 
                 }
 
-
                 selectedGeo = point;
 
                 map.setFeatureState({
-                  source: 'postal-2',
-                  sourceLayer: source,
+                  source: layerSource[0],
+                  sourceLayer: layerSource[2],
                   id: point
                 }, {
                   hover: true
@@ -329,7 +473,7 @@ function init(locationInput,data,container,geo,scope,variableOne,variableTwo){
     })
     .on("mouseout",function(d){
       map.setFeatureState({
-        source: 'postal-2',
+        source: 'postal',
         sourceLayer: source,
         id: selectedGeo
       }, {

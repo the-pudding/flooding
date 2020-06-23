@@ -1,28 +1,83 @@
 <section class="property-section">
-  <p class="section-hed">How many properties are affected?</p>
-  <p class="section-dek">How is flooding affecting your community</p>
+  <p class="section-hed">Who is affected by flooding?</p>
+  <p class="section-dek">Nearly <span class="at-risk-properties"></span> properties in America have have a 1% risk of flooding in 2020. Here’s how those numbers breakdown by varius geographics.</p>
 
-  <div id="city-cluster">
-    
+
+  <p class="subsection-hed">How many properties are affected in my community?</p>
+  <p class="subsection-dek">Explore the map and zoom in to see how the number of properties at risk of flooding in your area.</p>
+
+  <div class="map-wrapper">
+    <!-- <div class="search">
+      <input autocomplete="off" spellcheck="off" type="text" name="" value="" placeholder="Find a location...">
+      <span class="results">
+        <div class="results-wrapper">
+        </div>
+      </span>
+
+    </div> -->
+    <div id="geocode">
+
+    </div>
+    <div class="title-wrapper">
+      <p class="chart-title">Number of Properties with a 1% annual likelihood of flooding in <span class="year-selected-map">2020</span>.</p>
+      <div class="legend-wrapper">
+        <p>Fewer Properties</p>
+        <div class="legend-circles">
+          <div class="circle">
+
+          </div>
+          <div class="circle">
+
+          </div>
+          <div class="circle">
+
+          </div>
+        </div>
+        <p>More Properties</p>
+      </div>
+    </div>
+    <div id="city-cluster">
+      <div class='controls-container'>
+        <p class='controls-directions' id='button-directions'>Change Year:</p>
+        <div class='controls-buttons' aria-labelledby='button-directions'>
+          <input id='cluster-control-2020' type='radio' name='cluster-controls' value='2020' checked>
+          <label for='cluster-control-2020'>2020</label>
+          <input id='cluster-control-2050' type='radio' name='cluster-controls' value='2050'>
+          <label for='cluster-control-2050'>2050</label>
+        </div>
+      </div>
+    </div>
+
   </div>
 
+  <p class="subsection-hed">How does flooding risk compare to neighboring communities?</p>
+  <p class="subsection-dek">Filter the table to see the number of properties in a flood zone, defined as a 1% annual likelihood of flooding in 2020.</p>
 
   <div class="table-wrapper">
 
+
+
     <div class='controls-container' data-js="table__controls">
-        <p class='controls-directions' id='button-directions'>View data for:</p>
-        <div class='controls-buttons' aria-labelledby='button-directions'>
-            <input id='state-table' type='radio' name='table-controls' value='state'>
-            <label for='state-table'>States</label>
-            <input id='county-table' type='radio' name='table-controls' value='county' checked>
-            <label for='county-table'>Counties</label>
-            <input id='city-table' type='radio' name='table-controls' value='city'>
-            <label for='city-table'>Cities</label>
-        </div>
+      <p class='controls-directions' id='button-directions'>View data for:</p>
+      <div class='controls-buttons' aria-labelledby='button-directions'>
+        <input id='state-table' type='radio' name='table-controls' value='state'>
+        <label for='state-table'>States</label>
+        <input id='county-table' type='radio' name='table-controls' value='county' checked>
+        <label for='county-table'>Counties</label>
+        <input id='city-table' type='radio' name='table-controls' value='city'>
+        <label for='city-table'>Cities</label>
+      </div>
+    </div>
+    <div id="geocoder-container-test">
+
     </div>
 
     <div class="property-table state-table">
       <div class="search">
+
+      </div>
+
+      <!-- <div class="search">
 
         <input autocomplete="off" spellcheck="off" type="text" name="" value="" placeholder="Find a state...">
         <span class="results">
@@ -30,19 +85,23 @@
 
           </div>
         </span>
-      </div>
+      </div> -->
+
       <p class="title-wrapper">How <span class="city-selected">Cleveland</span> compares to nearby <span>states</span>.</p>
       <div class="table">
       </div>
     </div>
     <div class="property-table county-table">
       <div class="search">
+
+      </div>
+      <!-- <div class="search">
         <input autocomplete="off" spellcheck="off" type="text" name="" value="" placeholder="Find a county...">
         <span class="results">
           <div class="results-wrapper">
           </div>
         </span>
-      </div>
+      </div> -->
       <p class="title-wrapper">How <span class="city-selected">Cleveland</span> compares to nearby <span class="geo-selected">counties</span>.</p>
       <div class="table">
       </div>
@@ -50,13 +109,16 @@
 
     <div class="property-table city-table">
       <div class="search">
+
+      </div>
+      <!-- <div class="search">
         <input autofill="" autocomplete="off" spellcheck="off" type="text" name="" value="" placeholder="Find a city...">
         <span class="results">
           <div class="results-wrapper">
 
           </div>
         </span>
-      </div>
+      </div> -->
       <p class="title-wrapper">How <span class="city-selected">Cleveland</span> compares to nearby <span class="geo-selected">cities</span>.</p>
       <div class="table">
       </div>

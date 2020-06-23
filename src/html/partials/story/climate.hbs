@@ -1,24 +1,75 @@
 <section class="climate-section">
   <p class="section-hed">How will climate change increase flood risk?</p>
-  <p class="section-dek">How is flooding affecting your community</p>
+  <p class="section-dek">Due to increasing temperatures and sea-level rise, more homes will flood in 2050 vs. today.</p>
   <div class="graphic-wrapper">
 
-    <div class="map-wrapper climate-map-county">
-      <p class="map-title">In many parts of the US, flood risk will <span>increase</span> over the next 30 years.</p>
-      <div class="legend">
+
+    <div class="gif-wrapper">
+
+      <p class="subsection-hed">How will flood risk change in my area?</p>
+      <p class="subsection-dek">Explore the map and zoom in to see how the number of properties at risk of flooding in your area. </p>
+      <div class="title-wrapper">
+        <p class="chart-title">Areas with a 1% Annual Likelihood of Flooding in <span class="gif-year-selected">2020</span></p>
+
+        <div class="control-wrapper">
+          <div class="play-pause-wrapper">
+            <div class="play-button button active">
+              <img inline src="play.svg" >
+            </div>
+            <div class="pause-button button">
+              <img inline src="pause.svg" >
+            </div>
+          </div>
+          <div class="year-wrapper">
+            <div class="year">
+              <input type="radio" id="twenty" name="gif-radio" value="2020" checked>
+              <label for="twenty">2020</label>
+            </div>
+            <div class="year">
+              <input type="radio" id="twentyThirtyFive" name="gif-radio" value="2035">
+              <label for="twentyThirtyFive">2035</label>
+            </div>
+
+            <div class="year">
+              <input type="radio" id="twentyFifty" name="gif-radio" value="2050">
+              <label for="twentyFifty">2050</label>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="flood-gif">
+        <div class="search">
+        </div>
+      </div>
+
+    </div>
+
+
+
+    <div class="map-wrapper climate-map">
+
+      <p class="subsection-hed">How do climate change-related increases in flooding compare around the country?</p>
+      <p class="subsection-dek">Explore the map and zoom in to see how zipcodes and counties throughout the US compare.</p>
+
+
+      <div class='controls-container' data-js="">
+        <p class='controls-directions' id='button-directions'>View data for:</p>
+        <div class='controls-buttons' aria-labelledby='button-directions'>
+          <input id='climate-choro-county' type='radio' name='climate-choro-controls' value='county'>
+          <label for='climate-choro-county'>Counties</label>
+          <input id='climate-choro-zip' type='radio' name='climate-choro-controls' value='zipcode' checked>
+          <label for='climate-choro-zip'>Zipcode</label>
+        </div>
+      </div>
+
+      <div class="title-wrapper">
+        <p class="chart-title">Change in # of Properties with a 1% annual likelihood of flooding in <span class="year-selected-map">2020</span>.</p>
+        <div class="legend-wrapper">
+        </div>
       </div>
       <div class="map">
       </div>
     </div>
-    <div class="map-wrapper climate-map-zip">
-      <p class="map-title">In many parts of the US, flood risk will <span>increase</span> over the next 30 years.</p>
-      <div class="legend">
-      </div>
-      <div class="map">
-      </div>
-    </div>
-
-
   </div>
 
 </section>

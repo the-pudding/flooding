@@ -1,30 +1,86 @@
 
-
+import searchCreate from './searchCreate.js'
+import createGeojson from './createGeojson';
 // import mapboxgl from 'mapbox-gl';
 /* global d3 */
 import locate from './utils/locate';
 
 function resize() {}
 
-function init(data) {
+function swapText(id) {
+  map.setLayoutProperty(id, 'text-field',
+  [
+    'format',
+    ['get', 'name_clean'],
+    { 'font-scale': 1 },
+    '\n',
+    {},
+    ['get', 'place'],
+    {
+      'font-scale': 0.75,
+      'text-font': ['literal', ['Roboto Mono Regular', 'Rubik Black']],
+    },
+  ]);
+}
 
-  console.log(data);
+function init(nearest,data) {
 
-    mapboxgl.accessToken = 'pk.eyJ1IjoiZG9jazQyNDIiLCJhIjoiY2pjazE5eTM2NDl2aDJ3cDUyeDlsb292NiJ9.Jr__XbmAolbLyzPDj7-8kQ';
+    let munged = data.cityData.concat(data.countyData).concat(data.stateData);
+    let geojson1 = createGeojson.init(data["zipData"],"cluster")
+    let geojson2 = createGeojson.init(data["zipData"],"cluster2")
+
+    function forwardGeocoder(query) {
+      var matchingFeatures = [];
+      for (var i = 0; i < customData.features.length; i++) {
+      var feature = customData.features[i];
+      // handle queries with different capitalization than the source data by calling toLowerCase()
+      if (
+        feature.properties.title
+        .toLowerCase()
+        .search(query.toLowerCase()) !== -1
+      ) {
+        // add a tree emoji as a prefix for custom data results
+        // using carmen geojson format: https://github.com/mapbox/carmen/blob/master/carmen-geojson.md
+        feature['place_name'] = feature.properties.title + " county, "+feature.properties.state.toUpperCase();
+        feature['center'] = feature.geometry.coordinates;
+        matchingFeatures.push(feature);
+      }
+      }
+      return matchingFeatures;
+    }
+
+    let customData = createGeojson.init(data.countyData,"search");
+    let defaultCoords = [-84.191605, 39.758949];
+    //this needs an if statement in case nearest isn't found
+    defaultCoords = [nearest["state"][0]["Longitude"],nearest["state"][0]["Latitude"]];
+    mapboxgl.accessToken = 'pk.eyJ1IjoiZG9jazQyNDIiLCJhIjoiY2thZWxrN3cxMDVpYTJ0bXZwenI2ZXl1ZCJ9.E0ICxBW96VVQbnQqyRTWbA';
 
         var map = new mapboxgl.Map({
           container: 'city-cluster',
           style: 'mapbox://styles/mapbox/light-v10',
           // style: 'mapbox://styles/nytgraphics/cjmsjh9u308ze2rpk2vh41efx?optimize=true',
-          center: [-84.191605, 39.758949],
+          center: defaultCoords,
           minZoom: 4,
           clusterMaxZoom: 10, // Max zoom to cluster points on
           zoom: 4
       });
 
+      var geocoder = new MapboxGeocoder({
+        accessToken: mapboxgl.accessToken,
+        countries: 'us',
+        localGeocoder: forwardGeocoder,
+        placeholder:'Find a location',
+        filter: function(item) {
+          return item.place_type[0] != "poi";
+        },
+        zoom:7,
+        marker:false,
+        mapboxgl: mapboxgl
+      });
+
+      document.getElementById('geocode').appendChild(geocoder.onAdd(map));
 
       map.on('load', function() {
-
 
         map.addSource("postal-2", {
           type: "vector",
@@ -41,7 +97,8 @@ function init(data) {
               "fill-opacity":.1,
               "fill-color": "#000"
           },
-          'minzoom':7
+          'minzoom':7,
+          'maxzoom':10
 
         },"admin-1-boundary");
 
@@ -58,11 +115,9 @@ function init(data) {
           }
         });
 
-
-
         map.addSource('points', {
           'type': 'geojson',
-          'data': data,
+          'data': geojson1,
           'cluster':true,
           'clusterRadius': 30,
           'clusterProperties':{
@@ -110,6 +165,38 @@ function init(data) {
                 30
               ]
             ]
+          }
+        });
+
+        map.addLayer({
+          id: 'unclustered-label',
+          type: 'symbol',
+          source: 'points',
+          filter: ['!', ['has', 'point_count']],
+          paint: {
+            "text-halo-width":1,
+            "text-halo-color":"#FFFFFF"
+          },
+          layout: {
+            'text-field':
+            [
+              'format',
+              ['get', 'countFormatted'],
+              { 'font-scale': 1.1,
+                'text-font': ['literal', ['Open Sans Bold', 'Arial Unicode MS Bold']],
+              },
+              '\n',
+              {},
+              ['get', 'id'],
+              {
+                'font-scale': 0.85,
+                'text-font': ['literal', ['Open Sans Semibold', 'Arial Unicode MS Bold']],
+              }
+            ],
+
+
+            'text-font': ['Open Sans Semibold', 'Arial Unicode MS Bold'],
+            'text-size': 10
           }
         });
 
@@ -183,15 +270,52 @@ function init(data) {
           }
         });
 
+        map.addSource('fsf', {
+             'type': 'raster',
+             'tiles': ['https://api.firststreet.org/v1/tile/probability/depth/2020/100/{z}/{x}/{y}.png?key=w6e9nl3apphi9ln2mux4aazyd9gics5a'],
+             'tileSize': 256
+         });
+
+         map.addLayer({
+             'id': 'fsf',
+             'source': 'fsf',
+             'type': 'raster',
+             'minzoom': 10,
+             'maxzoom': 18,
+             'paint': { 'raster-opacity': .8 }
+         },"postal-2-fill");
+
+
         map.on('mousemove', function(e){
 
           const features = map.queryRenderedFeatures(e.point, { layers: ["unclustered-point"] });
           if(features.length > 0){
             console.log(features[0]);
           }
-
-
         });
+
+        let yearCut = 2020;
+
+        d3.select("#city-cluster")
+          .select(".controls-container")
+          .selectAll('input')
+          .on('change', function (d) {
+            let selected = +d3.select(this).attr("value");
+            if(selected != yearCut){
+              yearCut = selected;
+              d3.select(".year-selected-map").text(yearCut)
+              if(yearCut == 2020){
+                map.getSource('points').setData(geojson1);
+              }
+              else {
+                map.getSource('points').setData(geojson2);
+              }
+            }
+          });
+
+        d3.select(".click-to-explore").on("click",function(){
+
+        })
 
           // map.on('click', 'clusters', function(e) {
             // var features = map.queryRenderedFeatures(e.point, {

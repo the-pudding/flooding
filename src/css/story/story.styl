@@ -1,16 +1,70 @@
+.subsection-hed
+  font-size 24px
+  font-family $atlas
+  margin 0
+  padding 0
+  margin-top 3rem
+  margin-bottom .5rem
+  font-weight 400
+
+.subsection-dek
+  margin 0
+  padding 0
+  font-size 16px
+
+
+main
+  .mapboxgl-ctrl-geocoder
+    box-shadow none
+    width 100%
+    margin 0
+    max-width none
+    input
+      font-family $atlas
+      width 100%
+      border 1px solid #ccc
+      box-shadow inset 2px 2px 5px rgba(0, 0, 0, 0.05)
+      border-radius 5px
+      height 36px
+      font-weight 400
+      padding-left 2rem
+      &::placeholder
+        font-family $atlas
+    .suggestions-wrapper
+      ul
+        li
+          font-family $atlas
+          .mapboxgl-ctrl-geocoder--suggestion
+            font-size 13px
+
+
+
+
+
+main
+  background rgb(255, 254, 252)
+p
+  margin 0 auto
 /* CUSTOM STORY STYLE */
+section
+  max-width $column-width
+  width 95%
+  margin 0 auto
+  border-bottom 1px solid #ddd
+  padding-bottom 3rem
+
 .section-hed
   font-family $atlas
-  font-size 24px
+  font-size 36px
   margin 0 auto
-  text-align center
   padding 0
+  margin-bottom 1rem
 .section-dek
   font-size 18px
   margin 0 auto
   font-family $lyon
-  text-align center
   padding 0
+
 
 .table-wrapper
   margin-top 2rem
@@ -55,8 +109,9 @@
   display flex
   flex-direction row
   align-items baseline
-  justify-content center
+  justify-content flex-start
   margin-bottom 2rem
+  margin-top 2rem
   .controls-directions
     font-size .8rem
     letter-spacing .2px
@@ -95,4 +150,4 @@
         background-color "white"
         color black
 .climate-section, .fema-section
-  margin-top 5rem
+  margin-top 3rem

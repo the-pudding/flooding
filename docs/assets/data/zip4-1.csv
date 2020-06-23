@@ -1,4 +1,4 @@
-﻿Zipcode,Total Properties,FEMA Properties at Risk 2020 (total),FS 2020 100 Year Risk (total),FS 2035 100 Year Risk (total),FS 2050 100 Year Risk (total),"FS-FEMA Difference, 2020 (total)",state_iso2,Latitude,Longitude,index
+locationName,Total Properties,FEMA Properties at Risk 2020 (total),FS 2020 100 Year Risk (total),FS 2035 100 Year Risk (total),FS 2050 100 Year Risk (total),"FS-FEMA Difference, 2020 (total)",state_iso2,Latitude,Longitude,index
 57714,1,0,0,0,0,0,sd,43.308056,-101.941615,1480075497
 40404,1,0,0,0,0,0,ky,37.573471, -84.290858,257173737
 75962,1,0,0,0,0,0,tx,31.619873, -94.647080,1955604713

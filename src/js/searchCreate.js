@@ -3,7 +3,6 @@ import propertyTable from './propertyTable.js';
 const geoName = { city: '', county: ' county', state: '' };
 
 function calculatingDistance(readerLat, readerLong, locLat, locLong) {
-  console.log(readerLat, readerLong, locLat, locLong);
   // Haversine Formula
   function toRadians(value) {
     return (value * Math.PI) / 180;
@@ -24,8 +23,6 @@ function calculatingDistance(readerLat, readerLong, locLat, locLong) {
 }
 
 function findNearest(locationInput, data) {
-
-  console.log(locationInput);
 
   const locationDistance = data
     .map((d) => ({
@@ -68,6 +65,8 @@ function buildSearchResults(searchContainer, results, container, data) {
       }, ${d.state_iso2.toUpperCase()}`;
     })
     .on('click', function (d) {
+
+      console.log("clicked");
       const vizType = container.attr('type-selected');
       searchContainer.select('input').node().value = '';
 
@@ -83,6 +82,7 @@ function buildSearchResults(searchContainer, results, container, data) {
       if (vizType == 'table') {
         propertyTable.buildTable(container, loc);
       }
+
     });
 
   resultsData.exit().remove();
@@ -106,6 +106,7 @@ function searchDataset(data, value) {
 }
 
 function setupSearchBox(container, data, geoSelected) {
+
   const searchContainer = container.select('.search');
   let results = null;
   searchContainer.select('input').on('keyup', function () {
@@ -122,7 +123,10 @@ function setupSearchBox(container, data, geoSelected) {
     }
   });
 
+  console.log(searchContainer.node());
+
   searchContainer.node().addEventListener('focusout', (e) => {
+    console.log("focusing out");
     const t = d3.timer(function (elapsed) {
       if (elapsed > 200) {
         t.stop();
