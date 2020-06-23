@@ -13,6 +13,7 @@ import findNearest from './utils/find-nearest';
 import singleBars from './singleBars';
 import multiBars from './multiBars';
 import story from './story'
+import animatedGif from './animatedGif'
 
 const defaultLocation = {
   country_code: 'US',
@@ -44,21 +45,21 @@ function resize() {
 function findReaderLoc() {
   return new Promise((resolve, reject) => {
     const key = 'fd4d87f605681c0959c16d9164ab6a4a';
-    // resolve(defaultLocation);
-    locate(key, (err, result) => {
-      if (err) {
-        reject(err);
-      }
-      const readerLatLong =
-        err || result.country_code !== 'US'
-          ? {
-              latitude: defaultLocation.latitude,
-              longitude: defaultLocation.longitude,
-            }
-          : { latitude: result.latitude, longitude: result.longitude };
-
-      resolve(readerLatLong);
-    });
+    resolve(defaultLocation);
+    // locate(key, (err, result) => {
+    //   if (err) {
+    //     reject(err);
+    //   }
+    //   const readerLatLong =
+    //     err || result.country_code !== 'US'
+    //       ? {
+    //           latitude: defaultLocation.latitude,
+    //           longitude: defaultLocation.longitude,
+    //         }
+    //       : { latitude: result.latitude, longitude: result.longitude };
+    //
+    //   resolve(readerLatLong);
+    // });
   });
 }
 
@@ -85,6 +86,8 @@ function init() {
     .then((readerLocation) => findNearest(readerLocation, DATA))
     .then((nearest) => {
 
+      // animatedGif.init(DATA,nearest)
+
       story.init(DATA);
 
       singleBars.init(DATA, nearest);
@@ -100,77 +103,57 @@ function init() {
 
 
 
-      let tableSelected = d3.select(".table-wrapper").select('input[name="table-controls"]:checked').attr("value");
-      propertyTable.tableButtonClick(tableSelected);
-
-      d3.select(".table-wrapper")
-        .select(".controls-container")
-        .selectAll('input')
-        .on('change', function (d) {
-          console.log("changing");
-          propertyTable.tableButtonClick(d3.select(this).attr("value"));
-        });
-
-      propertyTable.init(
-        DATA.countyData,
-        d3.select('.county-table'),
-        nearest,
-        'county'
-      );
-      propertyTable.init(
-        DATA.cityData,
-        d3.select('.city-table'),
-        nearest,
-        'city'
-      );
-      propertyTable.init(
-        DATA.stateData,
-        d3.select('.state-table'),
-        nearest,
-        'state'
-      );
-
+      // let tableSelected = d3.select(".table-wrapper").select('input[name="table-controls"]:checked').attr("value");
+      // propertyTable.tableButtonClick(tableSelected);
+      // //
+      // d3.select(".table-wrapper")
+      //   .select(".controls-container")
+      //   .selectAll('input')
+      //   .on('change', function (d) {
+      //     console.log("changing");
+      //     propertyTable.tableButtonClick(d3.select(this).attr("value"));
+      //   });
       //
-      zipMap.init(
-        nearest,
-        DATA["countyData"],
-        d3.select('.climate-map-county'),
-        "county",
-        "climate",
-        "FS 2020 100 Year Risk (total)",
-        "FS 2050 100 Year Risk (total)"
-      );
+      // propertyTable.init(
+      //   DATA.countyData,
+      //   d3.select('.county-table'),
+      //   nearest,
+      //   'county'
+      // );
+      // propertyTable.init(
+      //   DATA.cityData,
+      //   d3.select('.city-table'),
+      //   nearest,
+      //   'city'
+      // );
+      // propertyTable.init(
+      //   DATA.stateData,
+      //   d3.select('.state-table'),
+      //   nearest,
+      //   'state'
+      // );
       //
-      zipMap.init(
-        nearest,DATA["zipData"],
-        d3.select('.climate-map-zip'),
-        "zipcode",
-        "climate",
-        "FS 2020 100 Year Risk (total)",
-        "FS 2050 100 Year Risk (total)"
-      );
-
-      zipMap.init(
-        nearest,
-        DATA["countyData"],
-        d3.select('.fema-map-county'),
-        "county",
-        "fema",
-        "FEMA Properties at Risk 2020 (total)",
-        "FS 2020 100 Year Risk (total)"
-      );
+      // // //
+      // zipMap.init(
+      //   nearest,DATA,
+      //   d3.select('.climate-map'),
+      //   "zipcode",
+      //   "climate",
+      //   "FS 2020 100 Year Risk (total)",
+      //   "FS 2050 100 Year Risk (total)"
+      // );
       //
-      zipMap.init(
-        nearest,
-        DATA["zipData"],
-        d3.select('.fema-map-zip'),
-        "zipcode",
-        "fema",
-        "FEMA Properties at Risk 2020 (total)",
-        "FS 2020 100 Year Risk (total)"
-      );
+      // zipMap.init(
+      //   nearest,DATA,
+      //   d3.select('.fema-map'),
+      //   "zipcode",
+      //   "fema",
+      //   "FEMA Properties at Risk 2020 (total)",
+      //   "FS 2020 100 Year Risk (total)"
+      // );
+      //
+      clusterMap.init(nearest,DATA);
 
-      clusterMap.init(nearest,createGeojson.init(DATA["zipData"],"cluster"),DATA);
     })
     .catch((error) => {
       console.log(error);

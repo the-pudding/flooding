@@ -13,7 +13,6 @@ let loc = null;
 const geoName = { city: '', county: ' county', state: '' };
 
 function tableButtonClick(btn) {
-  console.log("toggling");
   d3.select(".table-wrapper").selectAll(".property-table").style("display",null);
   d3.select(".table-wrapper").select("."+btn+"-table").style("display","block");
 }
@@ -29,30 +28,32 @@ function buildTable(container, data) {
   const tableContainer = container.select('.table');
   // let indexOfSelected = findWithAttr(data,"name",citySelected);
   const sortedData = data
-    // .filter(function (d) {
-    //   if (geoSelected == 'state') {
-    //     return d;
-    //   }
-    //   return d.state_iso2 == stateSelected;
-    // })
-    .sort(function (x, y) {
-      return x.locationName == citySelected
-        ? -1
-        : y.locationName == citySelected
-        ? 1
-        : 0;
-    });
+  //   // .filter(function (d) {
+  //   //   if (geoSelected == 'state') {
+  //   //     return d;
+  //   //   }
+  //   //   return d.state_iso2 == stateSelected;
+  //   // })
+  //   .sort(function (x, y) {
+  //     return x.locationName == citySelected
+  //       ? -1
+  //       : y.locationName == citySelected
+  //       ? 1
+  //       : 0;
+  //   });
 
   const rowData = tableContainer
     .selectAll('div')
     .data(sortedData.slice(0, 10), function (d, i) {
       return d.locationName + i;
     });
+
   const row = rowData.enter().append('div').attr('class', 'row');
   rowData.exit().remove();
 
   row.classed('selected', function (d, i) {
-    if (d.locationName == citySelected) {
+    if(i==0){
+    //if (d.locationName == citySelected) {
       return true;
     }
     return false;
@@ -111,6 +112,11 @@ function findNearest(locationInput, data) {
 
 function init(data, container, locationInput, geo) {
   let customData = createGeojson.init(data,"search");
+  let suffix = "";
+  if(geo=="county"){
+    suffix = " county"
+  }
+
   function forwardGeocoder(query) {
     var matchingFeatures = [];
     for (var i = 0; i < customData.features.length; i++) {
@@ -123,7 +129,8 @@ function init(data, container, locationInput, geo) {
     ) {
       // add a tree emoji as a prefix for custom data results
       // using carmen geojson format: https://github.com/mapbox/carmen/blob/master/carmen-geojson.md
-      feature['place_name'] = feature.properties.title + " county, "+feature.properties.state.toUpperCase();
+
+      feature['place_name'] = feature.properties.title +suffix+", "+feature.properties.state.toUpperCase();
       feature['center'] = feature.geometry.coordinates;
       matchingFeatures.push(feature);
     }
@@ -153,14 +160,11 @@ function init(data, container, locationInput, geo) {
     let el = geocoder.onAdd();
     parent.appendChild(el);
 
-
-
-
     geocoder.on("result",function(d){
 
-      container.attr('data-city', d.locationName);
-      container.attr('data-state', d.state_iso2);
-      console.log(d);
+      container.attr('data-city', d.result.place_name);
+      container.attr('data-state', d.result.properties.state);
+
       let long = d.result.geometry.coordinates[0];
       let lat = +d.result.geometry.coordinates[1];
 
@@ -170,7 +174,6 @@ function init(data, container, locationInput, geo) {
       );
 
       buildTable(container, loc);
-
 
     })
 

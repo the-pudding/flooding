@@ -19,7 +19,7 @@
 
     </div>
     <div class="title-wrapper">
-      <p class="chart-title">Number of Properties with a 1% annual likelihood of flooding in 2020.</p>
+      <p class="chart-title">Number of Properties with a 1% annual likelihood of flooding in <span class="year-selected-map">2020</span>.</p>
       <div class="legend-wrapper">
         <p>Fewer Properties</p>
         <div class="legend-circles">
@@ -36,8 +36,16 @@
         <p>More Properties</p>
       </div>
     </div>
-    <p class="click-to-explore">Click map to explore »</p>
     <div id="city-cluster">
+      <div class='controls-container'>
+        <p class='controls-directions' id='button-directions'>Change Year:</p>
+        <div class='controls-buttons' aria-labelledby='button-directions'>
+          <input id='cluster-control-2020' type='radio' name='cluster-controls' value='2020' checked>
+          <label for='cluster-control-2020'>2020</label>
+          <input id='cluster-control-2050' type='radio' name='cluster-controls' value='2050'>
+          <label for='cluster-control-2050'>2050</label>
+        </div>
+      </div>
     </div>
 
   </div>
@@ -50,15 +58,15 @@
 
 
     <div class='controls-container' data-js="table__controls">
-        <p class='controls-directions' id='button-directions'>View data for:</p>
-        <div class='controls-buttons' aria-labelledby='button-directions'>
-            <input id='state-table' type='radio' name='table-controls' value='state'>
-            <label for='state-table'>States</label>
-            <input id='county-table' type='radio' name='table-controls' value='county' checked>
-            <label for='county-table'>Counties</label>
-            <input id='city-table' type='radio' name='table-controls' value='city'>
-            <label for='city-table'>Cities</label>
-        </div>
+      <p class='controls-directions' id='button-directions'>View data for:</p>
+      <div class='controls-buttons' aria-labelledby='button-directions'>
+        <input id='state-table' type='radio' name='table-controls' value='state'>
+        <label for='state-table'>States</label>
+        <input id='county-table' type='radio' name='table-controls' value='county' checked>
+        <label for='county-table'>Counties</label>
+        <input id='city-table' type='radio' name='table-controls' value='city'>
+        <label for='city-table'>Cities</label>
+      </div>
     </div>
     <div id="geocoder-container-test">
 

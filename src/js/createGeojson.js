@@ -8,7 +8,7 @@ function init(data,cut){
     data = data.map(function(row){
       return {
         "type":"Feature",
-        "properties":{id:"Zipcode: "+row["locationName"],count:+row["FS 2020 100 Year Risk (total)"], countFormatted: commaFormat(+row["FS 2020 100 Year Risk (total)"])},
+        "properties":{id:"Zipcode: "+row["Zipcode"],count2:+row["FS 2050 100 Year Risk (total)"],count:+row["FS 2020 100 Year Risk (total)"], countFormatted: commaFormat(+row["FS 2020 100 Year Risk (total)"])},
         "geometry":{
           "type":"Point",
           "coordinates":[row.Longitude,row.Latitude]
@@ -20,8 +20,24 @@ function init(data,cut){
 
     return geojson;
   }
+  else if (cut == "cluster2"){
+    data = data.map(function(row){
+      return {
+        "type":"Feature",
+        "properties":{id:"Zipcode: "+row["Zipcode"],count2:+row["FS 2050 100 Year Risk (total)"],count:+row["FS 2050 100 Year Risk (total)"], countFormatted: commaFormat(+row["FS 2050 100 Year Risk (total)"])},
+        "geometry":{
+          "type":"Point",
+          "coordinates":[row.Longitude,row.Latitude]
+        }
+      }
+    })
 
-  else if(cut == "search"){
+    geojson.features = data;
+
+    return geojson;
+  }
+  else {
+    let suffix = cut;
     data = data.map(function(row){
       return {
         "type":"Feature",

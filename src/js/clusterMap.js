@@ -23,9 +23,11 @@ function swapText(id) {
   ]);
 }
 
-function init(nearest,geojson,data) {
+function init(nearest,data) {
 
     let munged = data.cityData.concat(data.countyData).concat(data.stateData);
+    let geojson1 = createGeojson.init(data["zipData"],"cluster")
+    let geojson2 = createGeojson.init(data["zipData"],"cluster2")
 
     function forwardGeocoder(query) {
       var matchingFeatures = [];
@@ -51,7 +53,7 @@ function init(nearest,geojson,data) {
     let defaultCoords = [-84.191605, 39.758949];
     //this needs an if statement in case nearest isn't found
     defaultCoords = [nearest["state"][0]["Longitude"],nearest["state"][0]["Latitude"]];
-    mapboxgl.accessToken = 'pk.eyJ1IjoiZG9jazQyNDIiLCJhIjoiY2pjazE5eTM2NDl2aDJ3cDUyeDlsb292NiJ9.Jr__XbmAolbLyzPDj7-8kQ';
+    mapboxgl.accessToken = 'pk.eyJ1IjoiZG9jazQyNDIiLCJhIjoiY2thZWxrN3cxMDVpYTJ0bXZwenI2ZXl1ZCJ9.E0ICxBW96VVQbnQqyRTWbA';
 
         var map = new mapboxgl.Map({
           container: 'city-cluster',
@@ -77,8 +79,6 @@ function init(nearest,geojson,data) {
       });
 
       document.getElementById('geocode').appendChild(geocoder.onAdd(map));
-
-
 
       map.on('load', function() {
 
@@ -117,7 +117,7 @@ function init(nearest,geojson,data) {
 
         map.addSource('points', {
           'type': 'geojson',
-          'data': geojson,
+          'data': geojson1,
           'cluster':true,
           'clusterRadius': 30,
           'clusterProperties':{
@@ -293,6 +293,29 @@ function init(nearest,geojson,data) {
             console.log(features[0]);
           }
         });
+
+        let yearCut = 2020;
+
+        d3.select("#city-cluster")
+          .select(".controls-container")
+          .selectAll('input')
+          .on('change', function (d) {
+            let selected = +d3.select(this).attr("value");
+            if(selected != yearCut){
+              yearCut = selected;
+              d3.select(".year-selected-map").text(yearCut)
+              if(yearCut == 2020){
+                map.getSource('points').setData(geojson1);
+              }
+              else {
+                map.getSource('points').setData(geojson2);
+              }
+            }
+          });
+
+        d3.select(".click-to-explore").on("click",function(){
+
+        })
 
           // map.on('click', 'clusters', function(e) {
             // var features = map.queryRenderedFeatures(e.point, {

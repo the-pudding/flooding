@@ -1,75 +1,183 @@
-#city-cluster
+#city-cluster, #flood-gif
   width 500px
   height 300px
-  margin 0 auto
+  margin 0
+  position relative
   margin-top .5rem
   margin-bottom 4rem
+  .controls-container
+    position absolute
+    top 1rem
+    right 1rem
+    z-index 10000
+    .controls-directions
+      font-size 11px
+      text-shadow 1px 1px 1px white, 1px 0 1px white, 0 1px 1px white, -1px 0 1px white, 0 -1px 1px white, -1px -1px 1px white, 2px 2px 1px white, 2px 0 1px white, 0 2px 1px white, -2px 0 1px white, 0 -2px 0px white, -2px -2px 1px white
+      font-weight 500
+    label
+      padding 0.3rem .6rem
+      font-size 12px
+
+.gif-wrapper
+  .control-wrapper
+    height 30px
+    display flex
+    margin-top 30px
+    margin-bottom 1.5rem
+    .play-pause-wrapper
+      display flex
+      height 30px
+      svg
+        fill #717171
+        stroke none
+        align-self center
+      .active
+        svg
+          fill #222
+      .play-button, .pause-button
+        display flex
+        background #EDEDED
+        justify-content center
+        width 40px
+        margin-right 10px
+        height 30px
+        cursor pointer
+
+
+    .year-wrapper
+      display flex
+      align-self center
+      margin-left 30px
+      position relative
+      &:before
+        position absolute
+        width calc(100%  + 20px)
+        left -10px
+        right 0
+        margin 0 auto
+        height calc(100% + 4px)
+        background #EDEDED
+        content ''
+        top -3px
+        border-radius 13px
+
+      .year
+        position relative
+        //width 100px
+        margin-right 60px
+        &:last-of-type
+          margin 0
+        label
+          transform translate(-50%,-100%)
+          text-align left
+          //float left
+          position absolute
+          top -8px
+          left 50%
+          font-family $atlas
+          font-size 15px
+          cursor pointer
+          color #666
+
+        input
+          margin 0
+          padding 0
+          position relative
+          cursor pointer
+        input:checked + label
+            color #222
+
+
+#flood-gif
+  position relative
+  margin 0
+  overflow visible
+  outline none
+  canvas
+    outline none
+  .mapboxgl-ctrl-top-left
+    z-index 10000
+  .year-label
+    position absolute
+    right 1rem
+    top 1rem
+    background #c8f7ff
+    font-size 18px
+    padding .5rem 1rem
+    font-weight 600
+    border-radius 5px
 
 .mapboxgl-ctrl-logo
   border none
   text-decoration none
 
-
-.map-wrapper
-  max-width 500px
-  margin-top 1.5rem
-  margin-left 2rem
-  .title-wrapper
-    display flex
-    margin-top 2rem
-    .chart-title
-      font-size 16px
-      font-family $atlas
-      font-size 14px
-      font-weight 500
-      align-self center
-      margin 0
-      padding 0
-      line-height 1.5
-    .legend-wrapper
-      display flex
-      p
-        font-size 12px
-        font-weight 400
-        font-family $atlas
-        margin 0
-        padding 0
-        align-self center
-        width 70px
-        text-align right
-        line-height 1.2
-        &:last-of-type
-          text-align left
-      .legend-circles
-        display flex
-        margin 0 5px
-        .circle
-          width 30px
-          border-radius 50%
-          height 30px
-          background #F2EE97
-          margin-left 5px
-          margin-right 5px
-          align-self center
-          &:first-of-type
-            width 15px
-            height 15px
-            margin 0
-            background #42D9FF
-          &:last-of-type
-            width 40px
-            height 40px
-            margin 0
-            background #F0A2BE
-  .click-to-explore
-    font-size 14px
-    color rgba(0,0,0,.7)
+.title-wrapper
+  display flex
+  margin-top 2rem
+  margin-bottom 2rem
+  .control-wrapper
+    margin-bottom 0
+  .chart-title
+    font-size 16px
     font-family $atlas
+    font-size 14px
+    font-weight 500
+    align-self center
+    max-width 300px
     margin 0
     padding 0
-    text-align center
-    font-weight 400
-    margin-top 1rem
+    margin-right 2rem
+    line-height 1.5
+  .legend-wrapper
+    display flex
+    margin-bottom 1.5rem
+    p
+      font-size 12px
+      font-weight 400
+      font-family $atlas
+      margin 0
+      padding 0
+      align-self center
+      //width 70px
+      text-align right
+      line-height 1.2
+      &:last-of-type
+        text-align left
+    .legend-circles
+      display flex
+      margin 0 5px
+      .circle
+        width 30px
+        border-radius 50%
+        height 30px
+        background #F2EE97
+        margin-left 5px
+        margin-right 5px
+        align-self center
+        &:first-of-type
+          width 15px
+          height 15px
+          margin 0
+          background #42D9FF
+        &:last-of-type
+          width 40px
+          height 40px
+          margin 0
+          background #F0A2BE
+.click-to-explore
+  font-size 14px
+  color rgba(0,0,0,.7)
+  font-family $atlas
+  margin 0
+  padding 0
+  text-align center
+  font-weight 400
+  margin-top 1rem
+
+.map-wrapper
+  margin-top 1.5rem
+  #geocode
+    max-width 500px
   .mapboxgl-map
     overflow visible
     canvas
@@ -78,8 +186,8 @@
   &:first-of-type
     margin-left 0
 .map, .county-map
-  height 300px
-  width 500px
+  height 400px
+  width 700px
   display block
   position relative
   overflow visible
@@ -100,11 +208,13 @@
       font-size 11px
       margin 0
       padding 0
-      text-align center
+      text-align left
+      line-height 1.3
       $atlas
       &:first-of-type
         font-weight 600
         font-size 14px
+        margin-bottom .5rem
 .map-title
   font-size 18px
   font-family $atlas
@@ -114,23 +224,31 @@
   padding 0
   span
     font-weight 600
-.legend
+.legend-wrapper
   display flex
   margin-top 10px
-  justify-content center
+  justify-content flex-start
   margin-bottom 10px
   .legend-colors
     display flex
     margin 0 10px
     .legend-item
-      height 5px
-      width 20px
-      align-self center
+      margin 0
+  .legend-item
+    height 10px
+    width 20px
+    align-self center
+    background #aaa
+    margin-left 5px
+    margin-right 25px
   .legend-text
     font-family $atlas
     margin 0
     padding 0
     line-height 1
-    font-size 12px
+    font-size 14px
     font-weight 400px
     align-self center
+.climate-map
+  margin-top 3rem
+  max-width none

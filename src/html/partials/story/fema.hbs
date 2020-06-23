@@ -1,26 +1,42 @@
 <section class="fema-section">
     <p class="section-hed">How does flood risk compare to FEMA’s estimations?</p>
-    <p class="section-dek">How is flooding affecting your community</p>
+    <p class="section-dek">FEMA is tasked with estimated flood risk for the purposes of flood management and setting flood insurance requirements. First Street Foundation&lsquo;s data provides another perspective, in addition to FEMA&lsquo;s, to determine a property&lsquo;s flood risk.</p>
     <div class="graphic-wrapper">
 
-        <div class="map-wrapper fema-map-county">
-            <p class="map-title">In many parts of the US, flood risk will <span>increase</span> over the next 30 years.
-            </p>
-            <div class="legend">
-            </div>
-            <div class="map">
-            </div>
-        </div>
-        <div class="map-wrapper fema-map-zip">
-            <p class="map-title">In many parts of the US, flood risk will <span>increase</span> over the next 30 years.
-            </p>
-            <div class="legend">
-            </div>
-            <div class="map">
-            </div>
+
+      <div class="map-wrapper fema-map">
+
+        <p class="subsection-hed">Where are FEMA&lsquo;s flood risk models different from First Street&lsquo;s?</p>
+        <p class="subsection-dek">Explore the map and zoom in to see how zipcodes and counties throughout the US compare.</p>
+
+
+        <div class='controls-container' data-js="">
+          <p class='controls-directions' id='button-directions'>View data for:</p>
+          <div class='controls-buttons' aria-labelledby='button-directions'>
+            <input id='fema-choro-county' type='radio' name='fema-choro-controls' value='county'>
+            <label for='fema-choro-county'>Counties</label>
+            <input id='fema-choro-zip' type='radio' name='fema-choro-controls' value='zipcode' checked>
+            <label for='fema-choro-zip'>Zipcode</label>
+          </div>
         </div>
 
+        <div class="title-wrapper">
+          <p class="chart-title">Change in # of Properties with a 1% annual likelihood of flooding in <span class="year-selected-map">2020</span>.</p>
+          <div class="legend-wrapper">
+          </div>
+        </div>
+        <div class="map">
+        </div>
+      </div>
+
+
+
         <div class="bar-wrapper" data-js="bars">
+
+          <p class="subsection-hed">How does your community&lsquo;s FEMA estimates compare to First Street&lsquo;s?</p>
+          <p class="subsection-dek">Filter the table to see the number of properties in a flood zone, defined as a 1% annual likelihood of flooding in 2020.</p>
+
+
             <div class='bar__controls-container controls-container' data-js="bar__controls">
                 <p class='controls-directions' id='button-directions'>View data for:</p>
                 <div class='controls-buttons' aria-labelledby='button-directions'>
