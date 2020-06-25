@@ -15,6 +15,7 @@ import multiBars from './multiBars';
 import './utils/search';
 import story from './story'
 import animatedGif from './animatedGif'
+import femaMap from './femaMap'
 
 const defaultLocation = {
   country_code: 'US',
@@ -212,6 +213,8 @@ function init() {
     .then(findReaderLoc)
     .then((readerLocation) => findNearest(readerLocation, DATA))
     .then((nearest) => {
+
+      femaMap.init();
 
       story.init(DATA);
       animatedGif.init(DATA,nearest)

@@ -10,7 +10,9 @@ from argparse import ArgumentParser
 
 #---------- CONFIGURATION -----------#
 
-tile_server = "https://tiles-preview.firststreet.org/probability/depth/2035/100/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoiZG9jazQyNDIiLCJhIjoiY2pjazE5eTM2NDl2aDJ3cDUyeDlsb292NiJ9.Jr__XbmAolbLyzPDj7-8kQ"
+#https://api.firststreet.org/v1/tile/probability/depth/2050/100/{z}/{x}/{y}.png?key=w6e9nl3apphi9ln2mux4aazyd9gics5a
+
+tile_server = "https://api.firststreet.org/v1/tile/probability/depth/2020/100/{z}/{x}/{y}.png?key=w6e9nl3apphi9ln2mux4aazyd9gics5a"
 
 parser = ArgumentParser()
 parser.add_argument("--latMin", nargs='?', default="check_string_for_empty")
@@ -22,8 +24,26 @@ args = parser.parse_args()
 
 #python tiles_to_tiff.py --lonMin -82.612512 --lonMax -82.582203 --latMin 41.272755 --latMax 41.303938
 
+#python tiles_to_tiff.py --lonMin -81.391698 --lonMax -80.78296 --latMin 31.705198 --latMax 32.237591
+
+#python tiles_to_tiff.py --lonMin -81.781712 --lonMax -81.138324 --latMin 31.71266 --latMax 32.24131
+
+#python tiles_to_tiff.py --lonMin -81.690469 --lonMax -81.150817 --latMin 29.622432 --latMax 30.252941
+#python tiles_to_tiff.py --lonMin -82.049502 --lonMax -81.316712 --latMin 30.103748 --latMax 30.586232
+
+#[-82.049502,30.103748],[-81.316712,30.103748],[-81.316712,30.586232],[-82.049502,30.586232],[-82.049502,30.103748]]
+
+
+# |[[-83.551907, 42.02793], [-82.749908, 42.02793], [-82.749908, 42.451337], [-83.551907, 42.451337], [-83.551907, 42.02793]]|
+# [[-83.102891, 42.447055], [-82.705966, 42.447055], [-82.705966, 42.897541], [-83.102891, 42.897541], [-83.102891, 42.447055]]
+# [[-83.689438, 42.431179], [-83.083393, 42.431179], [-83.083393, 42.888647], [-83.689438, 42.888647], [-83.689438, 42.431179]]|
+#
+# --lonMin -83.689438 --lonMax -82.705966 --latMin 42.02793 --latMax 42.897541
+
 temp_dir = 'temp'
 output_dir = 'output'
+shutil.rmtree(output_dir)
+os.makedirs(output_dir)
 zoom = 13
 lon_min = float(args.lonMin)
 lon_max = float(args.lonMax)

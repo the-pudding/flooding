@@ -31,7 +31,7 @@
 
 
 
-        <div class="bar-wrapper" data-js="bars">
+      <div class="bar-wrapper" data-js="bars">
 
           <p class="subsection-hed">How does your community&lsquo;s FEMA estimates compare to First Street&lsquo;s?</p>
           <p class="subsection-dek">Filter the table to see the number of properties in a flood zone, defined as a 1% annual likelihood of flooding in 2020.</p>
@@ -104,5 +104,30 @@
 
 
         </div>
+      <div class="fema-compare-wrapper">
+
+        <p class="subsection-hed">How FEMA&lsquo;s maps compare</p>
+        <p class="subsection-dek">Explore the map and zoom in to see how FEMA&lsquo;s map compares to First Street&lsquo;s.</p>
+
+        <div class="title-wrapper">
+          <p class="chart-title">Areas with a 1% annual likelihood of flooding.</p>
+          <div class='fema__controls-container controls-container'>
+              <p class='controls-directions' id='button-directions'>View data for:</p>
+              <div class='controls-buttons' aria-labelledby='button-directions'>
+                  <input id='fema' type='checkbox' name='fema-controls' value='fema' checked>
+                  <label for='fema'>FEMA</label>
+                  <input id='first-street' type='checkbox' name='fema-controls' value='first street' checked>
+                  <label for='first-street'>First Street</label>
+              </div>
+          </div>
+
+        </div>
+
+
+        <div id="fema-map">
+
+        </div>
+
+      </div>
     </div>
 </section>

@@ -103,3 +103,31 @@ https://www.figma.com/file/Q4E6osoJ78utIbFrbJQzh3/Present-day-Flood-Risk?node-id
 
 ## Pudding Story Figma
 https://www.figma.com/file/hncKI7BV2iyTOq9m0t4GXd/flood?node-id=330%3A2
+
+## county fema maps
+
+download map
+https://hazards.fema.gov/femaportal/NFHL/searchResult
+
+upload to qgis for just flood hazard layer
+filter -> A,Vs
+save
+simplify geometries -> .0001
+save
+
+go to county outlines
+highlight needed county and save as filtered element
+
+find state fsid: https://api.firststreet.org/v1/location/detail/state/13?key=w6e9nl3apphi9ln2mux4aazyd9gics5a
+find county fsids: https://api.firststreet.org/v1/query?$select=county&$filter=location:state.fsid%20eq%2013&$offset=0&key=w6e9nl3apphi9ln2mux4aazyd9gics5a
+transpose rows, paste into data.csv, run python get_location_meta.py --geo county
+find county fsid and run: https://api.firststreet.org/v1/location/detail/county/13051?key=w6e9nl3apphi9ln2mux4aazyd9gics5a
+get bbox and run python tiles_to_tiff.py --lonMin -81.391698 --lonMax -80.78296 --latMin 31.705198 --latMax 32.237591
+
+go to raster clipper, mask with selected ccounty
+raster calculator -> layer > 0 * 255...reset extent (important!)
+polyonize
+filter for dn > 0
+save
+
+tippecanoe -o mi_counties3.mbtiles -Z7 -z14 -ab -l --include="PROVIDERS" mi_counties3.geojson

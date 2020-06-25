@@ -172,10 +172,8 @@ function init(data,nearest) {
   })
 
   d3.select("#download-gif").on("click",function(){
-
     if(!animating){
       toggleAnimation(false)
-
       buttons.classed("active",function(d,i){
         let play = d3.select(this).classed("play-button");
         if(play){
@@ -183,10 +181,7 @@ function init(data,nearest) {
         }
         return false;
       })
-
     }
-
-
 
     if(!downloaded){
 

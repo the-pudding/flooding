@@ -5,7 +5,7 @@
   border-radius 3px
   font-size 14px
 
-#city-cluster, #flood-gif
+#city-cluster, #flood-gif, #fema-map
   width 500px
   height 300px
   margin 0
@@ -24,6 +24,39 @@
     label
       padding 0.3rem .6rem
       font-size 12px
+
+
+#fema-map
+  width 100%
+  max-width 1200px
+  height 800px
+.fema-compare-wrapper
+  .controls-container
+    .controls-buttons
+      input:checked + label
+        color white
+        background rgb(225, 98, 89)
+        border 1px solid rgb(190, 86, 67)
+        &:last-of-type
+          background #598ee1
+          border 1px solid #437abe
+      input
+        z-index 10000
+        position relative
+        outline 1px solid white
+      label
+        z-index 0
+        position relative
+        margin-left -30px
+        padding-left 33px
+        margin-right 10px
+        border-radius 3px
+        border 1px solid #aaa
+        box-shadow rgba(15, 15, 15, 0.1) 0px 1px 2px
+
+
+
+
 
 .gif-wrapper
   .title-wrapper

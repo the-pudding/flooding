@@ -34,7 +34,7 @@ def main():
                             quotechar='|', quoting=csv.QUOTE_MINIMAL)
 
         reader = csv.reader(open('data.csv'))
-        first = ["fsid","name","fips","lsad","longitude","latitude","properties","atRisk"]
+        first = ["fsid","name","fips","lsad","longitude","latitude","properties","atRisk","bounding"]
         writer.writerow(first)
 
         for row in reader:
@@ -46,6 +46,7 @@ def main():
             fips = results['fips']
             name = results['name']
             centroid = results['geometry']['center']['coordinates']
+            bounding = results['geometry']['bbox']['coordinates']
             if(geo == "city"):
                 lsad = results['lsad']
             else:
@@ -57,7 +58,7 @@ def main():
 
             properties = results['properties']['total']
             atRisk = results['properties']['atRisk']
-            row = [fsid,name,fips,lsad,centroid[0],centroid[1],properties,atRisk]
+            row = [fsid,name,fips,lsad,centroid[0],centroid[1],properties,atRisk,bounding]
             writer.writerow([unicode(s).encode("utf-8") for s in row])
 if __name__ == '__main__':
     main()

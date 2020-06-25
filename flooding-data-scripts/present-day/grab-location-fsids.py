@@ -19,10 +19,14 @@ from argparse import ArgumentParser
 
 parser = ArgumentParser()
 parser.add_argument("--geo", nargs='?', default="check_string_for_empty")
+parser.add_argument("--state", nargs='?', default="check_string_for_empty")
+
 args = parser.parse_args()
 
 
 geo = args.geo
+state = args.state
+
 
 output_filename = 'data.csv'
 
@@ -33,7 +37,7 @@ def main():
 
         fsids = []
 
-        url = "https://api.firststreet.org/v1/query?$select="+geo+"&$filter=location:state.fsid%20eq%2039&$offset=0&key=w6e9nl3apphi9ln2mux4aazyd9gics5a"
+        url = "https://api.firststreet.org/v1/query?$select="+geo+"&$filter=location:state.fsid%20eq%20"+state+"&$offset=0&key=w6e9nl3apphi9ln2mux4aazyd9gics5a"
         results = requests.get(url)
         results = results.json()
 
@@ -41,7 +45,7 @@ def main():
         max_pages = int(math.ceil(max_results/100))
         for x in range(0,max_pages+1):
             offset = x*100
-            url = "https://api.firststreet.org/v1/query?$select="+geo+"&$filter=location:state.fsid%20eq%2039&$offset="+str(offset)+"&key=w6e9nl3apphi9ln2mux4aazyd9gics5a"
+            url = "https://api.firststreet.org/v1/query?$select="+geo+"&$filter=location:state.fsid%20eq%20"+state+"&$offset="+str(offset)+"&key=w6e9nl3apphi9ln2mux4aazyd9gics5a"
             results = requests.get(url)
             results = results.json()
             for result in results['results']:
