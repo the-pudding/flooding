@@ -18,6 +18,8 @@ ogr2ogr -f GeoJSON tl_2019_19_tabblock10_simp.geojson tl_2019_19_tabblock10_simp
 tippecanoe -o census_blocks.mbtiles -Z9 -z11 -ab -l --include="PROVIDERS" output_2.geojson
 
 
+
+
 ### /present-day
 
 This folder contains python scripts to pull present-day flooding data. Note that these might be converted to node scripts later on.
@@ -131,3 +133,8 @@ filter for dn > 0
 save
 
 tippecanoe -o mi_counties3.mbtiles -Z7 -z14 -ab -l --include="PROVIDERS" mi_counties3.geojson
+
+
+git filter-branch --index-filter \
+    'git rm --cached --ignore-unmatch flooding-data-scripts/present-day/output/merged.tif' \
+    --tag-name-filter cat -- --all
