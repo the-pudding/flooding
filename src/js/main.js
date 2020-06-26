@@ -19,7 +19,7 @@ import femaMap from './femaMap'
 import urlParam from './utils/url-parameter'
 import countyMap from './countyMap'
 
-const defaultLocation = {
+let defaultLocation = {
   country_code: 'US',
   country_name: 'United States',
   region_code: 'NY',
@@ -41,6 +41,8 @@ const searchUpdateFiles = {
 
 const $body = d3.select('body');
 let previousWidth = 0;
+let embedded = null;
+let coords = null;
 
 function resize() {
   // only do resize on width changes, not height
@@ -55,21 +57,33 @@ function resize() {
 function findReaderLoc() {
   return new Promise((resolve, reject) => {
     const key = 'fd4d87f605681c0959c16d9164ab6a4a';
-    resolve(defaultLocation);
-    // locate(key, (err, result) => {
-    //   if (err) {
-    //     reject(err);
-    //   }
-    //   const readerLatLong =
-    //     err || result.country_code !== 'US'
-    //       ? {
-    //           latitude: defaultLocation.latitude,
-    //           longitude: defaultLocation.longitude,
-    //         }
-    //       : { latitude: result.latitude, longitude: result.longitude };
-    //
-    //   resolve(readerLatLong);
-    // });
+    if(embedded == "true"){
+      console.log(coords);
+      if(coords[0]){
+        defaultLocation.longitude = +coords[0];
+        defaultLocation.latitude = +coords[1];
+      }
+      console.log(defaultLocation);
+      resolve(defaultLocation);
+    }
+    else {
+      locate(key, (err, result) => {
+        if (err) {
+          reject(err);
+        }
+        const readerLatLong =
+          err || result.country_code !== 'US'
+            ? {
+                latitude: defaultLocation.latitude,
+                longitude: defaultLocation.longitude,
+              }
+            : { latitude: result.latitude, longitude: result.longitude };
+
+        resolve(readerLatLong);
+      });
+    }
+
+
   });
 }
 
@@ -110,8 +124,6 @@ let suffix = " county"
 function setupGeocoder(container,data,geo){
 
   function forwardGeocoder(query) {
-
-    console.log(customData);
 
     var matchingFeatures = [];
     for (var i = 0; i < customData.features.length; i++) {
@@ -209,6 +221,11 @@ function init() {
   let [cityData, zipData, countyData, stateData] = [];
   let DATA = [];
 
+  embedded = urlParam.get("embed")
+  let long = urlParam.get("lon")
+  let lat = urlParam.get("lat")
+  coords = [long,lat];
+
   loadData(['city6.csv', 'zip6.csv', 'county6-3.csv', 'state6.csv'])
     .then((result) => {
       [cityData, zipData, countyData, stateData] = result;
@@ -218,14 +235,10 @@ function init() {
     .then((readerLocation) => findNearest(readerLocation, DATA))
     .then((nearest) => {
 
-      let long = urlParam.get("lon")
-      let lat = urlParam.get("lat")
-      let coords = [long,lat];
-
       let storyMode = urlParam.get("story")
       let albers = urlParam.get("albers")
       let mapType = urlParam.get("map")
-      let embedded = urlParam.get("embed")
+
       let chartEmbedded = urlParam.get("chart")
       if(embedded == "true"){
         d3.select("main").classed("embed",true);
@@ -345,6 +358,8 @@ function init() {
             const type = parent.attr('data-selected');
             handleSearchUpdate(sel, DATA, type);
           });
+
+
 
         customData = createGeojson.init(DATA["countyData"],"search");
         setupGeocoder(d3.select(".bar-wrapper"),DATA,"countyData");

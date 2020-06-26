@@ -1,6 +1,10 @@
+import embedCode from './embed-code'
+
+
 // global constants
 let NEAREST = [];
 let DATA = [];
+let barEmbedRevealed = false;
 
 // by default we'll start with state data
 let TYPE = 'county';
@@ -150,7 +154,13 @@ function init(data, nearestLocations) {
   NEAREST = nearestLocations;
   DATA = data;
 
-  console.log(data,nearestLocations);
+  d3.select(".bar-wrapper").select(".embed-button").on("click",function(d){
+    let center = {lat:+NEAREST["zip"][0]["Latitude"],lng:+NEAREST["zip"][0]["Longitude"]};
+      if(!barEmbedRevealed){
+        embedCode.init(d3.select(this.parentNode),"https://pudding.cool/projects/flooding/visuals/embed.html?embed=true&chart=fema-table&lat="+center.lat+"&lon="+center.lng)
+        barEmbedRevealed = true;
+      }
+    })
 
   setup();
 }
