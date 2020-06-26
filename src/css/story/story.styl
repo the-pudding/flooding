@@ -1,6 +1,18 @@
 .embed
   .intro, section
     display none
+  .section-hed, .section-dek, .subsection-hed, .subsection-dek, .map-wrapper, .bar-wrapper, .embed-button-wrapper
+    display none
+
+
+.fema-compare-map
+  .fema-section
+    display block
+    border none
+    margin 0
+    padding 0
+
+
 
 .albers
   background white
@@ -162,3 +174,36 @@ section
         color black
 .climate-section, .fema-section
   margin-top 3rem
+
+.embed-button-wrapper
+  display flex
+  width 100%
+  .embed-button
+    border-radius 3px
+    border 1px solid #aaa
+    box-shadow rgba(15, 15, 15, 0.1) 0px 1px 2px
+    padding .5rem 1rem
+    font-size 16px
+    font-family $atlas
+  .embed-input-wrapper
+    display flex
+    flex-grow 1
+    width 1px
+    p
+      font-family $atlas
+      align-self center
+      width 100px
+      font-size 14px
+      line-height 1.2
+      text-align right
+      margin-right 10px
+      margin-left 30px
+      font-weight 400
+    textarea
+      font-size 12px
+      font-family $atlas
+      width 1px
+      flex-grow 1
+      border-radius 3px
+      border 1px solid #aaa
+      box-shadow rgba(15, 15, 15, 0.1) 0px 1px 2px

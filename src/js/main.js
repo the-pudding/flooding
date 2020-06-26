@@ -55,21 +55,21 @@ function resize() {
 function findReaderLoc() {
   return new Promise((resolve, reject) => {
     const key = 'fd4d87f605681c0959c16d9164ab6a4a';
-    // resolve(defaultLocation);
-    locate(key, (err, result) => {
-      if (err) {
-        reject(err);
-      }
-      const readerLatLong =
-        err || result.country_code !== 'US'
-          ? {
-              latitude: defaultLocation.latitude,
-              longitude: defaultLocation.longitude,
-            }
-          : { latitude: result.latitude, longitude: result.longitude };
-
-      resolve(readerLatLong);
-    });
+    resolve(defaultLocation);
+    // locate(key, (err, result) => {
+    //   if (err) {
+    //     reject(err);
+    //   }
+    //   const readerLatLong =
+    //     err || result.country_code !== 'US'
+    //       ? {
+    //           latitude: defaultLocation.latitude,
+    //           longitude: defaultLocation.longitude,
+    //         }
+    //       : { latitude: result.latitude, longitude: result.longitude };
+    //
+    //   resolve(readerLatLong);
+    // });
   });
 }
 
@@ -110,6 +110,8 @@ let suffix = " county"
 function setupGeocoder(container,data,geo){
 
   function forwardGeocoder(query) {
+
+    console.log(customData);
 
     var matchingFeatures = [];
     for (var i = 0; i < customData.features.length; i++) {
@@ -216,15 +218,19 @@ function init() {
     .then((readerLocation) => findNearest(readerLocation, DATA))
     .then((nearest) => {
 
-      console.log(DATA);
+      let long = urlParam.get("lon")
+      let lat = urlParam.get("lat")
+      let coords = [long,lat];
 
       let storyMode = urlParam.get("story")
       let albers = urlParam.get("albers")
       let mapType = urlParam.get("map")
-
-      if(storyMode == "false"){
+      let embedded = urlParam.get("embed")
+      let chartEmbedded = urlParam.get("chart")
+      if(embedded == "true"){
         d3.select("main").classed("embed",true);
       }
+
       if(albers == "true"){
         d3.select("html").style("height","100%")
         d3.select("body").style("height","100%")
@@ -253,15 +259,17 @@ function init() {
           );
         }
       }
-      if(storyMode != "false"){
-        ///?albers=true&story=false&map=climate
-        console.log("here");
-        femaMap.init();
+      if(chartEmbedded == "fema-compare-map" && embedded == "true"){
+        d3.select("main").classed("fema-compare-map",true);
+        femaMap.init(d3.select(".fema-compare-wrapper"),coords);
+      }
+      if(embedded == ""){
+
+        femaMap.init(d3.select(".fema-compare-wrapper"),coords);
         story.init(DATA);
         animatedGif.init(DATA,nearest)
         singleBars.init(DATA, nearest);
         multiBars.init(DATA, nearest);
-
 
         d3.select('.bar-wrapper')
           .selectAll('input')
@@ -278,20 +286,17 @@ function init() {
             const barSection = d3.select('.bar-wrapper');
             const btnType = btn.attr('id');
 
-            console.log(btnType);
             if(btnType == "state"){
-              customData = createGeojson.init(data["stateData"],"search");
+              customData = createGeojson.init(DATA["stateData"],"search");
+              console.log(customData);
               suffix = "";
             }
             else {
-              customData = createGeojson.init(data["countyData"],"search");
+              customData = createGeojson.init(DATA["countyData"],"search");
               suffix = " county";
             }
-
-            prepareSearch(barSection, btnType, DATA);
           });
 
-        prepareSearch('all', null, DATA);
 
         // setup update functions for search menu changes
         d3.selectAll('.search-container')
@@ -302,7 +307,6 @@ function init() {
             const type = parent.attr('data-selected');
             handleSearchUpdate(sel, DATA, type);
           });
-
 
         customData = createGeojson.init(DATA["countyData"],"search");
         setupGeocoder(d3.select(".bar-wrapper"),DATA,"countyData");
@@ -337,8 +341,6 @@ function init() {
           'state'
         );
 
-        //
-        // // //
         zipMap.init(
           nearest,DATA,
           d3.select('.climate-map'),
