@@ -205,7 +205,7 @@ function init() {
   let [cityData, zipData, countyData, stateData] = [];
   let DATA = [];
 
-  loadData(['city5.csv', 'zip5.csv', 'county5.csv', 'state5.csv'])
+  loadData(['city6.csv', 'zip6.csv', 'county6.csv', 'state6.csv'])
     .then((result) => {
       [cityData, zipData, countyData, stateData] = result;
       DATA = { cityData, zipData, countyData, stateData };
