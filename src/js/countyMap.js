@@ -201,15 +201,14 @@ function init(locationInput,data,container,geo,scope,variableOne,variableTwo){
 
   buildLegend(container,scope);
 
-
-
   var map = new mapboxgl.Map({
     container: container.select(".map").node(),
     style: 'mapbox://styles/dock4242/ckbvo6tb30c3d1il91i7mokb9',
     // style: 'mapbox://styles/nytgraphics/cjmsjh9u308ze2rpk2vh41efx?optimize=true',
     center: [0,0],
     minZoom: getMinZoom(scope,geoSelected),
-    zoom: 4//getZoom(scope,geoSelected)
+    zoom: 4,//getZoom(scope,geoSelected)
+    bounds: [[22.10180925964056, 13.596431034352321], [-21.717652931297067, -16.37959447066632]]
   });
 
   buildToolTip(container,map);
@@ -328,7 +327,6 @@ function init(locationInput,data,container,geo,scope,variableOne,variableTwo){
 
         if(Object.keys(features[0]).indexOf("id") > -1){
           let point = +features[0]["properties"]["county_fips"];
-          console.log(features[0]);
 
           if(dataMap.has(+point)){
 

@@ -130,6 +130,7 @@ get bbox and run python tiles_to_tiff.py --lonMin -81.391698 --lonMax -80.78296 
 
 go to raster clipper, mask with selected ccounty
 raster calculator -> layer > 0 * 255...reset extent (important!)
+remove zero values (save as and ignore zero,otherwise will take forever to polygonize)
 polyonize
 filter for dn > 0
 save
@@ -142,10 +143,7 @@ tippecanoe -o la_counties.mbtiles -Z7 -z13 -L'{"file":"la_counties_fema.geojson"
 
 tippecanoe -o sav_counties.mbtiles -Z7 -z13 -L'{"file":"sav_counties_fema.geojson", "layer":"fema", "description":"fema"}' -L'{"file":"sav_counties_fs.geojson", "layer":"fs", "description":"fs"}'
 
+tippecanoe -o ohio_ne.mbtiles -Z7 -z13 -L'{"file":"ohio_ne_fema.geojson", "layer":"fema", "description":"fema"}' -L'{"file":"ohio_ne_fs.geojson", "layer":"fs", "description":"fs"}'
 
-tile-join -o output_combined.mbtiles sav_counties.mbtiles la_counties.mbtiles
 
-
-git filter-branch --index-filter \
-    'git rm --cached --ignore-unmatch flooding-data-scripts/present-day/output/merged.tif' \
-    --tag-name-filter cat -- --all
+tile-join -o output_combined.mbtiles sav_counties.mbtiles la_counties.mbtiles ohio_ne.mbtiles

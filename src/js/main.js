@@ -57,7 +57,7 @@ function resize() {
 function findReaderLoc() {
   return new Promise((resolve, reject) => {
     const key = 'fd4d87f605681c0959c16d9164ab6a4a';
-    if(embedded == "true"){
+    if(embedded == "true" || albers == "true"){
       console.log(coords);
       if(coords[0]){
         defaultLocation.longitude = +coords[0];
@@ -222,6 +222,7 @@ function init() {
   let DATA = [];
 
   embedded = urlParam.get("embed")
+  let albers = urlParam.get("albers")
   let long = urlParam.get("lon")
   let lat = urlParam.get("lat")
   coords = [long,lat];
@@ -236,7 +237,7 @@ function init() {
     .then((nearest) => {
 
       let storyMode = urlParam.get("story")
-      let albers = urlParam.get("albers")
+
       let mapType = urlParam.get("map")
 
       let chartEmbedded = urlParam.get("chart")
@@ -281,6 +282,41 @@ function init() {
       if(chartEmbedded == "cluster-map" && embedded == "true"){
         d3.select("main").classed("cluster-map",true);
         clusterMap.init(nearest,DATA);
+      }
+      if(chartEmbedded == "property-table-embed" && embedded == "true"){
+
+        d3.select("main").classed("property-table-embed",true);
+        let tableSelected = d3.select(".table-wrapper").select('input[name="table-controls"]:checked').attr("value");
+
+        propertyTable.tableButtonClick(tableSelected);
+
+        d3.select(".table-wrapper")
+          .select(".controls-container")
+          .selectAll('input')
+          .on('change', function (d) {
+            console.log("changing");
+            propertyTable.tableButtonClick(d3.select(this).attr("value"));
+          });
+
+        propertyTable.init(
+          DATA.countyData,
+          d3.select('.county-table'),
+          nearest,
+          'county'
+        );
+        propertyTable.init(
+          DATA.cityData,
+          d3.select('.city-table'),
+          nearest,
+          'city'
+        );
+        propertyTable.init(
+          DATA.stateData,
+          d3.select('.state-table'),
+          nearest,
+          'state'
+        );
+
       }
       if(chartEmbedded == "fema-table" && embedded == "true"){
         d3.select("main").classed("fema-table",true);
@@ -367,36 +403,36 @@ function init() {
         //
         // customData = createGeojson.init(DATA["countyData"],"search");
         // setupGeocoder(d3.select(".bar-wrapper"),DATA,"countyData");
-        //
-        // let tableSelected = d3.select(".table-wrapper").select('input[name="table-controls"]:checked').attr("value");
-        // propertyTable.tableButtonClick(tableSelected);
-        //
-        // d3.select(".table-wrapper")
-        //   .select(".controls-container")
-        //   .selectAll('input')
-        //   .on('change', function (d) {
-        //     console.log("changing");
-        //     propertyTable.tableButtonClick(d3.select(this).attr("value"));
-        //   });
-        //
-        // propertyTable.init(
-        //   DATA.countyData,
-        //   d3.select('.county-table'),
-        //   nearest,
-        //   'county'
-        // );
-        // propertyTable.init(
-        //   DATA.cityData,
-        //   d3.select('.city-table'),
-        //   nearest,
-        //   'city'
-        // );
-        // propertyTable.init(
-        //   DATA.stateData,
-        //   d3.select('.state-table'),
-        //   nearest,
-        //   'state'
-        // );
+
+        let tableSelected = d3.select(".table-wrapper").select('input[name="table-controls"]:checked').attr("value");
+        propertyTable.tableButtonClick(tableSelected);
+
+        d3.select(".table-wrapper")
+          .select(".controls-container")
+          .selectAll('input')
+          .on('change', function (d) {
+            console.log("changing");
+            propertyTable.tableButtonClick(d3.select(this).attr("value"));
+          });
+
+        propertyTable.init(
+          DATA.countyData,
+          d3.select('.county-table'),
+          nearest,
+          'county'
+        );
+        propertyTable.init(
+          DATA.cityData,
+          d3.select('.city-table'),
+          nearest,
+          'city'
+        );
+        propertyTable.init(
+          DATA.stateData,
+          d3.select('.state-table'),
+          nearest,
+          'state'
+        );
         //
         // zipMap.init(
         //   nearest,DATA,
@@ -415,7 +451,7 @@ function init() {
         //   "FEMA Properties at Risk 2020 (total)",
         //   "FS 2020 100 Year Risk (total)"
         // );
-        clusterMap.init(nearest,DATA);
+        // clusterMap.init(nearest,DATA);
 
       }
 

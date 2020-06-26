@@ -1,5 +1,6 @@
 import searchCreate from './searchCreate.js'
 import createGeojson from './createGeojson';
+import embedCode from './embed-code'
 
 const formatComma = d3.format(',');
 
@@ -160,6 +161,8 @@ function init(data, container, locationInput, geo) {
     let el = geocoder.onAdd();
     parent.appendChild(el);
 
+
+
     geocoder.on("result",function(d){
 
       container.attr('data-city', d.result.place_name);
@@ -168,12 +171,15 @@ function init(data, container, locationInput, geo) {
       let long = d.result.geometry.coordinates[0];
       let lat = +d.result.geometry.coordinates[1];
 
-      const loc = searchCreate.findNearest(
+      loc.Latitude = lat;
+      loc.Longitude = long;
+
+      let nearestResults = searchCreate.findNearest(
         { latitude: lat, longitude: long },
         data
       );
 
-      buildTable(container, loc);
+      buildTable(container, nearestResults);
 
     })
 
@@ -183,6 +189,7 @@ function init(data, container, locationInput, geo) {
     container.attr('type-selected', "table");
 
     loc = locationInput[geoSelected][0]
+
 
     container.attr("data-city",loc.locationName);
     container.attr("data-state",loc.state_iso2);
@@ -194,6 +201,21 @@ function init(data, container, locationInput, geo) {
     // );
 
     buildTable(container, locationInput[geo]);
+
+    let embedRevealed = false;
+
+
+    container.select(".embed-button").on("click",function(d){
+
+      let center = {lat:+loc["Latitude"],lng:+loc["Longitude"]};
+
+      console.log(loc);
+
+      if(!embedRevealed){
+        embedCode.init(d3.select(this.parentNode),"https://pudding.cool/projects/flooding/visuals/embed.html?embed=true&chart=property-table-embed&lat="+center.lat+"&lon="+center.lng)
+        embedRevealed = true;
+      }
+    })
 
     // searchCreate.setupSearchBox(container,data,geoSelected)
 }
