@@ -216,6 +216,8 @@ function init() {
     .then((readerLocation) => findNearest(readerLocation, DATA))
     .then((nearest) => {
 
+      console.log(DATA);
+
       let storyMode = urlParam.get("story")
       let albers = urlParam.get("albers")
       let mapType = urlParam.get("map")
