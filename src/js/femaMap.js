@@ -41,6 +41,7 @@ function init(container,coords) {
   map.on("load",function(d){
 
     d3.select(".fema__controls-container").selectAll("input").on("click",function(d){
+      console.log("here");
       let value = d3.select(this).attr("value");
       let checked = d3.select(this).property("checked");
       let visibility = "none";

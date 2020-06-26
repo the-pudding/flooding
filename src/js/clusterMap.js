@@ -1,6 +1,7 @@
 
 import searchCreate from './searchCreate.js'
 import createGeojson from './createGeojson';
+import embedCode from './embed-code'
 // import mapboxgl from 'mapbox-gl';
 /* global d3 */
 import locate from './utils/locate';
@@ -79,6 +80,20 @@ function init(nearest,data) {
       });
 
       document.getElementById('geocode').appendChild(geocoder.onAdd(map));
+
+      let embedRevealed = false;
+      let container = null;
+      d3.select("#city-cluster").each(function(d){
+        container = d3.select(this.parentNode)
+      })//.select(this.parentNode).node();
+
+      container.select(".embed-button").on("click",function(d){
+        let center = map.getCenter();
+        if(!embedRevealed){
+          embedCode.init(d3.select(this.parentNode),"https://pudding.cool/projects/flooding/visuals/embed.html?embed=true&chart=cluster-map&lat="+center.lat+"&lon="+center.lng)
+          embedRevealed = true;
+        }
+      })
 
       map.on('load', function() {
 

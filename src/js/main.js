@@ -278,6 +278,10 @@ function init() {
         d3.select("main").classed("fema-compare-map",true);
         femaMap.init(d3.select(".fema-compare-wrapper"),coords);
       }
+      if(chartEmbedded == "cluster-map" && embedded == "true"){
+        d3.select("main").classed("cluster-map",true);
+        clusterMap.init(nearest,DATA);
+      }
       if(chartEmbedded == "fema-table" && embedded == "true"){
         d3.select("main").classed("fema-table",true);
 
@@ -322,95 +326,95 @@ function init() {
       }
       if(embedded == ""){
 
-        femaMap.init(d3.select(".fema-compare-wrapper"),coords);
-        story.init(DATA);
-        animatedGif.init(DATA,nearest)
-        singleBars.init(DATA, nearest);
-        multiBars.init(DATA, nearest);
-
-        d3.select('.bar-wrapper')
-          .selectAll('input')
-          .on('change', (d, i, nodes) => {
-            // same as d3.select(this)
-            const btn = d3.select(nodes[i]);
-            singleBars.singleButtonClick(btn);
-            multiBars.multiButtonClick(btn);
-
-            const barSection = d3.select('.bar-wrapper');
-            const btnType = btn.attr('id');
-
-            if(btnType == "state"){
-              customData = createGeojson.init(DATA["stateData"],"search");
-              console.log(customData);
-              suffix = "";
-            }
-            else {
-              customData = createGeojson.init(DATA["countyData"],"search");
-              suffix = " county";
-            }
-          });
-
-        d3.selectAll('.search-container')
-          .select('select')
-          .on('change', (d, i, nodes) => {
-            const sel = d3.select(nodes[i]);
-            const parent = d3.select(nodes[i].parentNode);
-            const type = parent.attr('data-selected');
-            handleSearchUpdate(sel, DATA, type);
-          });
-
-
-
-        customData = createGeojson.init(DATA["countyData"],"search");
-        setupGeocoder(d3.select(".bar-wrapper"),DATA,"countyData");
-
-        let tableSelected = d3.select(".table-wrapper").select('input[name="table-controls"]:checked').attr("value");
-        propertyTable.tableButtonClick(tableSelected);
-
-        d3.select(".table-wrapper")
-          .select(".controls-container")
-          .selectAll('input')
-          .on('change', function (d) {
-            console.log("changing");
-            propertyTable.tableButtonClick(d3.select(this).attr("value"));
-          });
-
-        propertyTable.init(
-          DATA.countyData,
-          d3.select('.county-table'),
-          nearest,
-          'county'
-        );
-        propertyTable.init(
-          DATA.cityData,
-          d3.select('.city-table'),
-          nearest,
-          'city'
-        );
-        propertyTable.init(
-          DATA.stateData,
-          d3.select('.state-table'),
-          nearest,
-          'state'
-        );
-
-        zipMap.init(
-          nearest,DATA,
-          d3.select('.climate-map'),
-          "zipcode",
-          "climate",
-          "FS 2020 100 Year Risk (total)",
-          "FS 2050 100 Year Risk (total)"
-        );
-
-        zipMap.init(
-          nearest,DATA,
-          d3.select('.fema-map'),
-          "zipcode",
-          "fema",
-          "FEMA Properties at Risk 2020 (total)",
-          "FS 2020 100 Year Risk (total)"
-        );
+        // femaMap.init(d3.select(".fema-compare-wrapper"),coords);
+        // story.init(DATA);
+        // animatedGif.init(DATA,nearest)
+        // singleBars.init(DATA, nearest);
+        // multiBars.init(DATA, nearest);
+        //
+        // d3.select('.bar-wrapper')
+        //   .selectAll('input')
+        //   .on('change', (d, i, nodes) => {
+        //     // same as d3.select(this)
+        //     const btn = d3.select(nodes[i]);
+        //     singleBars.singleButtonClick(btn);
+        //     multiBars.multiButtonClick(btn);
+        //
+        //     const barSection = d3.select('.bar-wrapper');
+        //     const btnType = btn.attr('id');
+        //
+        //     if(btnType == "state"){
+        //       customData = createGeojson.init(DATA["stateData"],"search");
+        //       console.log(customData);
+        //       suffix = "";
+        //     }
+        //     else {
+        //       customData = createGeojson.init(DATA["countyData"],"search");
+        //       suffix = " county";
+        //     }
+        //   });
+        //
+        // d3.selectAll('.search-container')
+        //   .select('select')
+        //   .on('change', (d, i, nodes) => {
+        //     const sel = d3.select(nodes[i]);
+        //     const parent = d3.select(nodes[i].parentNode);
+        //     const type = parent.attr('data-selected');
+        //     handleSearchUpdate(sel, DATA, type);
+        //   });
+        //
+        //
+        //
+        // customData = createGeojson.init(DATA["countyData"],"search");
+        // setupGeocoder(d3.select(".bar-wrapper"),DATA,"countyData");
+        //
+        // let tableSelected = d3.select(".table-wrapper").select('input[name="table-controls"]:checked').attr("value");
+        // propertyTable.tableButtonClick(tableSelected);
+        //
+        // d3.select(".table-wrapper")
+        //   .select(".controls-container")
+        //   .selectAll('input')
+        //   .on('change', function (d) {
+        //     console.log("changing");
+        //     propertyTable.tableButtonClick(d3.select(this).attr("value"));
+        //   });
+        //
+        // propertyTable.init(
+        //   DATA.countyData,
+        //   d3.select('.county-table'),
+        //   nearest,
+        //   'county'
+        // );
+        // propertyTable.init(
+        //   DATA.cityData,
+        //   d3.select('.city-table'),
+        //   nearest,
+        //   'city'
+        // );
+        // propertyTable.init(
+        //   DATA.stateData,
+        //   d3.select('.state-table'),
+        //   nearest,
+        //   'state'
+        // );
+        //
+        // zipMap.init(
+        //   nearest,DATA,
+        //   d3.select('.climate-map'),
+        //   "zipcode",
+        //   "climate",
+        //   "FS 2020 100 Year Risk (total)",
+        //   "FS 2050 100 Year Risk (total)"
+        // );
+        //
+        // zipMap.init(
+        //   nearest,DATA,
+        //   d3.select('.fema-map'),
+        //   "zipcode",
+        //   "fema",
+        //   "FEMA Properties at Risk 2020 (total)",
+        //   "FS 2020 100 Year Risk (total)"
+        // );
         clusterMap.init(nearest,DATA);
 
       }
