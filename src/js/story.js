@@ -5,6 +5,8 @@ function init(data){
     return d["FS 2020 100 Year Risk (total)"];
   })
 
+  
+
   d3.select(".at-risk-properties").text(commaFormat(total));
 }
 

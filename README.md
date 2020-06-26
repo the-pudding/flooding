@@ -34,6 +34,8 @@ This script goes through the main state zip file via Google Drive and combines f
 
 use flag --file [geo], where geo is either "County", "Zipcode", "State", or "City"
 
+python combine-fs-data.py --file Zipcode
+
 ### tiles_to_tiff.py
 This script will convert tiles from the first street tile service to a merged tif file.
 
@@ -132,7 +134,16 @@ polyonize
 filter for dn > 0
 save
 
-tippecanoe -o mi_counties3.mbtiles -Z7 -z14 -ab -l --include="PROVIDERS" mi_counties3.geojson
+tippecanoe -o mi_counties3.mbtiles -Z7 -z13 -ab -l --include="PROVIDERS" mi_counties3.geojson
+
+tippecanoe -o la_counties.mbtiles -Z7 -z13 -ab -L -named-layer=fs --include="PROVIDERS" la_counties_fs.geojson -L -named-layer=fema --include="PROVIDERS" la_counties_fema.geojson
+
+tippecanoe -o la_counties.mbtiles -Z7 -z13 -L'{"file":"la_counties_fema.geojson", "layer":"fema", "description":"fema"}' -L'{"file":"la_counties_fs.geojson", "layer":"fs", "description":"fs"}'
+
+tippecanoe -o sav_counties.mbtiles -Z7 -z13 -L'{"file":"sav_counties_fema.geojson", "layer":"fema", "description":"fema"}' -L'{"file":"sav_counties_fs.geojson", "layer":"fs", "description":"fs"}'
+
+
+tile-join -o output_combined.mbtiles sav_counties.mbtiles la_counties.mbtiles
 
 
 git filter-branch --index-filter \

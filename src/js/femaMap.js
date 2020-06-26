@@ -22,8 +22,6 @@ function init() {
     "first street": "_fs"
   }
 
-
-
   map.on("load",function(d){
 
     d3.select(".fema__controls-container").selectAll("input").on("click",function(d){

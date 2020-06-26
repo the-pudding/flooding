@@ -132,14 +132,19 @@ dirpath = str(d)+"/state_pages"
 
 if fileSelected == "City":
     configfiles = glob(dirpath+'/**/All_Cities_by_Properties_at_Risk.csv')
+elif fileSelected == "County":
+    configfiles = glob(dirpath+'/**/County_Summary2.csv')
 else:
     configfiles = glob(dirpath+'/**/'+fileSelected+'_Summary.csv')
 
 #combined_csv = pd.concat([pd.read_csv(f) for f in configfiles ])
+
 df_list = []
 for f in configfiles:
     if fileSelected == "City":
         code = f.replace("/All_Cities_by_Properties_at_Risk.csv","")[-2:]
+    elif fileSelected == "County":
+        code = f.replace("/"+fileSelected+"_Summary2.csv","")[-2:]
     else:
         code = f.replace("/"+fileSelected+"_Summary.csv","")[-2:]
     print(code)

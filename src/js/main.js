@@ -16,6 +16,8 @@ import './utils/search';
 import story from './story'
 import animatedGif from './animatedGif'
 import femaMap from './femaMap'
+import urlParam from './utils/url-parameter'
+import countyMap from './countyMap'
 
 const defaultLocation = {
   country_code: 'US',
@@ -205,7 +207,7 @@ function init() {
   let [cityData, zipData, countyData, stateData] = [];
   let DATA = [];
 
-  loadData(['city6.csv', 'zip6.csv', 'county6.csv', 'state6.csv'])
+  loadData(['city6.csv', 'zip6.csv', 'county6-3.csv', 'state6.csv'])
     .then((result) => {
       [cityData, zipData, countyData, stateData] = result;
       DATA = { cityData, zipData, countyData, stateData };
@@ -214,109 +216,148 @@ function init() {
     .then((readerLocation) => findNearest(readerLocation, DATA))
     .then((nearest) => {
 
-      femaMap.init();
+      let storyMode = urlParam.get("story")
+      let albers = urlParam.get("albers")
+      let mapType = urlParam.get("map")
 
-      story.init(DATA);
-      animatedGif.init(DATA,nearest)
+      if(storyMode == "false"){
+        d3.select("main").classed("embed",true);
+      }
+      if(albers == "true"){
+        d3.select("html").style("height","100%")
+        d3.select("body").style("height","100%")
+        d3.select("main").classed("albers",true);
 
-      singleBars.init(DATA, nearest);
-      multiBars.init(DATA, nearest);
-
-      d3.select('.bar-wrapper')
-        .selectAll('input')
-        .on('change', (d, i, nodes) => {
-          // same as d3.select(this)
-          const btn = d3.select(nodes[i]);
-          singleBars.singleButtonClick(btn);
-          multiBars.multiButtonClick(btn);
-
-
-
-          // update search bars to reflect change
-
-          const barSection = d3.select('.bar-wrapper');
-          const btnType = btn.attr('id');
-
-          console.log(btnType);
-          if(btnType == "state"){
-            customData = createGeojson.init(data["stateData"],"search");
-            suffix = "";
-          }
-          else {
-            customData = createGeojson.init(data["countyData"],"search");
-            suffix = " county";
-          }
-
-          prepareSearch(barSection, btnType, DATA);
-        });
-
-      prepareSearch('all', null, DATA);
-
-      // setup update functions for search menu changes
-      d3.selectAll('.search-container')
-        .select('select')
-        .on('change', (d, i, nodes) => {
-          const sel = d3.select(nodes[i]);
-          const parent = d3.select(nodes[i].parentNode);
-          const type = parent.attr('data-selected');
-          handleSearchUpdate(sel, DATA, type);
-        });
+        if(mapType == "fema"){
+          countyMap.init(
+            nearest,DATA,
+            d3.select('.county-map'),
+            "county",
+            "fema",
+            "FEMA Properties at Risk 2020 (total)",
+            "FS 2020 100 Year Risk (total)"
+          );
+        } else {
+          countyMap.init(
+            nearest,DATA,
+            d3.select('.county-map'),
+            "county",
+            "climate",
+            "FS 2020 100 Year Risk (total)",
+            "FS 2050 100 Year Risk (total)"
+          );
+        }
+      }
+      if(storyMode != "false"){
+        ///?albers=true&story=false&map=climate
+        console.log("here");
+        femaMap.init();
+        story.init(DATA);
+        animatedGif.init(DATA,nearest)
+        singleBars.init(DATA, nearest);
+        multiBars.init(DATA, nearest);
 
 
-      customData = createGeojson.init(DATA["countyData"],"search");
-      setupGeocoder(d3.select(".bar-wrapper"),DATA,"countyData");
+        d3.select('.bar-wrapper')
+          .selectAll('input')
+          .on('change', (d, i, nodes) => {
+            // same as d3.select(this)
+            const btn = d3.select(nodes[i]);
+            singleBars.singleButtonClick(btn);
+            multiBars.multiButtonClick(btn);
 
-      let tableSelected = d3.select(".table-wrapper").select('input[name="table-controls"]:checked').attr("value");
-      propertyTable.tableButtonClick(tableSelected);
-      //
-      d3.select(".table-wrapper")
-        .select(".controls-container")
-        .selectAll('input')
-        .on('change', function (d) {
-          console.log("changing");
-          propertyTable.tableButtonClick(d3.select(this).attr("value"));
-        });
 
-      propertyTable.init(
-        DATA.countyData,
-        d3.select('.county-table'),
-        nearest,
-        'county'
-      );
-      propertyTable.init(
-        DATA.cityData,
-        d3.select('.city-table'),
-        nearest,
-        'city'
-      );
-      propertyTable.init(
-        DATA.stateData,
-        d3.select('.state-table'),
-        nearest,
-        'state'
-      );
 
-      //
-      // // //
-      zipMap.init(
-        nearest,DATA,
-        d3.select('.climate-map'),
-        "zipcode",
-        "climate",
-        "FS 2020 100 Year Risk (total)",
-        "FS 2050 100 Year Risk (total)"
-      );
+            // update search bars to reflect change
 
-      zipMap.init(
-        nearest,DATA,
-        d3.select('.fema-map'),
-        "zipcode",
-        "fema",
-        "FEMA Properties at Risk 2020 (total)",
-        "FS 2020 100 Year Risk (total)"
-      );
+            const barSection = d3.select('.bar-wrapper');
+            const btnType = btn.attr('id');
 
-      clusterMap.init(nearest,DATA);
+            console.log(btnType);
+            if(btnType == "state"){
+              customData = createGeojson.init(data["stateData"],"search");
+              suffix = "";
+            }
+            else {
+              customData = createGeojson.init(data["countyData"],"search");
+              suffix = " county";
+            }
+
+            prepareSearch(barSection, btnType, DATA);
+          });
+
+        prepareSearch('all', null, DATA);
+
+        // setup update functions for search menu changes
+        d3.selectAll('.search-container')
+          .select('select')
+          .on('change', (d, i, nodes) => {
+            const sel = d3.select(nodes[i]);
+            const parent = d3.select(nodes[i].parentNode);
+            const type = parent.attr('data-selected');
+            handleSearchUpdate(sel, DATA, type);
+          });
+
+
+        customData = createGeojson.init(DATA["countyData"],"search");
+        setupGeocoder(d3.select(".bar-wrapper"),DATA,"countyData");
+
+        let tableSelected = d3.select(".table-wrapper").select('input[name="table-controls"]:checked').attr("value");
+        propertyTable.tableButtonClick(tableSelected);
+        //
+        d3.select(".table-wrapper")
+          .select(".controls-container")
+          .selectAll('input')
+          .on('change', function (d) {
+            console.log("changing");
+            propertyTable.tableButtonClick(d3.select(this).attr("value"));
+          });
+
+        propertyTable.init(
+          DATA.countyData,
+          d3.select('.county-table'),
+          nearest,
+          'county'
+        );
+        propertyTable.init(
+          DATA.cityData,
+          d3.select('.city-table'),
+          nearest,
+          'city'
+        );
+        propertyTable.init(
+          DATA.stateData,
+          d3.select('.state-table'),
+          nearest,
+          'state'
+        );
+
+        //
+        // // //
+        zipMap.init(
+          nearest,DATA,
+          d3.select('.climate-map'),
+          "zipcode",
+          "climate",
+          "FS 2020 100 Year Risk (total)",
+          "FS 2050 100 Year Risk (total)"
+        );
+
+        zipMap.init(
+          nearest,DATA,
+          d3.select('.fema-map'),
+          "zipcode",
+          "fema",
+          "FEMA Properties at Risk 2020 (total)",
+          "FS 2020 100 Year Risk (total)"
+        );
+        clusterMap.init(nearest,DATA);
+
+      }
+
+
+
+
 
     })
     .catch((error) => {

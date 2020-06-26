@@ -5,7 +5,7 @@
   border-radius 3px
   font-size 14px
 
-#city-cluster, #flood-gif, #fema-map
+#city-cluster, #flood-gif, #fema-map, .county-map
   width 500px
   height 300px
   margin 0
@@ -157,6 +157,7 @@
   display flex
   margin-top 2rem
   margin-bottom 1rem
+  flex-wrap wrap
   .control-wrapper
     margin-bottom 0
   .chart-title
@@ -257,6 +258,8 @@
         font-weight 600
         font-size 14px
         margin-bottom .5rem
+.county-map
+  display none
 .map-title
   font-size 18px
   font-family $atlas
