@@ -229,6 +229,9 @@ function init() {
         d3.select("main").classed("albers",true);
 
         if(mapType == "fema"){
+
+          d3.select(".county-map").select(".chart-title").text("Percent change in # of properties in the Special Flood Hazard Area.")
+
           countyMap.init(
             nearest,DATA,
             d3.select('.county-map'),
