@@ -1,16 +1,44 @@
 .embed
+  background white
   .intro, section
     display none
-  .section-hed, .section-dek, .subsection-hed, .subsection-dek, .map-wrapper, .bar-wrapper, .embed-button-wrapper
+  .section-hed, .section-dek, .subsection-hed, .subsection-dek, .map-wrapper, .bar-wrapper, .embed-button-wrapper, .graphic-wrapper, .bar-wrapper, .fema-compare-wrapper
     display none
 
 
+.fema-table
+  .fema-section, .graphic-wrapper
+    display block
+    border none
+    margin 0
+    padding 0
+    .bar-wrapper
+      display block
+      margin 0
+      padding 0
+
 .fema-compare-map
+  height 100%
   .fema-section
     display block
     border none
     margin 0
     padding 0
+    height 100%
+    .graphic-wrapper
+      display block
+      border none
+      margin 0
+      padding 0
+      height 100%
+      .fema-compare-wrapper
+        display block
+        display flex
+        flex-direction column
+        height 100%
+        #fema-map
+          height 1px
+          flex-grow 1
 
 
 

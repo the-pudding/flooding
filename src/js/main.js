@@ -229,6 +229,8 @@ function init() {
       let chartEmbedded = urlParam.get("chart")
       if(embedded == "true"){
         d3.select("main").classed("embed",true);
+        d3.select("body").style("height","100%");
+        d3.select("html").style("height","100%");
       }
 
       if(albers == "true"){
@@ -263,6 +265,48 @@ function init() {
         d3.select("main").classed("fema-compare-map",true);
         femaMap.init(d3.select(".fema-compare-wrapper"),coords);
       }
+      if(chartEmbedded == "fema-table" && embedded == "true"){
+        d3.select("main").classed("fema-table",true);
+
+        singleBars.init(DATA, nearest);
+        multiBars.init(DATA, nearest);
+
+        d3.select('.bar-wrapper')
+          .selectAll('input')
+          .on('change', (d, i, nodes) => {
+            // same as d3.select(this)
+            const btn = d3.select(nodes[i]);
+            singleBars.singleButtonClick(btn);
+            multiBars.multiButtonClick(btn);
+
+            const barSection = d3.select('.bar-wrapper');
+            const btnType = btn.attr('id');
+
+            if(btnType == "state"){
+              customData = createGeojson.init(DATA["stateData"],"search");
+              console.log(customData);
+              suffix = "";
+            }
+            else {
+              customData = createGeojson.init(DATA["countyData"],"search");
+              suffix = " county";
+            }
+          });
+
+        d3.selectAll('.search-container')
+          .select('select')
+          .on('change', (d, i, nodes) => {
+            const sel = d3.select(nodes[i]);
+            const parent = d3.select(nodes[i].parentNode);
+            const type = parent.attr('data-selected');
+            handleSearchUpdate(sel, DATA, type);
+          });
+
+        customData = createGeojson.init(DATA["countyData"],"search");
+        setupGeocoder(d3.select(".bar-wrapper"),DATA,"countyData");
+
+
+      }
       if(embedded == ""){
 
         femaMap.init(d3.select(".fema-compare-wrapper"),coords);
@@ -279,10 +323,6 @@ function init() {
             singleBars.singleButtonClick(btn);
             multiBars.multiButtonClick(btn);
 
-
-
-            // update search bars to reflect change
-
             const barSection = d3.select('.bar-wrapper');
             const btnType = btn.attr('id');
 
@@ -297,8 +337,6 @@ function init() {
             }
           });
 
-
-        // setup update functions for search menu changes
         d3.selectAll('.search-container')
           .select('select')
           .on('change', (d, i, nodes) => {
@@ -313,7 +351,7 @@ function init() {
 
         let tableSelected = d3.select(".table-wrapper").select('input[name="table-controls"]:checked').attr("value");
         propertyTable.tableButtonClick(tableSelected);
-        //
+
         d3.select(".table-wrapper")
           .select(".controls-container")
           .selectAll('input')
@@ -361,10 +399,6 @@ function init() {
         clusterMap.init(nearest,DATA);
 
       }
-
-
-
-
 
     })
     .catch((error) => {
