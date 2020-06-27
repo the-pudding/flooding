@@ -13,6 +13,7 @@ function init(container,coords) {
 
   let embedRevealed = false;
   container.select(".embed-button").on("click",function(d){
+    console.log("here");
     let center = map.getCenter();
     if(!embedRevealed){
       embedCode.init(d3.select(this.parentNode),"https://pudding.cool/projects/flooding/visuals/embed.html?embed=true&chart=fema-compare-map&lat="+center.lat+"&lon="+center.lng)
@@ -32,7 +33,6 @@ function init(container,coords) {
     ["Duval County in Florida",[-81.452,30.120]],
     ["Bucks and Montgomery counties in Pennsylvania",[-74.971,40.172]],
     ["Rhode Island Counties",[-71.418,41.669]]
-
   ];
 
   let dropdown = container.select(".dropdown-counties").select("select")
