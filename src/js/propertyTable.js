@@ -14,6 +14,7 @@ let loc = null;
 const geoName = { city: '', county: ' county', state: '' };
 
 function tableButtonClick(btn) {
+  console.log("here");
   d3.select(".table-wrapper").selectAll(".property-table").style("display",null);
   d3.select(".table-wrapper").select("."+btn+"-table").style("display","block");
 }
@@ -206,11 +207,7 @@ function init(data, container, locationInput, geo) {
 
 
     container.select(".embed-button").on("click",function(d){
-
       let center = {lat:+loc["Latitude"],lng:+loc["Longitude"]};
-
-      console.log(loc);
-
       if(!embedRevealed){
         embedCode.init(d3.select(this.parentNode),"https://pudding.cool/projects/flooding/visuals/embed.html?embed=true&chart=property-table-embed&lat="+center.lat+"&lon="+center.lng)
         embedRevealed = true;

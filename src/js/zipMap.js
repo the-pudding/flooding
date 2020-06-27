@@ -1,3 +1,4 @@
+import embedCode from './embed-code'
 
 
 
@@ -169,8 +170,6 @@ function init(locationInput,data,container,geo,scope,variableOne,variableTwo){
 
   function populateToolTip(container,dataPoint,coords,OPTIONS){
 
-
-
     let tooltipContainer = container.select(".map").select(".map-tooltip");
     tooltipContainer.style("left",coords["x"]+"px").style("top",coords["y"]+"px")
 
@@ -220,7 +219,8 @@ function init(locationInput,data,container,geo,scope,variableOne,variableTwo){
             "fill-outline-color":"rgba(0,0,0,0)",
             "fill-opacity":1,
             "fill-color": expression
-        }
+        },
+        "filter":[ "match", ["get", "iso_3166_1"], ["US"], true, false ]
       },"admin-1-boundary");
 
       map.addLayer({
@@ -302,11 +302,11 @@ function init(locationInput,data,container,geo,scope,variableOne,variableTwo){
 
   var map = new mapboxgl.Map({
     container: container.select(".map").node(),
-    style: 'mapbox://styles/mapbox/light-v10',
-    // style: 'mapbox://styles/nytgraphics/cjmsjh9u308ze2rpk2vh41efx?optimize=true',
+    style: 'mapbox://styles/dock4242/ckbxqjmpd0cnx1ipi5ok9e2id',
     center: [-98.585522 , 39.8333333],
     minZoom: getMinZoom(scope,geoSelected),
-    zoom: getZoom(scope,geoSelected)
+    zoom: getZoom(scope,geoSelected),
+    bounds: [[-65.62653762499436, 50.7290755205278], [-127.1499751249942, 23.23063251536344]]
   });
 
   buildToolTip(container,map);
@@ -342,7 +342,19 @@ function init(locationInput,data,container,geo,scope,variableOne,variableTwo){
     source = "boundaries_admin_2"
   }
 
+  let embedRevealed = false;
+
+  container.select(".embed-button").on("click",function(d){
+    if(!embedRevealed){
+      embedCode.init(d3.select(this.parentNode),"https://pudding.cool/projects/flooding/visuals/embed.html?embed=true&chart="+scope+"-map-embed")
+      embedRevealed = true;
+    }
+  })
+
   map.on('load', function() {
+    map.setLayoutProperty('boundaries-admin-1','visibility','none')
+
+    map.setPaintProperty('water-shadow','line-opacity',.5)
 
     map.addSource("postal", {
       type: "vector",
@@ -418,6 +430,7 @@ function init(locationInput,data,container,geo,scope,variableOne,variableTwo){
 
     map.on('mousemove', function(e){
       let layerSource = getLayerSource();
+
       const features = map.queryRenderedFeatures(e.point, { layers: [layerSource[1]] });
       if(features.length > 0){
 

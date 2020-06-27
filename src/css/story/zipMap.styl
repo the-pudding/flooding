@@ -34,12 +34,22 @@
   .controls-container
     margin-top 0
 
+
+
 #fema-map
   width 100%
   max-width 1200px
   height 800px
   margin-bottom 1rem
 .fema-compare-wrapper
+  .dropdown-counties
+    display flex
+    label
+      font-family $atlas
+      font-size 14px
+      margin-right 5px
+    select
+      font-size 16px
   .controls-container
     .controls-buttons
       input:checked + label
@@ -243,6 +253,7 @@
   display block
   position relative
   overflow visible
+  margin-bottom 1rem
   .map-tooltip
     position absolute
     width 130px

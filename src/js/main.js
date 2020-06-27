@@ -284,6 +284,30 @@ function init() {
         d3.select("main").classed("cluster-map",true);
         clusterMap.init(nearest,DATA);
       }
+      if(chartEmbedded == "climate-map-embed" && embedded == "true"){
+        d3.select("main").classed("climate-map-embed",true);
+
+        zipMap.init(
+          nearest,DATA,
+          d3.select('.climate-map'),
+          "zipcode",
+          "climate",
+          "FS 2020 100 Year Risk (total)",
+          "FS 2050 100 Year Risk (total)"
+        );
+      }
+      if(chartEmbedded == "fema-map-embed" && embedded == "true"){
+        d3.select("main").classed("fema-map-embed",true);
+
+        zipMap.init(
+          nearest,DATA,
+          d3.select('.fema-map'),
+          "zipcode",
+          "fema",
+          "FEMA Properties at Risk 2020 (total)",
+          "FS 2020 100 Year Risk (total)"
+        );
+      }
       if(chartEmbedded == "property-table-embed" && embedded == "true"){
 
         d3.select("main").classed("property-table-embed",true);

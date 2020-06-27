@@ -20,6 +20,34 @@ function init(container,coords) {
     }
   })
 
+  let counties = [
+    ["Sarasota and Manatee counties in Florida",[]],
+    ["Akron, Ohio Area",[-81.538,40.992]],
+    ["Escambia and Santa Rosa counties in Florida",[]],
+    ["Lafayette and St. Landry parishes in Louisiana",[-92.05416264226284,30.332087829526884]],
+    ["Wayne, Oakland and Macomb counties in Michigan",[-83.264,42.505]],
+    ["Chatham and Bryan",[-81.22376056548842,31.931047184232682]],
+    ["St. Johns County in Florida",[-81.31572653813868,29.89694420163633]],
+    ["Richmond and Columbia in Georgia, Aiken in South Carolina",[-81.87830985421346,33.4663727552888]]
+  ];
+
+  let dropdown = container.select(".dropdown-counties").select("select")
+
+  dropdown.selectAll("options")
+    .data(counties)
+    .enter()
+    .append("option")
+    .text(function(d){
+      return d[0];
+    })
+
+  dropdown
+    .on("change",function(d){
+
+      map.setCenter(d3.select(dropdown.node().options[dropdown.node().selectedIndex]).datum()[1])
+    })
+    ;
+
 
   mapboxgl.accessToken = 'pk.eyJ1IjoiZG9jazQyNDIiLCJhIjoiY2thZWxrN3cxMDVpYTJ0bXZwenI2ZXl1ZCJ9.E0ICxBW96VVQbnQqyRTWbA';
 

@@ -45,7 +45,6 @@
       padding 0
       height 100%
       .property-table
-        display block
         margin 0
         padding 0
         height 100%
@@ -89,10 +88,62 @@
         display flex
         flex-direction column
         height 100%
+        .dropdown-counties
+          display none
         #fema-map
           height 1px
           flex-grow 1
 
+
+.fema-map-embed
+  background white
+  height 100%
+  .fema-section
+    display block
+    border none
+  .gif-wrapper, .section-hed, .section-dek
+    display none
+  .fema-map, .fema-section, .map,.graphic-wrapper
+    display block
+    max-width 100%
+    width 100%
+    height 100%
+    padding 0
+    margin 0
+  .fema-map
+    display flex
+    flex-direction column
+    height 100%
+    .title-wrapper
+      margin-top 0
+    .map
+      height 1px
+      flex-grow 1
+
+.climate-map-embed
+  background white
+  height 100%
+  .climate-section
+    display block
+    border none
+  .gif-wrapper, .section-hed, .section-dek
+    display none
+  .climate-map, .climate-section, .map,.graphic-wrapper
+    display block
+    max-width 100%
+    width 100%
+    height 100%
+    padding 0
+    margin 0
+  .climate-map
+    display flex
+    flex-direction column
+    height 100%
+    .title-wrapper
+      margin-top 0
+    .map
+      height 1px
+      flex-grow 1
 
 
 .albers
