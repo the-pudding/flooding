@@ -352,7 +352,9 @@ function init(locationInput,data,container,geo,scope,variableOne,variableTwo){
   })
 
   map.on('load', function() {
+    //map.setLayoutProperty('state-label','visibility','visible')
     map.setLayoutProperty('boundaries-admin-1','visibility','none')
+    //map.setPaintProperty('boundaries-admin-1','line-color','white')
 
     map.setPaintProperty('water-shadow','line-opacity',.5)
 

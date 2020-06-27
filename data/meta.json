@@ -1,9 +1,9 @@
 {
-	"title": "Title Case Hed Goes Here",
-	"description": "Sentence case dek goes down here. Modify these in data/meta.json.",
+	"title": "Flooding in America",
+	"description": "How is flooding affecting your community",
 	"site": "https://pudding.cool",
 	"siteName": "The Pudding",
-	"url": "https://pudding.cool/year/month/name/",
+	"url": "https://pudding.cool/projects/flooding/visuals/",
 	"keywords": "tk",
 	"imgFacebook": "https://pudding.cool/year/month/name/assets/social/social-facebook.jpg",
 	"imgTwitter": "https://pudding.cool/year/month/name/assets/social/social-twitter.jpg",
@@ -12,6 +12,6 @@
 		"url": "https://pudding.cool/author/the-pudding-team",
 		"twitterHandle": "@puddingviz"
 	},
-	"analytics": "",
+	"analytics": "UA-90567923-1",
 	"lorem": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis mollis neque sit amet sollicitudin vehicula. Maecenas fringilla mi non lacus mattis elementum. Curabitur dignissim faucibus justo."
 }
