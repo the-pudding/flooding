@@ -21,14 +21,18 @@ function init(container,coords) {
   })
 
   let counties = [
-    ["Sarasota and Manatee counties in Florida",[]],
+    ["Sarasota and Manatee counties in Florida",[-82.303,27.345]],
     ["Akron, Ohio Area",[-81.538,40.992]],
-    ["Escambia and Santa Rosa counties in Florida",[]],
+    ["Escambia and Santa Rosa counties in Florida",[-87.046,30.659]],
     ["Lafayette and St. Landry parishes in Louisiana",[-92.05416264226284,30.332087829526884]],
     ["Wayne, Oakland and Macomb counties in Michigan",[-83.264,42.505]],
     ["Chatham and Bryan",[-81.22376056548842,31.931047184232682]],
     ["St. Johns County in Florida",[-81.31572653813868,29.89694420163633]],
-    ["Richmond and Columbia in Georgia, Aiken in South Carolina",[-81.87830985421346,33.4663727552888]]
+    ["Richmond and Columbia in Georgia, Aiken in South Carolina",[-81.87830985421346,33.4663727552888]],
+    ["Duval County in Florida",[-81.452,30.120]],
+    ["Bucks and Montgomery counties in Pennsylvania",[-74.971,40.172]],
+    ["Rhode Island Counties",[-71.418,41.669]]
+
   ];
 
   let dropdown = container.select(".dropdown-counties").select("select")
@@ -43,7 +47,6 @@ function init(container,coords) {
 
   dropdown
     .on("change",function(d){
-
       map.setCenter(d3.select(dropdown.node().options[dropdown.node().selectedIndex]).datum()[1])
     })
     ;
