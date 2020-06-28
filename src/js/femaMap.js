@@ -36,7 +36,8 @@ function init(container,coords) {
     ["Rhode Island Counties",[-71.418,41.669]],
     ["Southwest Ohio, North Kentucky",[-84.518,39.167]],
     ["Oneida County, New York",[-75.4297,43.2205]],
-    ["Riverside County, California",[-116.261,33.589]]
+    ["Riverside County, California",[-116.261,33.589]],
+    ["Monmouth and Ocean counties in New Jersey",[-74.0731,39.9807]]
   ];
 
   let dropdown = container.select(".dropdown-counties").select("select")
