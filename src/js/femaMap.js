@@ -22,18 +22,21 @@ function init(container,coords) {
   })
 
   let counties = [
+    ["Wayne, Oakland and Macomb counties in Michigan",[-83.264,42.505]],
     ["Sarasota and Manatee counties in Florida",[-82.303,27.345]],
     ["Akron, Ohio Area",[-81.538,40.992]],
     ["Escambia and Santa Rosa counties in Florida",[-87.046,30.659]],
     ["Alachua, Levy, Dixie and Gilchrist counties in Florida",[-82.733,29.471]],
     ["Lafayette and St. Landry parishes in Louisiana",[-92.05416264226284,30.332087829526884]],
-    ["Wayne, Oakland and Macomb counties in Michigan",[-83.264,42.505]],
     ["Chatham and Bryan",[-81.22376056548842,31.931047184232682]],
     ["St. Johns County in Florida",[-81.31572653813868,29.89694420163633]],
     ["Richmond and Columbia in Georgia, Aiken in South Carolina",[-81.87830985421346,33.4663727552888]],
     ["Duval County in Florida",[-81.452,30.120]],
     ["Bucks and Montgomery counties in Pennsylvania",[-74.971,40.172]],
-    ["Rhode Island Counties",[-71.418,41.669]]
+    ["Rhode Island Counties",[-71.418,41.669]],
+    ["Southwest Ohio, North Kentucky",[-84.518,39.167]],
+    ["Oneida County, New York",[-75.4297,43.2205]],
+    ["Riverside County, California",[-116.261,33.589]]
   ];
 
   let dropdown = container.select(".dropdown-counties").select("select")
@@ -57,7 +60,7 @@ function init(container,coords) {
 
   let map = new mapboxgl.Map({
     container: 'fema-map',
-    style: 'mapbox://styles/dock4242/ckbuxuqa00nva1imfulcebf1r',
+    style: 'mapbox://styles/dock4242/ckbzcx1043xbx1ht9kjljx63c',
     center: center,
     minZoom: 7,
     maxZoom: 14,

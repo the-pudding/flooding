@@ -23,7 +23,7 @@ parser.add_argument("--lonMax", nargs='?', default="check_string_for_empty")
 args = parser.parse_args()
 
 
-#python tiles_to_tiff.py --lonMin -82.74605108883338 --lonMax -82.05434821589301 --latMin 26.94561286756681 --latMax 27.646523395223866
+#python tiles_to_tiff.py --lonMin -117.676286 --lonMax -114.434949 --latMin 33.425932 --latMax 34.079809
 
 #python tiles_to_tiff.py --lonMin -82.173373 --lonMax -81.001695 --latMin 40.635106 --latMax 41.351168
 
