@@ -169,7 +169,9 @@
   .mapboxgl-ctrl-geocoder
     top 6px
     @media (max-width: 600px)
-      width 100px
+      min-width 200px
+    @media (max-width: 400px)
+      max-width 200px
   .year-label
     position absolute
     right 1rem

@@ -220,6 +220,11 @@ function init(data,nearest) {
 
   let geocoder = null;
   map.on("load",function(d){
+
+    if(d3.select("body").classed("is-mobile")){
+      map.scrollZoom.disable();
+    }
+
     map.addControl(
       geocoder = new MapboxGeocoder({
         accessToken: mapboxgl.accessToken,
