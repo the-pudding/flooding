@@ -66,7 +66,7 @@ function findReaderLoc() {
       resolve(defaultLocation);
     }
     else {
-      resolve(defaultLocation);      
+      resolve(defaultLocation);
     }
     // else {
     //   locate(key, (err, result) => {
@@ -158,6 +158,7 @@ function setupGeocoder(container,data,geo){
     //   return item.place_type[0] == "manual";
     // },
     zoom:7,
+    limit:15,
     localGeocoderOnly:true,
     marker:false
     //mapboxgl: mapboxgl

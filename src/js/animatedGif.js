@@ -231,6 +231,7 @@ function init(data,nearest) {
         countries: 'us',
         placeholder:'Find a location',
         zoom:12,
+        limit:15,
         marker:false,
         flyTo:false,
         mapboxgl: mapboxgl
