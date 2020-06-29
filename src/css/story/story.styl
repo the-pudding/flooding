@@ -1,8 +1,43 @@
+.header
+  display flex
+  background #1B232D
+  justify-content space-between
+  padding .8rem .8rem
+  .header-title
+    .header-hed
+      font-size 25px
+      font-family $lyon-display
+      color white
+      line-height 1.3
+    .header-dek
+      font-family $atlas
+      font-size 11px
+      color white
+      font-weight 400
+      a
+        color white
+        font-weight 600
+  .patreon
+    align-self center
+    width 1px
+    flex-grow 1
+
+    p
+      font-size 12px
+      font-family $atlas
+      color #D7D7D7
+      font-weight 400
+      text-align right
+
+      a
+        color white
+        border-bottom 1px solid white
+
 .embed
   background white
-  .intro, section
+  .intro, section, .header
     display none
-  .section-hed, .section-dek, .subsection-hed, .subsection-dek, .map-wrapper, .bar-wrapper, .embed-button-wrapper, .graphic-wrapper, .bar-wrapper, .fema-compare-wrapper, .table-wrapper
+  .section-hed, .section-dek, .subsection-hed, .subsection-dek, .map-wrapper, .bar-wrapper, .embed-button-wrapper, .graphic-wrapper, .bar-wrapper, .fema-compare-wrapper, .table-wrapper, footer
     display none
   .attribution
     display block
@@ -82,6 +117,7 @@
     padding 0
     height 100%
     margin 0 auto
+
     .graphic-wrapper
       display block
       border none
@@ -301,6 +337,7 @@ p
 section
   max-width $column-width
   width 95%
+  font-weight 400
   margin 0 auto
   border-bottom 1px solid #ddd
   padding-bottom 3rem
@@ -400,6 +437,10 @@ section
         color black
 .climate-section, .fema-section
   margin-top 3rem
+
+.fema-section
+  border-bottom none
+
 
 .embed-button-wrapper
   display flex
