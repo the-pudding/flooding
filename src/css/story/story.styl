@@ -13,6 +13,8 @@
     margin 0
     padding 0
     height 100%
+    max-width 95%
+    margin 0 auto
     .map-wrapper
       display block
       border none
@@ -21,6 +23,15 @@
       height 100%
       display flex
       flex-direction column
+      #geocode
+        margin-top 10px
+        display block
+      .title-wrapper
+        margin-top 1rem
+        @media (max-width: 500px)
+          margin-bottom 0rem
+      .legend-wrapper
+        margin-bottom 1rem
       #city-cluster
         display block
         margin 0
@@ -28,6 +39,7 @@
         padding 0
         height 1px
         flex-grow 1
+        overflow hidden
 
 
 .property-table-embed
