@@ -352,6 +352,11 @@ function init(locationInput,data,container,geo,scope,variableOne,variableTwo){
   })
 
   map.on('load', function() {
+
+
+    if(d3.select("body").classed("is-mobile")){
+      map.scrollZoom.disable();
+    }
     //map.setLayoutProperty('state-label','visibility','visible')
 
     console.log("fitting");

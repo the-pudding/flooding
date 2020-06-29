@@ -133,6 +133,10 @@ function init(container,coords) {
 
   map.on("load",function(d){
 
+    if(d3.select("body").classed("is-mobile")){
+      map.scrollZoom.disable();
+    }
+
     d3.select(".fema__controls-container").selectAll("input").on("click",function(d){
       console.log("here");
       let value = d3.select(this).attr("value");

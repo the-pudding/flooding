@@ -4,11 +4,13 @@
   justify-content space-between
   padding .8rem .8rem
   .header-title
+    margin-right 10px
     .header-hed
       font-size 25px
       font-family $lyon-display
       color white
       line-height 1.3
+
     .header-dek
       font-family $atlas
       font-size 11px
@@ -28,7 +30,9 @@
       color #D7D7D7
       font-weight 400
       text-align right
-
+      @media (max-width: 374px)
+        font-size 11px
+        line-height 1.25
       a
         color white
         border-bottom 1px solid white
@@ -77,6 +81,9 @@
         height 1px
         flex-grow 1
         overflow hidden
+        max-width none
+      .attribution
+        text-align center
 
 
 .property-table-embed

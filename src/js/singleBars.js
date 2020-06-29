@@ -51,6 +51,9 @@ function resize() {
   if($figure.node().offsetWidth < 600){
     MARGIN_RIGHT = 100;
   }
+  if($figure.node().offsetWidth < 400){
+    MARGIN_RIGHT = 150;
+  }
   const width = $figure.node().offsetWidth - MARGIN_LEFT - MARGIN_RIGHT;
 
   scaleX
