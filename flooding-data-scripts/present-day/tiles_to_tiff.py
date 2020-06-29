@@ -28,8 +28,8 @@ args = parser.parse_args()
 #python tiles_to_tiff.py --lonMin -82.173373 --lonMax -81.001695 --latMin 40.635106 --latMax 41.351168
 
 
-ohio
-python tiles_to_tiff.py --lonMin -85.132508 --lonMax -83.977005 --latMin 38.770475 --latMax 39.591024
+
+python tiles_to_tiff.py --lonMin -80.98725 --lonMax -80.19943514363659 --latMin 27.205584 --latMax 28.791325
 
 
 

@@ -48,8 +48,12 @@
       font-family $atlas
       font-size 14px
       margin-right 5px
+      align-self center
     select
       font-size 16px
+      min-height 35px
+      @media (max-width: 600px)
+        width calc(100% - 120px)
   .controls-container
     .controls-buttons
       input:checked + label
@@ -154,10 +158,16 @@
   margin 0
   overflow visible
   outline none
+  @media (max-width: 550px)
+    width 100%
   canvas
     outline none
   .mapboxgl-ctrl-top-left
     z-index 10000
+  .mapboxgl-ctrl-geocoder
+    top 6px
+    @media (max-width: 600px)
+      width 100px
   .year-label
     position absolute
     right 1rem
@@ -254,6 +264,8 @@
   position relative
   overflow visible
   margin-bottom 1rem
+  @media (max-width: 700px)
+    width 100%
   .map-tooltip
     position absolute
     width 130px

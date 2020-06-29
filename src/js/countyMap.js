@@ -237,6 +237,8 @@ function init(locationInput,data,container,geo,scope,variableOne,variableTwo){
 
   map.on('load', function() {
 
+      map.scrollZoom.disable();
+
       map.addSource('albersusa2', {
         type: 'vector',
         url: 'mapbox://lobenichou.albersusa',
