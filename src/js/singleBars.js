@@ -21,7 +21,7 @@ const $search = $section.select("[data-js='search__bar-single'");
 const scaleX = d3.scaleLinear();
 
 // margins
-const MARGIN_RIGHT = 0;
+let MARGIN_RIGHT = 0;
 const MARGIN_LEFT = 0;
 
 const properties = [
@@ -48,6 +48,9 @@ const properties = [
 ];
 
 function resize() {
+  if($figure.node().offsetWidth < 600){
+    MARGIN_RIGHT = 100;
+  }
   const width = $figure.node().offsetWidth - MARGIN_LEFT - MARGIN_RIGHT;
 
   scaleX

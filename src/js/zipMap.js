@@ -353,6 +353,10 @@ function init(locationInput,data,container,geo,scope,variableOne,variableTwo){
 
   map.on('load', function() {
     //map.setLayoutProperty('state-label','visibility','visible')
+
+    console.log("fitting");
+    //map.fitBounds([[-127.1499751249942, 23.23063251536344],[-65.62653762499436, 50.7290755205278]]);
+
     map.setLayoutProperty('boundaries-admin-1','visibility','none')
     //map.setPaintProperty('boundaries-admin-1','line-color','white')
 

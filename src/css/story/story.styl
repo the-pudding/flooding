@@ -38,16 +38,23 @@
     margin 0
     padding 0
     height 100%
+    padding-top 1rem
+    margin 0 auto
     .table-wrapper
-      display block
+      display flex
       border none
       margin 0
       padding 0
       height 100%
+      flex-direction column
+      .controls-container
+        width 100%
+        justify-content center
       .property-table
         margin 0
         padding 0
         height 100%
+        align-self center
 
 .fema-table
   height 100%
@@ -57,6 +64,7 @@
     margin 0
     padding 0
     height 100%
+    margin 0 auto
     .graphic-wrapper
       display block
       border none
@@ -68,6 +76,8 @@
         margin 0
         padding 0
         height 100%
+        .controls-container
+          justify-content center
 
 .fema-compare-map
   height 100%
@@ -114,8 +124,24 @@
     display flex
     flex-direction column
     height 100%
+    .controls-container
+      width 100%
+      justify-content center
     .title-wrapper
       margin-top 0
+      text-align center
+      .chart-title
+        @media (max-width: 600px)
+          width 100%
+          margin-right 0
+          max-width none
+          max-width 400px
+          margin 0 auto
+      .legend-wrapper
+        @media (max-width: 600px)
+          width 100%
+          justify-content center
+
     .map
       height 1px
       flex-grow 1
@@ -197,6 +223,13 @@ main
       padding-left 2rem
       &::placeholder
         font-family $atlas
+    .mapboxgl-ctrl-geocoder--icon-search
+      left 7px
+      width 20px
+      height 20px
+      top 9px
+    .mapboxgl-ctrl-geocoder--icon-close
+      margin-top 2px
     .suggestions-wrapper
       ul
         li
@@ -277,6 +310,10 @@ section
     margin 0
     padding 0
     margin-right 1rem
+    @media (max-width: 600px)
+      font-size 12px
+      margin-right 10px
+      display none
 
   .controls-buttons
     input[type=radio]

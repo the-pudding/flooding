@@ -151,3 +151,7 @@ tippecanoe -o ohio_ne.mbtiles -Z7 -z13 -L'{"file":"ohio_ne_fema.geojson", "layer
 
 
 tile-join -o output_combined_two.mbtiles output_combined.mbtiles ri.mbtiles pa.mbtiles fl_duval.mbtiles fl_ala.mbtiles fl_santa.mbtiles fl_sara.mbtiles nj.mbtiles oneida.mbtiles river.mbtiles ohio_ham.mbtiles pa.mbtiles
+
+
+
+#mapbox fix attribution
