@@ -59,30 +59,31 @@ function findReaderLoc() {
   return new Promise((resolve, reject) => {
     const key = 'fd4d87f605681c0959c16d9164ab6a4a';
     if(embedded == "true" || albers == "true"){
-      console.log(coords);
       if(coords[0]){
         defaultLocation.longitude = +coords[0];
         defaultLocation.latitude = +coords[1];
       }
-      console.log(defaultLocation);
       resolve(defaultLocation);
     }
     else {
-      locate(key, (err, result) => {
-        if (err) {
-          reject(err);
-        }
-        const readerLatLong =
-          err || result.country_code !== 'US'
-            ? {
-                latitude: defaultLocation.latitude,
-                longitude: defaultLocation.longitude,
-              }
-            : { latitude: result.latitude, longitude: result.longitude };
-
-        resolve(readerLatLong);
-      });
+      resolve(defaultLocation);      
     }
+    // else {
+    //   locate(key, (err, result) => {
+    //     if (err) {
+    //       reject(err);
+    //     }
+    //     const readerLatLong =
+    //       err || result.country_code !== 'US'
+    //         ? {
+    //             latitude: defaultLocation.latitude,
+    //             longitude: defaultLocation.longitude,
+    //           }
+    //         : { latitude: result.latitude, longitude: result.longitude };
+    //
+    //     resolve(readerLatLong);
+    //   });
+    // }
 
 
   });
