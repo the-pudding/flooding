@@ -19,19 +19,16 @@ function startInterval(){
   const canvas = document.createElement('canvas');
   var width = canvas.width = 1000;
   var height = canvas.height = 600;
+  var scale = window.devicePixelRatio;
+  let retinaAdjust = 1;
+  if(scale == 1){
+    retinaAdjust = 2;
+    width = width/2;
+    height = height/2;
+
+  }
+
   var ctx = canvas.getContext('2d');
-  // ctx.beginPath();
-  // ctx.rect(20, 20, 150, 100);
-  // ctx.fillStyle = "red";
-  // ctx.fill();
-
-
-
-
-
-
-  //canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");  // here is the most important part because if you dont replace you will get a DOM 18 exception.
-
 
   interval = setInterval(function() {
 
@@ -47,11 +44,6 @@ function startInterval(){
       layerSelected = 0;
       loop = loop + 1;
     }
-
-
-
-
-
 
     container.select(".control-wrapper").select(".year-wrapper").selectAll("input").property("checked",function(d,i){
       if(i==layerSelected){
@@ -90,11 +82,14 @@ function startInterval(){
 
         ctx.beginPath();
         ctx.fillStyle = "#c8f7ff";
-        ctx.fillRect(width - 200, 50, 150, 75);
+        ctx.fillRect(width - 200/retinaAdjust, 50/retinaAdjust, 150/retinaAdjust, 75/retinaAdjust);
 
         ctx.fillStyle = "black";
         ctx.font = "48px Arial";
-        ctx.fillText(currentLayer, width-177, 105);
+        if(scale ==1){
+          ctx.font = "18px Arial";
+        }
+        ctx.fillText(currentLayer, width-177/retinaAdjust, 105/retinaAdjust);
 
         var test = canvas.toDataURL("image/png");
 
@@ -172,35 +167,46 @@ function init(data,nearest) {
   })
 
   d3.select("#download-gif").on("click",function(){
-    if(!animating){
-      toggleAnimation(false)
-      buttons.classed("active",function(d,i){
-        let play = d3.select(this).classed("play-button");
-        if(play){
-          return true;
-        }
-        return false;
-      })
+
+    if(d3.select(this).classed("to-download")){
+      d3.select(this).classed("to-download",false);
+      d3.select("#download-gif").text("Create GIF")
     }
+    else {
+      d3.select("#download-gif").attr("href",null).attr("download",null)
 
-    if(!downloaded){
+      if(!animating){
+        toggleAnimation(false)
+        buttons.classed("active",function(d,i){
+          let play = d3.select(this).classed("play-button");
+          if(play){
+            return true;
+          }
+          return false;
+        })
+      }
 
-      d3.select(this).text("Loading...")
+      if(!downloaded){
 
-      downloaded = true;
-      loop = 0;
-      gif = new GIF({
-        workers: 1,
-        quality: 10,
-        workerScript: 'assets/scripts/gif.worker.js'
-      });
+        d3.select(this).text("Loading...")
 
-      gif.on('finished', function(blob) {
-        downloaded = false;
-        gifRendered = false;
-        d3.select("#download-gif").text("Download GIF")
-        window.open(URL.createObjectURL(blob, {type: "image/gif"}));
-      })
+        downloaded = true;
+        loop = 0;
+        gif = new GIF({
+          workers: 1,
+          quality: 10,
+          workerScript: 'assets/scripts/gif.worker.js'
+        });
+
+        gif.on('finished', function(blob) {
+          downloaded = false;
+          gifRendered = false;
+          d3.select("#download-gif").text("Download GIF")
+          d3.select("#download-gif").attr("download","first-street.gif").classed("to-download",true).attr("target","_blank").attr("href",URL.createObjectURL(blob, {type: "image/gif"}))
+        })
+      }
+
+
     }
 
 
@@ -231,7 +237,7 @@ function init(data,nearest) {
         countries: 'us',
         placeholder:'Find a location',
         zoom:12,
-        limit:15,
+        limit:20,
         marker:false,
         flyTo:false,
         mapboxgl: mapboxgl

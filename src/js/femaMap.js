@@ -35,13 +35,19 @@ function init(container,coords) {
         ["Alachua, Levy, Dixie and Gilchrist counties in Florida",[-82.733,29.471]],
         ["St. Johns County in Florida",[-81.31572653813868,29.89694420163633]],
         ["Duval County in Florida",[-81.452,30.120]],
-        ["Brevard, Indian River, St. Lucie County, Florida",[-80.7214,28.2639]]
+        ["Brevard, Indian River, St. Lucie County, Florida",[-80.7214,28.2639]],
+        ["Palm Beach, Broward and Miami-Dade County, Florida",[-80.377,26.205]]
       ]
     ],
     ["Georgia",
       [
         ["Chatham and Bryan in Georgia",[-81.22376056548842,31.931047184232682]],
         ["Richmond and Columbia in Georgia, Aiken in South Carolina",[-81.87830985421346,33.4663727552888]],
+      ]
+    ],
+    ["Kansas",
+      [
+        ["Reno County, Kansas",[-98.07,37.95]]
       ]
     ],
     ["Louisiana",
@@ -118,7 +124,7 @@ function init(container,coords) {
 
   let map = new mapboxgl.Map({
     container: 'fema-map',
-    style: 'mapbox://styles/dock4242/ckc0u9fm05dap1hmwg83scof6',
+    style: 'mapbox://styles/dock4242/ckc3novvn10yv1ipe4u3ttxmm',
     center: center,
     minZoom: 7,
     maxZoom: 14,

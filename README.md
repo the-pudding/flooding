@@ -146,7 +146,7 @@ tippecanoe -o sav_counties.mbtiles -Z7 -z13 -L'{"file":"sav_counties_fema.geojso
 tippecanoe -o ohio_ham.mbtiles -ab -Z7 -z13 -L'{"file":"ohio_ham_fema.geojson", "layer":"fema", "description":"fema"}' -L'{"file":"ohio_ham_fs.geojson", "layer":"fs", "description":"fs"}'
 
 
-tippecanoe -o fl_br.mbtiles -Z7 -z13 -L'{"file":"fl_br_fema.geojson", "layer":"fema", "description":"fema"}' -L'{"file":"fl_br_fs.geojson", "layer":"fs", "description":"fs"}'
+tippecanoe -o fl_palm.mbtiles -Z7 -z13 -L'{"file":"fl_palm_fema.geojson", "layer":"fema", "description":"fema"}' -L'{"file":"fl_palm_fs.geojson", "layer":"fs", "description":"fs"}'
 
 
 

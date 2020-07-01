@@ -29,7 +29,7 @@ args = parser.parse_args()
 
 
 
-python tiles_to_tiff.py --lonMin -80.98725 --lonMax -80.19943514363659 --latMin 27.205584 --latMax 28.791325
+#python tiles_to_tiff.py --lonMin -98.472794 --lonMax -97.698692 --latMin 37.732503 --latMax 38.173918
 
 
 

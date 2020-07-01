@@ -357,20 +357,14 @@ function init(locationInput,data,container,geo,scope,variableOne,variableTwo){
     if(d3.select("body").classed("is-mobile")){
       map.scrollZoom.disable();
     }
-    //map.setLayoutProperty('state-label','visibility','visible')
-
-    console.log("fitting");
-    //map.fitBounds([[-127.1499751249942, 23.23063251536344],[-65.62653762499436, 50.7290755205278]]);
 
     map.setLayoutProperty('boundaries-admin-1','visibility','none')
-    //map.setPaintProperty('boundaries-admin-1','line-color','white')
 
     map.setPaintProperty('water-shadow','line-opacity',.5)
 
     map.addSource("postal", {
       type: "vector",
-      //url: "mapbox://mapbox.enterprise-boundaries-p2-v1"
-      url:url//.json?secure&access_token=pk.eyJ1IjoibGFicy1zYW5kYm94IiwiYSI6ImNrMTZuanRtdTE3cW4zZG56bHR6MnBkZG4ifQ.YGRP0sZNYdLw5_jSa9IvXg
+      url:url
     });
 
     map.addLayer({
@@ -401,14 +395,11 @@ function init(locationInput,data,container,geo,scope,variableOne,variableTwo){
           "line-color":"black"
       }
       //,
-      //'filter': ['==', 'id', 123]
     });
 
     // Join the JSON unemployment data with the corresponding vector features where
      // feautre.unit_code === `STATE_ID`.
      function setStates(e) {
-
-       //console.log("setting states");
 
        selectedData.forEach(function(row) {
          map.setFeatureState({

@@ -66,26 +66,18 @@ function findReaderLoc() {
       resolve(defaultLocation);
     }
     else {
-      resolve(defaultLocation);
+
+    		locate(key, (err, result) => {
+    			const readerLatLong =
+    				err || result.country_code !== 'US'
+    					? {
+    						latitude: defaultLocation.latitude,
+    						longitude: defaultLocation.longitude,
+    					}
+    					: { latitude: result.latitude, longitude: result.longitude };
+    			resolve(readerLatLong);
+    		});
     }
-    // else {
-    //   locate(key, (err, result) => {
-    //     if (err) {
-    //       reject(err);
-    //     }
-    //     const readerLatLong =
-    //       err || result.country_code !== 'US'
-    //         ? {
-    //             latitude: defaultLocation.latitude,
-    //             longitude: defaultLocation.longitude,
-    //           }
-    //         : { latitude: result.latitude, longitude: result.longitude };
-    //
-    //     resolve(readerLatLong);
-    //   });
-    // }
-
-
   });
 }
 
@@ -158,7 +150,7 @@ function setupGeocoder(container,data,geo){
     //   return item.place_type[0] == "manual";
     // },
     zoom:7,
-    limit:15,
+    limit:20,
     localGeocoderOnly:true,
     marker:false
     //mapboxgl: mapboxgl

@@ -14,7 +14,6 @@ let loc = null;
 const geoName = { city: '', county: ' county', state: '' };
 
 function tableButtonClick(btn) {
-  console.log("here");
   d3.select(".table-wrapper").selectAll(".property-table").style("display",null);
   d3.select(".table-wrapper").select("."+btn+"-table").style("display","block");
 }
@@ -151,7 +150,7 @@ function init(data, container, locationInput, geo) {
       //   return item.place_type[0] == "manual";
       // },
       zoom:7,
-      limit:15,
+      limit:20,
       localGeocoderOnly:true,
       marker:false
       //mapboxgl: mapboxgl

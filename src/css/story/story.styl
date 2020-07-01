@@ -455,6 +455,7 @@ section
 .embed-button-wrapper
   display flex
   width 100%
+  flex-wrap wrap
   .embed-button
     border-radius 3px
     border 1px solid #aaa
@@ -462,10 +463,14 @@ section
     padding .5rem 1rem
     font-size 16px
     font-family $atlas
+    @media (max-width: 500px)
+      margin-bottom 2rem
   .embed-input-wrapper
     display flex
     flex-grow 1
     width 1px
+    flex-wrap wrap
+    min-width 300px
     p
       font-family $atlas
       align-self center
