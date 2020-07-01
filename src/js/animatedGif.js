@@ -17,16 +17,19 @@ let loop = 0;
 function startInterval(){
 
   const canvas = document.createElement('canvas');
-  var width = canvas.width = 1000;
-  var height = canvas.height = 600;
+
+  var width = 1000;
+  var height = 600;
   var scale = window.devicePixelRatio;
   let retinaAdjust = 1;
   if(scale == 1){
     retinaAdjust = 2;
     width = width/2;
     height = height/2;
-
   }
+
+  canvas.width = width;
+  canvas.height = height;
 
   var ctx = canvas.getContext('2d');
 
