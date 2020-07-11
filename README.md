@@ -122,10 +122,10 @@ save
 go to county outlines
 highlight needed county and save as filtered element
 
-find state fsid: https://api.firststreet.org/v1/location/detail/state/13?key=w6e9nl3apphi9ln2mux4aazyd9gics5a
-find county fsids: https://api.firststreet.org/v1/query?$select=county&$filter=location:state.fsid%20eq%2013&$offset=0&key=w6e9nl3apphi9ln2mux4aazyd9gics5a
+find state fsid: https://api.firststreet.org/v1/location/detail/state/13
+find county fsids: https://api.firststreet.org/v1/query?$select=county&$filter=location:state.fsid%20eq%2013&$offset=0
 transpose rows, paste into data.csv, run python get_location_meta.py --geo county
-find county fsid and run: https://api.firststreet.org/v1/location/detail/county/13051?key=w6e9nl3apphi9ln2mux4aazyd9gics5a
+find county fsid and run: https://api.firststreet.org/v1/location/detail/county/13051
 get bbox and run python tiles_to_tiff.py --lonMin -81.391698 --lonMax -80.78296 --latMin 31.705198 --latMax 32.237591
 
 go to raster clipper, mask with selected ccounty
@@ -146,11 +146,11 @@ tippecanoe -o sav_counties.mbtiles -Z7 -z13 -L'{"file":"sav_counties_fema.geojso
 tippecanoe -o ohio_ham.mbtiles -ab -Z7 -z13 -L'{"file":"ohio_ham_fema.geojson", "layer":"fema", "description":"fema"}' -L'{"file":"ohio_ham_fs.geojson", "layer":"fs", "description":"fs"}'
 
 
-tippecanoe -o fl_palm.mbtiles -Z7 -z13 -L'{"file":"fl_palm_fema.geojson", "layer":"fema", "description":"fema"}' -L'{"file":"fl_palm_fs.geojson", "layer":"fs", "description":"fs"}'
+tippecanoe -o ks_reno.mbtiles -Z7 -z13 -L'{"file":"ks_reno_fema.geojson", "layer":"fema", "description":"fema"}' -L'{"file":"ks_reno_fs.geojson", "layer":"fs", "description":"fs"}'
 
 
 
-tile-join -o output_combined_five.mbtiles fl_br.mbtiles ohio_columbus.mbtiles output_combined_two.mbtiles
+tile-join -o output_combined_six.mbtiles ks_reno.mbtiles fl_palm.mbtiles output_combined_five.mbtiles
 
 
 

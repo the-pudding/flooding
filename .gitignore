@@ -8,3 +8,4 @@ dev
 dist
 state_pages
 flooding-data-scripts/present-day/output
+flooding-data-scripts/present-day/tiles_to_tiff.py

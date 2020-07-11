@@ -92,6 +92,9 @@ function startInterval(){
         if(scale ==1){
           ctx.font = "18px Arial";
         }
+        if(scale == 1){
+          ctx.fillText(currentLayer, width-177/retinaAdjust+8, 105/retinaAdjust);
+        }
         ctx.fillText(currentLayer, width-177/retinaAdjust, 105/retinaAdjust);
 
         var test = canvas.toDataURL("image/png");
